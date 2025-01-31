@@ -1,0 +1,40 @@
+[
+  {
+    "id": "proj101",
+    "academic": false,
+    "title": "Awesome Puzzle Game",
+    "description": "A 2D puzzle-platformer built during a 48-hour game jam.",
+    "dateStarted": "2024-06-12",
+    "status": "Completed",
+    "stack": ["Unity", "C#", "Photoshop", "Figma", "Git", "Blender"],
+    "thumbnail": "images/puzzle_thumb.jpg",
+    "previewImages": [
+      "images/puzzle_screenshot1.jpg",
+      "images/puzzle_screenshot2.jpg"
+    ]
+  },
+  {
+    "id": "proj102",
+    "academic": false,
+
+    "title": "Personal Portfolio Website",
+    "description": "A static website showcasing my projects and experience.",
+    "dateStarted": "2025-01-05",
+    "status": "Active",
+    "stack": ["HTML", "CSS", "JavaScript", "Bootstrap"],
+    "thumbnail": "images/portfolio_thumb.jpg",
+    "previewImages": [
+      "images/portfolio_screenshot1.jpg"
+    ]
+  },
+  {
+    "id": "proj103",
+    "title": "Data Visualization Tool",
+    "description": "A small tool to visualize large datasets with charts.",
+    "dateStarted": "2023-08-20",
+    "status": "In Progress",
+    "stack": ["Python", "Flask", "Chart.js", "D3.js", "Docker"],
+    "thumbnail": "images/dataviz_thumb.jpg",
+    "previewImages": []
+  }
+]
