@@ -1,9 +1,9 @@
 [
   {
     "id": "proj101",
-    "academic": false,
+    "academic": "false",
     "title": "Awesome Puzzle Game",
-    "description": "A 2D puzzle-platformer built during a 48-hour game jam.",
+    "description": "Campus housiung needed a way to ",
     "dateStarted": "2024-06-12",
     "status": "Completed",
     "stack": ["Unity", "C#", "Photoshop", "Figma", "Git", "Blender"],
@@ -15,13 +15,12 @@
   },
   {
     "id": "proj102",
-    "academic": false,
-
+    "academic": "false",
     "title": "Personal Portfolio Website",
-    "description": "A static website showcasing my projects and experience.",
+    "description": "A static website showcasing my projects and experience.  This had to be abandoned for a long time coming, but revisiting it after my education with web and software development hadbeen furthered was absolutely a smart call.",
     "dateStarted": "2025-01-05",
     "status": "Active",
-    "stack": ["HTML", "CSS", "JavaScript", "Bootstrap"],
+    "stack": ["HTML", "CSS", "JavaScript", "GitHub"],
     "thumbnail": "images/portfolio_thumb.jpg",
     "previewImages": [
       "images/portfolio_screenshot1.jpg"
@@ -29,11 +28,22 @@
   },
   {
     "id": "proj103",
-    "title": "Data Visualization Tool",
+    "title": "Quant",
     "description": "A small tool to visualize large datasets with charts.",
     "dateStarted": "2023-08-20",
     "status": "In Progress",
     "stack": ["Python", "Flask", "Chart.js", "D3.js", "Docker"],
+    "thumbnail": "images/dataviz_thumb.jpg",
+    "previewImages": []
+  },
+  {
+    "id": "proj104",
+    "academic": "true", 
+    "title": "Frugal Fasion",
+    "description": "A small tool to visualize large datasets with charts.",
+    "dateStarted": "2023-08-20",
+    "status": "Hiatus",
+    "stack": ["EJS","Node", "Express", "Replit"],
     "thumbnail": "images/dataviz_thumb.jpg",
     "previewImages": []
   }

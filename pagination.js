@@ -27,7 +27,7 @@ function renderPaginationControls() {
   const container = document.getElementById('paginationContainer');
   container.innerHTML = ''; // Clear existing controls
 
-  // Create a simple pagination bar with Previous, Page Numbers, and Next
+  // Pagination bar with Previous, Page Numbers, and Next
   const paginationWrapper = document.createElement('div');
   paginationWrapper.classList.add('pagination-wrapper');
 

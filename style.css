@@ -1,5 +1,3 @@
-/* style.css */
-
 /* 1) Base Reset/Global */
 * {
   box-sizing: border-box;
@@ -9,7 +7,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  /* We will manage layout with a container, not directly on body */
+  /* Manage layout with a container, not directly on body */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -39,7 +37,6 @@ footer {
 /* 4) Sidebar (1/4 width) */
 #sidebar {
   max-width: 300px;
-  /* optional max-width if you prefer */
   background-color: #0000a0;
   border-right: 1px solid #ddd;
   color: white;
