@@ -44,6 +44,7 @@ footer {
   border-right: 1px solid #ddd;
   color: white;
   padding: 20px;
+  height: 100%;
 }
 
 .profile-photo {
@@ -54,14 +55,17 @@ footer {
 
 /* 5) Main Content (3/4 width) */
 #mainContent {
-  width: 75%;
-  padding: 20px;
+  /* width: 75%; */
+  /* padding: 20px; */
+  flex: 9
 }
 
 /* MainContainrer */
 
 #mainContainer {
-  height: 
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 6) Project Gallery Styles */
@@ -146,4 +150,44 @@ footer {
   right: 20px;
   font-size: 2rem;
   cursor: pointer;
+}
+
+
+/* Academic Label styling */
+.academic-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  color: white;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  border-radius: 4px;
+}
+
+#paginationContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Basic pagination button styles */
+.pagination-wrapper button {
+  margin: 0 4px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.pagination-wrapper button.active-page {
+  background-color: #0000a0;
+  color: #fff;
+}
+
+.pagination-wrapper button:disabled {
+  opacity: 0.5;
+  cursor: default;
 }

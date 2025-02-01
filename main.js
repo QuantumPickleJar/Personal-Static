@@ -3,6 +3,9 @@
 
 // main.js
 
+/**
+ * Load partial files into the main page
+ */
 function loadPartial(file, elementId) {
   fetch(file)
     .then(response => {
@@ -19,11 +22,7 @@ function loadPartial(file, elementId) {
     });
 }
 
-// When DOM is fully loaded
-window.addEventListener('DOMContentLoaded', () => {
-  loadPartial('partials/header.html', 'headerContainer');
-  loadPartial('partials/footer.html', 'footerContainer');
-});
+
 
 // We'll store the fetched projects here
 let allProjects = [];
@@ -39,21 +38,31 @@ function loadProjects() {
     })
     .then(data => {
       allProjects = data;
-      renderProjectsGallery(data);
+      // renderProjectsGallery(data);
+      // projects, projects per page
+      initPagination(allProjects, 6); // e.g., 6 items per page
     })
     .catch(err => console.error(err));
 }
 
-/** Render the gallery with the given projects */
+/** Render the gallery with a given array of projects */
 function renderProjectsGallery(projects) {
   const gallery = document.getElementById('projectsGallery');
   gallery.innerHTML = ''; // Clear any existing content
 
   projects.forEach(project => {
-    // Create card
+    // Create card container & set it as relative for positioning academic label
     const card = document.createElement('div');
     card.classList.add('project-card');
-    card.dataset.projectId = project.id; // so we can find it when clicked
+    card.dataset.projectId = project.id;
+    card.style.position = 'relative';
+
+    // Academic label (top right corner)
+    const academicLabel = document.createElement('span');
+    academicLabel.classList.add('academic-label');
+    // Show "Academic" if true; otherwise, "Personal"
+    academicLabel.textContent = project.academic ? "Academic" : "Personal";
+    card.appendChild(academicLabel);
 
     // Thumbnail
     const thumb = document.createElement('img');
@@ -70,11 +79,10 @@ function renderProjectsGallery(projects) {
     const stackContainer = document.createElement('div');
     stackContainer.classList.add('stack-icons');
 
-    const MAX_VISIBLE_STACK = 3; // or 5, adjust as needed
+    const MAX_VISIBLE_STACK = 3; // adjust as needed
     const totalStack = project.stack.length;
 
     project.stack.forEach((tech, index) => {
-      // only create a tech element if within the MAX_VISIBLE_STACK
       if (index < MAX_VISIBLE_STACK) {
         const techSpan = document.createElement('span');
         techSpan.classList.add('stack-icon');
@@ -83,24 +91,24 @@ function renderProjectsGallery(projects) {
       }
     });
 
-    // If there are more than 3, show a +N more link
+    // If there are more than MAX_VISIBLE_STACK, show a "+N more" link
     if (totalStack > MAX_VISIBLE_STACK) {
       const moreLink = document.createElement('span');
       moreLink.classList.add('more-link');
       moreLink.textContent = `+${totalStack - MAX_VISIBLE_STACK} more`;
       moreLink.addEventListener('click', e => {
-        e.stopPropagation(); // so we don't open modal immediately
+        e.stopPropagation(); // Prevent immediate modal open
         expandStack(stackContainer, project.stack, MAX_VISIBLE_STACK, moreLink);
       });
       stackContainer.appendChild(moreLink);
     }
 
-    // Append elements to card
+    // Append elements to the card
     card.appendChild(thumb);
     card.appendChild(title);
     card.appendChild(stackContainer);
 
-    // Clicking the card -> open modal
+    // Clicking the card opens the modal
     card.addEventListener('click', () => {
       openProjectModal(project.id);
     });
@@ -108,7 +116,6 @@ function renderProjectsGallery(projects) {
     gallery.appendChild(card);
   });
 }
-
 /** Expand the stack icons in the gallery card */
 function expandStack(container, stackArray, max, linkElement) {
   // Remove the existing link
@@ -134,6 +141,11 @@ function openProjectModal(projectId) {
 
   // Clear previous content
   modalBody.innerHTML = '';
+  
+  // Academic label in modal (e.g., above the title)
+  const academicLabel = document.createElement('span');
+  academicLabel.classList.add('academic-label');
+  academicLabel.textContent = project.academic ? "Academic" : "Personal";
 
   // Populate modal content
   const titleEl = document.createElement('h2');
