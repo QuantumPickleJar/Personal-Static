@@ -1,14 +1,15 @@
-// pagination.js
+import { renderProjectsGallery, allProjects } from './projects.js';
 
 let currentPage = 1;
 let itemsPerPage = 6; // adjust as needed
 let totalPages = 1;
 
 /** Initialize pagination using the provided projects array and items per page */
-function initPagination(projects, perPage) {
+export function initPagination(projects, perPage) {
   itemsPerPage = perPage;
   totalPages = Math.ceil(projects.length / itemsPerPage);
   currentPage = 1;
+  console.log('Initializing pagination:', { totalPages, itemsPerPage }); // Debug log
   renderPage(currentPage);
   renderPaginationControls();
 }
@@ -18,6 +19,7 @@ function renderPage(pageNumber) {
   currentPage = pageNumber;
   const startIndex = (pageNumber - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+  console.log('Rendering page:', { pageNumber, startIndex, endIndex }); // Debug log
   // Pass the subset to renderProjectsGallery (defined in main.js)
   renderProjectsGallery(allProjects.slice(startIndex, endIndex));
 }

@@ -21,9 +21,18 @@
     <!-- Main Container: holds content and pagination -->
     <div id="mainContainer">
       <main id="mainContent">
-        <h2>Welcome to My Site!</h2>
-        <p>This is my main content area. I'll add more interesting stuff later.</p>
-
+        <div id="filterContols">
+          <div class="how-to">
+            <p>Below are projects that have enough of a footprint to warrant<br/>
+              listing here.
+            </p>
+          </div>
+          <div id="sortOptions">
+            <button onClick="filterTitle">TITLE</button>
+            <button onClick="filterDate">DATE</button>
+            <button onClick="filterStatus">STATUS</button>
+          </div>
+        </div>
         <!-- Project Gallery -->
         <div id="projectsGallery" class="projects-gallery"></div>
       </main>
@@ -45,9 +54,8 @@
     </div>
   </div>
 
-  <!-- JavaScript code -->
-  <script src="main.js"></script>
-  <script src="pagination.js"></script>
+  <!-- Include only the entry point as module -->
+  <script type="module" src="main.js"></script>
 
 </body>
 
