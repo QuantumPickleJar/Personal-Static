@@ -139,6 +139,7 @@ footer {
   width: 600px;
   border-radius: 6px;
   position: relative;
+  max-width: 60%;
 }
 
 .close-button {
