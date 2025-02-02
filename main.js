@@ -206,6 +206,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load projects.json
   loadProjects();
 
+  // Load partials
+  loadPartial('partials/header.html', 'headerContainer');
+  loadPartial('partials/footer.html', 'footerContainer');
+  loadPartial('partials/sidebar.html', 'sidebarContainer');
+
   // Close modal when user clicks the X button
   document.getElementById('closeModal').addEventListener('click', closeModal);
 
@@ -216,12 +221,4 @@ document.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }
   });
-});
-
-
-// When DOM is fully loaded
-window.addEventListener('DOMContentLoaded', () => {
-  loadPartial('partials/header.html', 'headerContainer');
-  loadPartial('partials/footer.html', 'footerContainer');
-  loadPartial('partials/sidebar.html', 'sidebarContainer');
 });
