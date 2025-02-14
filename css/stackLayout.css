@@ -1,0 +1,28 @@
+#stackBox {
+  /* common styling for the container */
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.horizontal-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.vertical-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Styling for placeholder when no images present */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  border: 1px dashed #ccc;
+  height: 100px;
+  width: 100%;
+}
