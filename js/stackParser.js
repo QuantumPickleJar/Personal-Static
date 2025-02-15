@@ -1,18 +1,11 @@
-// const stackImageMap = {
-//   "Xamarin Forms": "xamarin-forms.png",
-//   "C#": "csharp.png",
-//   "JSON": "json.png",
-//   "Visual Studio": "visual-studio.png",
-//   "XML": "xml.png",
-//   // ...add additional mappings as needed...
-// };
+import { getIconPath } from 'tech-stack-icons';
 
-// export function getStackImages(stackArray) {
-//   return stackArray.map(item => {
-//     const filename = stackImageMap[item] || null;
-//     return { name: item, src: filename ? `/rsc/images/stack/${filename}` : null };
-//   });
-// }
+export function getStackImages(stackArray) {
+  return stackArray.map(item => {
+    const src = getIconPath(item); // Assume getIconPath returns an icon path or undefined
+    return { name: item, src: src || null };
+  });
+}
 
 export function initStackLayout() {
     const stackBox = document.getElementById('stackBox');

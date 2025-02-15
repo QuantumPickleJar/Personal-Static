@@ -2,6 +2,7 @@
   "dependencies": {
     "express": "^4.21.2",
     "node": "^23.7.0",
+    "sharp": "^0.33.5",
     "tech-stack-icons": "^2.1.0"
   },
   "name": "personal-static",
