@@ -4,7 +4,7 @@ import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 export let allProjects = []; // stored projects go here
 
 /** Fetch projects.json and render gallery */
-export function loadProjects() {
+export function loadProjectsOld() {
   fetch('rsc/projects.json')
     .then(response => {
       if (!response.ok) {
@@ -20,8 +20,21 @@ export function loadProjects() {
     .catch(err => console.error(err));
 }
 
+/** Fetch projects.json and render gallery */
+export function loadProjects() {
+  fetch('rsc/projects.json')
+    .then(response => response.json())
+    .then(data => {
+      allProjects = data;
+      console.log('Projects loaded:', allProjects);
+      initPagination(allProjects, 6);
+    })
+    .catch(err => console.error('Failed to load projects:', err));
+}
+
+
 /** Render the gallery with a given array of projects */
-export function renderProjectsGallery(projects) {
+export function renderProjectsGalleryOld(projects) {
   console.log('Rendering projects:', projects); // Debug log
   const gallery = document.getElementById('projectsGallery');
   gallery.innerHTML = ''; // Clear any existing content
@@ -92,22 +105,88 @@ export function renderProjectsGallery(projects) {
   });
 }
 
-/** Expand the stack icons in the gallery card */
+/** Render the gallery with a given array of projects */
+export function renderProjectsGallery(projects) {
+  console.log('Rendering projects:', projects);
+  const gallery = document.getElementById('projectsGallery');
+  gallery.innerHTML = ''; // Clear content
+
+  projects.forEach(project => {
+    const card = document.createElement('div');
+    card.classList.add('project-card');
+    card.dataset.projectId = project.id;
+    card.style.position = 'relative';
+
+    // Academic label (top right corner)
+    const academicLabel = document.createElement('span');
+    academicLabel.classList.add('academic-label');
+    academicLabel.textContent = project.academic ? "Academic" : "Personal";
+    card.appendChild(academicLabel);
+
+    // Thumbnail
+    const thumb = document.createElement('img');
+    thumb.classList.add('project-thumbnail');
+    thumb.src = project.thumbnail || 'rsc/images/placeholder.jpg';
+    thumb.alt = project.title;
+
+    // Title
+    const title = document.createElement('div');
+    title.classList.add('project-title');
+    title.textContent = project.title;
+
+    // Stack Icons
+    const stackContainer = document.createElement('div');
+    stackContainer.classList.add('stack-icons');
+
+    const MAX_VISIBLE_STACK = 3;
+    const totalStack = project.stack.length;
+
+    project.stack.slice(0, MAX_VISIBLE_STACK).forEach(tech => {
+      const techSpan = document.createElement('span');
+      techSpan.classList.add('stack-icon');
+      techSpan.textContent = tech;
+      stackContainer.appendChild(techSpan);
+    });
+
+    // "+N more" link if needed
+    if (totalStack > MAX_VISIBLE_STACK) {
+      const moreLink = document.createElement('span');
+      moreLink.classList.add('more-link');
+      moreLink.textContent = `+${totalStack - MAX_VISIBLE_STACK} more`;
+      moreLink.addEventListener('click', e => {
+        e.stopPropagation();
+        expandStack(stackContainer, project.stack, MAX_VISIBLE_STACK, moreLink);
+      });
+      stackContainer.appendChild(moreLink);
+    }
+
+    card.appendChild(thumb);
+    card.appendChild(title);
+    card.appendChild(stackContainer);
+
+    card.addEventListener('click', () => {
+      openProjectModal(project.id);
+    });
+
+    gallery.appendChild(card);
+  });
+}
+
+/** Expand stack icons */
 function expandStack(container, stackArray, max, linkElement) {
   container.removeChild(linkElement);
-
-  for (let i = max; i < stackArray.length; i++) {
+  stackArray.slice(max).forEach(tech => {
     const techSpan = document.createElement('span');
     techSpan.classList.add('stack-icon');
-    techSpan.textContent = stackArray[i];
+    techSpan.textContent = tech;
     container.appendChild(techSpan);
-  }
+  });
 }
 
 // TODO: collapse Stack
 
 /** Open modal for a specific project by ID */
-export function openProjectModal(projectId) {
+export function openProjectModalOld(projectId) {
   const project = allProjects.find(p => p.id === projectId);
   if (!project) return;
 
@@ -160,6 +239,27 @@ export function openProjectModal(projectId) {
   modalBody.appendChild(descEl);
   modalBody.appendChild(fullStackContainer);
   modalBody.appendChild(previewContainer);
+
+  modal.style.display = 'block';
+}
+
+/** Open modal */
+export function openProjectModal(projectId) {
+  const project = allProjects.find(p => p.id === projectId);
+  if (!project) return;
+
+  const modal = document.getElementById('projectModal');
+  modal.querySelector('#modalTitle').innerText = project.title;
+  modal.querySelector('#modalDescription').innerText = project.description;
+
+  const modalImages = modal.querySelector('#modalImages');
+  modalImages.innerHTML = '';
+  project.images.forEach(imgSrc => {
+    const imgElement = document.createElement('img');
+    imgElement.src = imgSrc;
+    imgElement.classList.add('modal-image');
+    modalImages.appendChild(imgElement);
+  });
 
   modal.style.display = 'block';
 }
