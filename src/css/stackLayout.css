@@ -1,0 +1,27 @@
+Here are the contents for the `webpack.config.js` file, updated to reflect the new directory structure:
+
+const path = require('path');
+
+module.exports = {
+  entry: './src/js/main.js',
+  output: {
+    path: path.resolve(__dirname, 'public'),
+    filename: 'bundle.js'
+  },
+  mode: 'development',
+  devtool: 'source-map',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      }
+    ]
+  }
+};
