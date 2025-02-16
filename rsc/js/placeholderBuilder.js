@@ -16,20 +16,32 @@
 export function getPlaceholderForStack(stack) {
     if (!stack || stack.length === 0) {
       // Just return a generic placeholder file if you have one
-      return 'rsc/images/placeholder-generic.png';
+      console.error('Project has no stack!');
+      // return 'rsc/images/placeholder-generic.png';
     }
   
-    // Example: create an inline SVG data URI with the first stack’s name
+    // Read placeholder data from project.json in the tech’s folder
     const [mainTech] = stack;
-    const svg = `
-      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="90" fill="lightgray" stroke="black" stroke-width="2"/>
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
-              font-size="16" fill="black">
-          ${mainTech || '?'}
-        </text>
-      </svg>
-    `;
-    return `data:image/svg+xml;base64,${btoa(svg)}`;
+    const projectJsonPath = `rsc/stack/${mainTech}/project.json`;
+    let placeholder = 'rsc/images/placeholder-generic.png';
+
+    try {
+      // Synchronously load the JSON from the project's folder
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', projectJsonPath, false); // synchronous request
+      xhr.send(null);
+      
+      if (xhr.status === 200) {
+      const projectData = JSON.parse(xhr.responseText);
+      // If the project's images array is empty, use the stack placeholder
+      if (!Array.isArray(projectData.images) || projectData.images.length === 0) {
+        placeholder = projectData.stack || placeholder;
+      }
+      }
+    } catch (error) {
+      console.error('Error loading project.json:', error);
+    }
+    
+    return placeholder;
   }
   

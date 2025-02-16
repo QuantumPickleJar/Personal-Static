@@ -1,4 +1,5 @@
 import { initPagination } from './pagination.js';
+import { getPlaceholderForStack } from './rsc/js/placeholderBuilder.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 
 export let allProjects = []; // stored projects go here
@@ -185,14 +186,15 @@ function expandStack(container, stackArray, max, linkElement) {
 
 // TODO: collapse Stack
 
-/** Open modal for a specific project by ID */
-export function openProjectModalOld(projectId) {
+/** Open modal */
+export function openProjectModal(projectId) {
   const project = allProjects.find(p => p.id === projectId);
   if (!project) return;
 
   const modal = document.getElementById('projectModal');
-  const modalBody = document.getElementById('modalBody');
-  modalBody.innerHTML = ''; // Clear previous content
+  modal.querySelector('#modalTitle').innerText = project.title;
+  modal.querySelector('#modalDescription').innerText = project.description;
+
 
   const academicLabel = document.createElement('span');
   academicLabel.classList.add('academic-label');
@@ -233,6 +235,7 @@ export function openProjectModalOld(projectId) {
   }
 
   // hide all modal-only cotent "above" the previewContainer
+  const modalBody = document.getElementById('modalContent');
   modalBody.appendChild(titleEl);
   modalBody.appendChild(statusEl);
   modalBody.appendChild(dateEl);
@@ -240,26 +243,32 @@ export function openProjectModalOld(projectId) {
   modalBody.appendChild(fullStackContainer);
   modalBody.appendChild(previewContainer);
 
-  modal.style.display = 'block';
-}
-
-/** Open modal */
-export function openProjectModal(projectId) {
-  const project = allProjects.find(p => p.id === projectId);
-  if (!project) return;
-
-  const modal = document.getElementById('projectModal');
-  modal.querySelector('#modalTitle').innerText = project.title;
-  modal.querySelector('#modalDescription').innerText = project.description;
-
   const modalImages = modal.querySelector('#modalImages');
   modalImages.innerHTML = '';
+
   project.images.forEach(imgSrc => {
     const imgElement = document.createElement('img');
     imgElement.src = imgSrc;
     imgElement.classList.add('modal-image');
     modalImages.appendChild(imgElement);
   });
+
+  // If there are no real images, generate a placeholder
+  if (!project.images || project.images.length === 0) {
+    const placeholderSrc = getPlaceholderForStack(project.stack);
+    const imgElement = document.createElement('img');
+    imgElement.src = placeholderSrc;
+    imgElement.classList.add('modal-image');
+    modalImages.appendChild(imgElement);
+  } else {
+    // Otherwise, show all images
+    project.images.forEach(imgSrc => {
+      const imgElement = document.createElement('img');
+      imgElement.src = imgSrc;
+      imgElement.classList.add('modal-image');
+      modalImages.appendChild(imgElement);
+    });
+  }
 
   modal.style.display = 'block';
 }
@@ -268,4 +277,14 @@ export function openProjectModal(projectId) {
 export function closeModal() {
   const modal = document.getElementById('projectModal');
   modal.style.display = 'none';
+
+  const modalBody = document.getElementById('modalContent');
+  modalBody.innerHTML = `<div id="projectModal" class="modal">
+    <div class="modal-content" id = "modalContent">
+      <span class="close-button" id="closeModal">&times;</span>
+      <div id="modalTitle"></div>
+      <div id="modalDescription"></div>
+      <div id="modalImages"></div>    </div>
+  </div>`;
 }
+
