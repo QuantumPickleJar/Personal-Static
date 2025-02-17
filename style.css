@@ -175,7 +175,7 @@ footer {
 /* Bottom container = 60% of the modal */
 .modal-bottom {
   flex: 1;            /* Remaining space (60%) */
-  padding: 15px;
+  /* padding: 15px; */
   overflow-y: auto;   /* Scroll if content is tall */
 }
 
