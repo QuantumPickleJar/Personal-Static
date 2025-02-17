@@ -14,31 +14,45 @@
 // or you have a bundler that includes it. If that’s too tricky, you can
 // store a small local library of icons in rsc/images/stack/.
 
+import { iconSvgs } from './stackSvgMap.js';
+
 /**
- * Load an icon from 'tech-stack-icons' if possible, else fallback.
- * @param {string} techName - The technology name, e.g. 'React', 'NodeJS', 'DotNet'.
- * @param {string} localPath - Path to local fallback icons directory.
- * @returns {Promise<string>} The URL (or data URI) of the icon.
+ * @function getIcon
+ * @description Looks up an inline SVG by name and returns it as a base64 Data URI
+ *              so it can be used in <img src="...">.
+ * @param {string} techName - e.g. 'React', 'NodeJS', 'dotNet'
+ * @returns {string|null} - data URI of the inline SVG or null if not found
  */
-export async function loadTechIcon(techName, localPath = './rsc/images/stack') {
-    try {
-      // This import will fail if you're not bundling your code. 
-      // If you see errors, either bundle the app or store icons locally.
-      const { getIcon } = await import('tech-stack-icons');
-  
-      // Try to fetch the remote icon. This returns an SVG data URI.
-      const remoteUrl = await getIcon(techName);
-      if (remoteUrl) return remoteUrl;
-    } catch (error) {
-      console.warn(`Remote icon fetch failed for ${techName}`, error);
-    }
-  
-    // Fallback to a local icon
-    const fallbackFileName = techName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-') + '.png'; 
-    // e.g. "React" -> "react.png"
-  
-    return `${localPath}/${fallbackFileName}`;
+export function getIcon(techName) {
+  // Attempt to find an inline SVG from the map
+  const rawSvg = iconSvgs[techName];
+  if (!rawSvg) {
+    // not found -> return null so you can fallback to local .png
+    return null;
   }
-  
+
+  // Convert the raw <svg> string to base64
+  const base64 = btoa(rawSvg);
+  // Return as a data URI
+  return `data:image/svg+xml;base64,${base64}`;
+}
+
+  export function renderOneStackIcon(tech) {
+    // Attempt to load an inline SVG
+    const iconUrl = getIcon(tech);
+    if (iconUrl) {
+      // Use a data URI
+      const imgEl = document.createElement('img');
+      imgEl.src = iconUrl;
+      imgEl.alt = tech;
+      imgEl.classList.add('stack-image');
+      return imgEl;
+    } else {
+      // If not found, fallback to local .png
+      const fallback = document.createElement('img');
+      fallback.src = `rsc/images/${tech.toLowerCase()}.png`;
+      fallback.alt = tech;
+      fallback.classList.add('stack-image');
+      return fallback;
+    }
+  }
