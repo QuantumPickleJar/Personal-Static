@@ -1,25 +1,8 @@
 import { initPagination } from './pagination.js';
-import { getPlaceholderForStack } from './rsc/js/placeholderBuilder.js';
+import { getPlaceholderForStack,  } from './rsc/js/placeholderBuilder.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
-
+import { getIcon, renderOneStackIcon } from './rsc/js/stackIconLoader.js';
 export let allProjects = []; // stored projects go here
-
-/** Fetch projects.json and render gallery */
-export function loadProjectsOld() {
-  fetch('rsc/projects.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Could not fetch projects.json');
-      }
-      return response.json();
-    })
-    .then(data => {
-      allProjects = data;
-      console.log('Projects loaded:', allProjects); // Debug log
-      initPagination(allProjects, 6); // e.g., 6 items per page
-    })
-    .catch(err => console.error(err));
-}
 
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
@@ -184,107 +167,165 @@ function expandStack(container, stackArray, max, linkElement) {
   });
 }
 
+
+
 // TODO: collapse Stack
 
 /** Open modal */
+// export function openProjectModal(projectId) {
+//   const project = allProjects.find(p => p.id === projectId);
+//   if (!project) return;
+// // Get references to the modal and elements
+//   const modal = document.getElementById('projectModal');
+//   const modalTitle = document.getElementById('modalTitle');
+//   const modalDesc = document.getElementById('modalDescription');
+//   const modalStack = document.getElementById('modalStack');
+//   const modalImages = document.getElementById('modalImages');
+
+//   modalStack.innerHTML = '';
+
+//   // For each tech in the project’s stack, create an icon `<img>`
+//   project.stack.forEach(tech => {
+//     const iconEl = renderOneStackIcon(tech);
+//     modalStack.appendChild(iconEl);
+//   });
+
+//   // Clear any old data
+//   modalTitle.innerText = '';
+//   modalDesc.innerText = '';
+//   modalStack.innerHTML = '';
+//   modalImages.innerHTML = '';
+
+//   const fullStackContainer = document.createElement('div');
+//   fullStackContainer.classList.add('stack-icons');
+//   project.stack.forEach(tech => {
+//     const techSpan = document.createElement('span');
+//     techSpan.classList.add('stack-icon');
+//     techSpan.textContent = tech;
+//     fullStackContainer.appendChild(techSpan);
+//   });
+
+//   const previewContainer = document.createElement('div');
+//   previewContainer.style.marginTop = '10px';
+//   if (project.previewImages && project.previewImages.length > 0) {
+//     project.previewImages.forEach(imgSrc => {
+//       const img = document.createElement('img');
+//       img.src = imgSrc;
+//       img.alt = project.title;
+//       img.style.width = '100%';
+//       img.style.marginBottom = '10px';
+//       previewContainer.appendChild(img);
+//     });
+//   }
+
+//   // Populate text fields
+//   modalTitle.innerText = project.title;
+//   modalDesc.innerText = project.description || 'No description available';
+
+//   // Display the stack items or icons
+//   if (project.stack && project.stack.length > 0) {
+//     project.stack.forEach(tech => {
+//       const techSpan = document.createElement('span');
+//       techSpan.classList.add('stack-icon');
+//       techSpan.textContent = tech;
+//       modalStack.appendChild(techSpan);
+
+//       // OR if using `getIcon` from tech-stack-icons:
+//       getIcon(tech).then(iconUrl => {
+//         const iconImg = document.createElement('img');
+//         iconImg.src = iconUrl;
+//         iconImg.alt = tech;
+//         iconImg.classList.add('modal-image');
+//         modalStack.appendChild(iconImg);
+//         }).catch(err => {
+//           console.warn('Failed to get icon for', tech, err);
+//           });
+//           /*
+//       */
+//     });
+//   }
+ 
+
+// // If images is empty, show placeholder
+//   if (!project.images || project.images.length === 0) {
+//     const placeholderSrc = getPlaceholderForStack(project.stack);
+//     const imgElement = document.createElement('img');
+//     imgElement.src = placeholderSrc;
+//     imgElement.classList.add('modal-image');
+//     modalImages.appendChild(imgElement);
+//   } else {
+//     // Show all images
+//     project.images.forEach(imgSrc => {
+//       const imgElement = document.createElement('img');
+//       imgElement.src = imgSrc;
+//       imgElement.classList.add('modal-image');
+//       modalImages.appendChild(imgElement);
+//     });
+//   } 
+
+//   modal.style.display = 'block';
+// }
+
 export function openProjectModal(projectId) {
   const project = allProjects.find(p => p.id === projectId);
   if (!project) return;
 
+  // Show the modal
   const modal = document.getElementById('projectModal');
-  modal.querySelector('#modalTitle').innerText = project.title;
-  modal.querySelector('#modalDescription').innerText = project.description;
+  modal.style.display = 'block';
 
+  // Title
+  const modalTitle = document.getElementById('modalTitle');
+  modalTitle.textContent = project.title;
 
-  const academicLabel = document.createElement('span');
-  academicLabel.classList.add('academic-label');
-  academicLabel.textContent = project.academic ? "Academic" : "Personal";
-
-  const titleEl = document.createElement('h2');
-  titleEl.textContent = project.title;
-
-  const statusEl = document.createElement('p');
-  statusEl.innerHTML = `<strong>Status:</strong> ${project.status}`;
-
-  const dateEl = document.createElement('p');
-  dateEl.innerHTML = `<strong>Started:</strong> ${project.dateStarted}`;
-
-  const descEl = document.createElement('p');
-  descEl.textContent = project.description;
-
-  const fullStackContainer = document.createElement('div');
-  fullStackContainer.classList.add('stack-icons');
-  project.stack.forEach(tech => {
-    const techSpan = document.createElement('span');
-    techSpan.classList.add('stack-icon');
-    techSpan.textContent = tech;
-    fullStackContainer.appendChild(techSpan);
-  });
-
-  const previewContainer = document.createElement('div');
-  previewContainer.style.marginTop = '10px';
-  if (project.previewImages && project.previewImages.length > 0) {
-    project.previewImages.forEach(imgSrc => {
+  // Images
+  const modalImages = document.getElementById('modalImages');
+  modalImages.innerHTML = '';
+  if (project.images && project.images.length > 0) {
+    project.images.forEach(imgSrc => {
       const img = document.createElement('img');
       img.src = imgSrc;
-      img.alt = project.title;
-      img.style.width = '100%';
-      img.style.marginBottom = '10px';
-      previewContainer.appendChild(img);
+      modalImages.appendChild(img);
     });
-  }
-
-  // hide all modal-only cotent "above" the previewContainer
-  const modalBody = document.getElementById('modalContent');
-  modalBody.appendChild(titleEl);
-  modalBody.appendChild(statusEl);
-  modalBody.appendChild(dateEl);
-  modalBody.appendChild(descEl);
-  modalBody.appendChild(fullStackContainer);
-  modalBody.appendChild(previewContainer);
-
-  const modalImages = modal.querySelector('#modalImages');
-  modalImages.innerHTML = '';
-
-  project.images.forEach(imgSrc => {
-    const imgElement = document.createElement('img');
-    imgElement.src = imgSrc;
-    imgElement.classList.add('modal-image');
-    modalImages.appendChild(imgElement);
-  });
-
-  // If there are no real images, generate a placeholder
-  if (!project.images || project.images.length === 0) {
+  } else {
+    // fallback placeholder
     const placeholderSrc = getPlaceholderForStack(project.stack);
     const imgElement = document.createElement('img');
     imgElement.src = placeholderSrc;
-    imgElement.classList.add('modal-image');
     modalImages.appendChild(imgElement);
-  } else {
-    // Otherwise, show all images
-    project.images.forEach(imgSrc => {
-      const imgElement = document.createElement('img');
-      imgElement.src = imgSrc;
-      imgElement.classList.add('modal-image');
-      modalImages.appendChild(imgElement);
-    });
   }
 
-  modal.style.display = 'block';
+  // Stack
+  const modalStack = document.getElementById('modalStack');
+  modalStack.innerHTML = '';
+  project.stack.forEach(tech => {
+    // Possibly use your dynamic icon loader:
+    const iconEl = renderOneStackIcon(tech);
+    modalStack.appendChild(iconEl);
+  });
+
+  // Bottom container
+  const projectStatus = document.getElementById('projectStatus');
+  projectStatus.textContent = `Status: ${project.status || 'N/A'}`;
+
+  const projectDates = document.getElementById('projectDates');
+  projectDates.textContent = `Dates: ${project.dates || 'Unknown'}`;
+
+  const modalDesc = document.getElementById('modalDescription');
+  modalDesc.textContent = project.description || 'No description available';
 }
 
-/** Close the modal */
+
+/** Close the modal and "reset" it*/
 export function closeModal() {
   const modal = document.getElementById('projectModal');
   modal.style.display = 'none';
 
-  const modalBody = document.getElementById('modalContent');
-  modalBody.innerHTML = `<div id="projectModal" class="modal">
-    <div class="modal-content" id = "modalContent">
-      <span class="close-button" id="closeModal">&times;</span>
-      <div id="modalTitle"></div>
-      <div id="modalDescription"></div>
-      <div id="modalImages"></div>    </div>
-  </div>`;
+  // Optionally clear fields so it’s fresh next time
+  document.getElementById('modalTitle').innerText = '';
+  document.getElementById('modalDescription').innerText = '';
+  document.getElementById('modalStack').innerHTML = '';
+  document.getElementById('modalImages').innerHTML = '';
 }
+
 
