@@ -118,6 +118,9 @@ footer {
   margin-left: 8px;
 }
 
+
+
+
 /* 7) Modal Styles */
 .modal {
   display: none;
@@ -131,6 +134,10 @@ footer {
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.modal-top { flex: 0 0 40%; } 
+.modal-bottom { flex: 1; }
+
 
 /* The actual white content box */
 .modal-content {
@@ -176,7 +183,17 @@ footer {
 .modal-bottom {
   flex: 1;            /* Remaining space (60%) */
   padding: 15px;
-  overflow-y: auto;   /* Scroll if content is tall */
+  overflow-y: auto;   Scroll if content is tall
+}
+
+
+.modal-top {
+  flex: 0 0 40%;   /* forced 40% height of .modal-body */
+}
+
+.modal-bottom {
+  flex: 1;         /* the remaining 60% of .modal-body */
+  overflow-y: auto; /* if you only want bottom to scroll */
 }
 
 
@@ -212,6 +229,11 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+#modalStack {
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 /* Example stack-icon style */

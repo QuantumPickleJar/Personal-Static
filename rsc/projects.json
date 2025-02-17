@@ -11,7 +11,7 @@
       "Xamarin",
       "Csharp",
       "JSON",
-      "Visual_Studio",
+      "VSCommunity",
       "XML"
     ],
     "mermaid": "",
@@ -26,10 +26,10 @@
     "shortForm": "Integrated the ability to query room numbers and relationally pull up the UUID of the booked student.",
     "description": "Leveraged largely pre-established infrastructure, extended functionality using existing schemas, and migrated the project from dotnet 3.1 to dotnet 6.X.",
     "stack": [
-      "JWT",
+      "jwt",
       "Visual Studio",
       "Docker",
-      ".NET",
+      "NETCore",
       "ReSharper",
       "Postman",
       "DataGrip",
@@ -47,15 +47,14 @@
     "shortForm": "Debugged a service containing multiple APIs with dual-purpose support for two run configurations.",
     "description": "Debugged a service containing multiple APIs, each serving its own purpose, and provided user-friendly dual-purpose support for two run configurations.",
     "stack": [
-      "Docker-compose",
-      "redis",
+      "Redis",
       "Docker",
       "dotNET",
+      "Confluence",
       "Visual Studio",
-      "Visual Studio Code",
+      "VS Code",
       "NodeJS",
-      "MermaidJS",
-      "Confluence"
+      "MermaidJS"
     ],
     "mermaid": "",
     "images": [],
@@ -95,17 +94,19 @@
     "id": "vtm-portfolio",
     "title": "Personal Site",
     "academic": false,
-    "dates": "",
-    "status": "",
+    "dates": "12-18-24 to Present",
+    "status": "In-Progress",
     "link": "https://github.com/QuantumPickleJar/Personal-Static",
-    "shortForm": "",
-    "description": "",
+    "shortForm": "Having a QR Code on your card warrants a website",
+    "description": "A portfolio to link to my resume and provide a more interactive experience for potential employers.  Built using a suite of AI-driven tools, designed around the Jekyll environment that Github Pages supports.",
     "stack": [
-      "Github Pages",
-      "Replit",
-      "Visual Studio",
-      "CSS",
-      "JS"
+      "GitHub",
+      "Copilot",
+      "VSCode",
+      "CSS3",
+      "Javascript",
+      "HTML5",
+      "Webpack"
     ],
     "mermaid": "",
     "images": []
@@ -118,7 +119,14 @@
     "status": "",
     "shortForm": "A single graphic detailing principles, ordered steps, and guidelines for leveraging abstractions at a linguistic level.",
     "description": "Non technical; emphasizes the importance of leveraging abstractions instead of a technical, object-oriented approach.",
-    "stack": [],
+    "stack": [
+      "OpenAI",
+      "Gemini",
+      "Claude",
+      "Tensorflow",
+      "Keras",
+      "Jupyter Notebook"
+    ],
     "mermaid": "",
     "images": []
   },
@@ -134,10 +142,10 @@
       "MAUI",
       "Flutter",
       "Dart",
-      "Visual Studio",
+      "VSCommunity",
       "PostGresSQL",
       "Figma",
-      "CockroachDB",
+      "cockroachdb",
       "DBeaver"
     ],
     "mermaid": "",
@@ -157,28 +165,29 @@
     "stack": [
       "Dart",
       "Flutter",
-      "Visual Studio",
+      "VSCode",
+      "VSCommunity",
       "GitHub",
       "Figma",
       "DBeaver",
-      "CockroachDB"
+      "cockroachdb"
     ],
     "mermaid": "",
     "images": []
   },
   {
-    "id": "fvtc-poitracker",
-    "title": "POITracker (Archived)",
+    "id": "fvtc-poi-tracker",
+    "title": "POITracker",
     "academic": true,
     "dates": "1-12-2019 to 4-30-2019",
-    "status": "",
+    "status": "Archived",
     "shortForm": "Product of a 5-week agile simulation for tracking changes.",
     "description": "Team Foundations for tracking changes.",
     "stack": [
       "Jira",
-      "Windows Forms",
-      "Google Maps API",
-      "Visual Studio",
+      "VSCommunity",
+      "GoogleMaps",
+      "AzureDevops",
       "Azure",
       "Canva"
     ],
@@ -194,10 +203,13 @@
     "shortForm": "Deploying bare-bone temperature units using a microcontroller and ESP-01 to relay readings via Wi-Fi.",
     "description": "Data is visualized using an IFTTT endpoint to collect readings into a spreadsheet.",
     "stack": [
-      "C",
+      "cpp",
       "HTML5",
       "Express",
-      "Websocket"
+      "Websocket",
+      "GitHub",
+      "handlebars",
+      "IFTTT"
     ],
     "mermaid": "",
     "images": []
@@ -211,13 +223,13 @@
     "shortForm": "A site built for a local fashion merchant with features for non-technical users.",
     "description": "Built to allow frequent changes of venues and authentication for the owner to maintain a local store of files on a Replit-hosted server.",
     "stack": [
-      "EJS",
+      "PugJS",
       "Replit",
-      "HTML",
-      "CSS",
-      "JS",
+      "HTML5",
+      "CSS3",
+      "Javascript",
       "DBeaver",
-      "CockroachDB"
+      "cockroachdb"
     ],
     "mermaid": "",
     "images": []
@@ -230,7 +242,7 @@
     "status": "Completed",
     "shortForm": "Experimenting with automated workflows bound to repositories.",
     "description": "Continuous deployment with GitHub repository integration.",
-    "stack": [],
+    "stack": ["tensorflow", "keras", "Jupyter"],
     "mermaid": "",
     "images": []
   },
@@ -245,7 +257,7 @@
     "description": "Investigated the effectiveness of a CNN trained to recognize images using a centralized dataset versus poor handwriting.",
     "stack": [
       "Python",
-      "Jupyter Notebook",
+      "Jupyter",
       "Google CoLab",
       "Tensorflow"
     ],
