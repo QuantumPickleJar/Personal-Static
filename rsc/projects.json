@@ -190,12 +190,12 @@
     "title": "Temperature Tracker",
     "academic": false,
     "dates": "",
-    "status": "",
+    "status": "In-progress",
     "shortForm": "Deploying bare-bone temperature units using a microcontroller and ESP-01 to relay readings via Wi-Fi.",
     "description": "Data is visualized using an IFTTT endpoint to collect readings into a spreadsheet.",
     "stack": [
-      "C++",
-      "HTML",
+      "C",
+      "HTML5",
       "Express",
       "Websocket"
     ],

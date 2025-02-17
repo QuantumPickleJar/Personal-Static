@@ -30,6 +30,13 @@
             "request": "launch",
             "reAttach": true,
             "addonPath": "${workspaceFolder}"
+        },
+        {
+            "name": "Launch SVG Converter",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/launchSVGConverter.js",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
