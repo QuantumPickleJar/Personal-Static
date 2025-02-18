@@ -139,7 +139,7 @@ const server = http.createServer((req, res) => {
                 fs.writeFile(mapFilePath, updatedData, 'utf8', (err) => {
                     if (err) {
                         res.writeHead(500);
-                        res.end('Error writing to stackIconMap.js');
+                        res.end('Error writing to stackSvgMap.js');
                         return;
                     }
                     res.writeHead(200, { 'Content-Type': 'text/html' });

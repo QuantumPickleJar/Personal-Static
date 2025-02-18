@@ -10,6 +10,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
+    publicPath: '/',
     clean: true
   },
   plugins: [
@@ -46,6 +47,7 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     port: 9000,
+    hot: true,
     open: true,
   },
 };

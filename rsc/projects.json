@@ -143,14 +143,21 @@
       "Flutter",
       "Dart",
       "VSCommunity",
-      "PostGresSQL",
+      "Postgres",
       "Figma",
       "cockroachdb",
       "DBeaver"
     ],
     "mermaid": "",
     "images": [
-      "flavor-flav-addrecipe-2.png"
+      "recipes/addrecipe_p1.png",
+      "recipes/addrecipe_p2.png",
+      "recipes/addrecipe_p2noqty.png",
+      "recipes/addrecipe_p3_1.png",
+      "recipes/dietaryrestrictions.png",
+      "recipes/ingredientselector.png",
+      "recipes/test_page.png",
+      "recipes/timepickerdialog.png"
     ]
   },
   {
@@ -232,7 +239,10 @@
       "cockroachdb"
     ],
     "mermaid": "",
-    "images": []
+    "images": [
+      "frugal-fashion-mid-fidelity-mockup.png",
+      "frugal-fashion-mid-fidelity-mockup-alt.png"
+    ]
   },
   {
     "id": "workflow-playground",
@@ -263,5 +273,23 @@
     ],
     "mermaid": "",
     "images": []
+  },
+  {
+    "id": "fwappa",
+    "title": "Flutter UI Mockup",
+    "academic": true,
+    "dates": "",
+    "status": "Complete",
+    "link": "https://github.com/QuantumPickleJar/",
+    "shortForm": "Produce a Dart/Flutter UI mockup for a flight-tracking app.",
+    "description": "My job was to produce a Dart/Flutter UI mockup for a flight-tracking app. The app was to be used by a pilots to track which airports they've visited with a plane",
+    "stack": [
+      "Python",
+      "Jupyter",
+      "Google CoLab",
+      "Tensorflow"
+    ],
+    "mermaid": "",
+    "images": ["lab3-select-airport-ui.png"]
   }
 ]
