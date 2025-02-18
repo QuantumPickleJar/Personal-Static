@@ -132,26 +132,23 @@ footer {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-top { flex: 0 0 40%; } 
-.modal-bottom { flex: 1; }
-
 
 /* The actual white content box */
 .modal-content {
   background-color: #fff;
   margin: 2% auto;
   width: 60%;           /* Adjust as needed */
-  max-width: 800px;     /* Example max width */
-  max-height: 80vh;     /* Use max-height instead of fixed height */
+  max-width: 800px;     /// Example max width
+  max-height: 90vh;     /* Use max-height instead of fixed height */
   border-radius: 6px;
-  position: relative;
+  /* position: relative; */
   display: flex;        /* We'll do vertical flex layout in the content */
   flex-direction: column;
 }
 
 /* Top container */
 .modal-top {
-  flex: none;
+  flex: 0 0 auto; 
   padding: 10px;
   border-bottom: 1px solid #ddd;
   display: flex;
@@ -181,6 +178,7 @@ footer {
   border-left: 1px solid #ddd;
   padding-left: 10px;
   overflow-y: auto;     /* If stack is tall, it scrolls */
+  max-height: 100%;
 }
 
 /* Bottom container */
@@ -189,17 +187,6 @@ footer {
   padding: 15px;
   overflow-y: auto;   //Scroll if content is tall
 }
-
-
-.modal-top {
-  flex: 0 0 40%;   /* forced 40% height of .modal-body */
-}
-
-.modal-bottom {
-  flex: 1;         /* the remaining 60% of .modal-body */
-  overflow-y: auto; /* if you only want bottom to scroll */
-}
-
 
 .modal-image {
   max-width: 100px;
@@ -218,37 +205,57 @@ footer {
 
 /* Limit the carousel and its items to the container height */
 .modal-images .carousel {
-  height: 100%;
-  max-height: 100%;
   width: 100%;
+  max-height: 300px;
 }
-
 .modal-images .carousel-item {
-  height: 100%;
-  max-height: 100%;
+  height: 400px;
 }
 
-.modal-images .carousel-item img {
-  object-fit: contain;
-  height: 100%;
+/* Carousel must stay inside its bounds */
+#projectImageCarousel {
+  position: relative; // Ensures arrows are positioned relative to this container
   width: 100%;
+  height: 375px;
 }
+
+
+
+.carousel-item img {
+  object-fit: contain;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  top: 50%; /* 50% of 375px = 187.5px from the top */
+  transform: translateY(-50%);
+}
+
 
 /* Override Bootstrap’s default carousel arrow icons to use black arrows */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   width: 30px;
   height: 30px;
-  background-color: transparent;
-  /* Use an inline SVG with black fill */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 8 8'%3E%3Cpath d='M4.146 0.146a.5.5 0 0 1 .708 0L7.207 2.5a.5.5 0 1 1-.707.707L4.5 1.207V7.5a.5.5 0 0 1-1 0V1.207L1.5 3.207a.5.5 0 1 1-.707-.707L4.146.146z'/%3E%3C/svg%3E");
+  background-color: rgba(0, 0, 0, 0.6); /* Make arrows visible */
   background-size: 100%;
   background-repeat: no-repeat;
+  opacity: 0.8;
+  border-radius: 50%;
 }
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 1;
+}
+
 
 .modal-images .carousel {
   width: 100%;
-  max-height: 400px; /* Adjust this value as needed */
+  max-height: 300px; 
 }
 
 .modal-images .carousel-item {
@@ -266,12 +273,6 @@ footer {
   height: 32px;
   margin: 4px;
   object-fit: contain;
-}
-
-.modal-images img {
-  max-width: 150px;
-  max-height: 100px;
-  object-fit: cover;
 }
 
 /* For vertical stack icons */

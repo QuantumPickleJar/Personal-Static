@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <title>Vincent's GitHub Page</title>
   <!-- Updated CSS path -->
-  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -41,8 +41,6 @@
     </div>
   </div>
 
-  <div id="paginationContainer"></div>
-
   <!-- Footer partial -->
   <div id="footerContainer"></div>
 
@@ -59,7 +57,21 @@
       <div class="modal-top-left">
         <h4 id="modalTitle"></h4>
         <!-- Main image area (carousel or just a grid) -->
-        <div id="modalImages" class="modal-images"></div>
+        <div id="modalImages" class="modal-images">
+          <div id="projectImageCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <!-- Images will be inserted here by JavaScript -->
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#projectImageCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#projectImageCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Right 1/3: Stack icons -->

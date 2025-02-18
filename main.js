@@ -1,3 +1,4 @@
+import { projectsPerPage } from './perPageSettings.js';
 import { loadProjects, closeModal } from './projects.js';
 
 /**
@@ -18,6 +19,9 @@ function loadPartial(file, elementId) {
       console.error('Error loading partial:', error);
     });
 }
+
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load partials
@@ -41,4 +45,36 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Only render the control on projects.html
+if (window.location.pathname.endsWith('projects.html')) {
+  // Assume the sidebar is rendered (from sidebar.html)
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    const perPageContainer = document.createElement('div');
+    perPageContainer.id = 'perPageSettings';
+    perPageContainer.innerHTML = `
+      <label for="perPageSelect">Projects per page: </label>
+      <select id="perPageSelect">
+        <option value="6">6</option>
+        <option value="9">9</option>
+        <option value="12">12</option>
+      </select>
+    `;
+    // Append the control at the end of the sidebar
+    sidebar.appendChild(perPageContainer);
+
+    // set initial select value
+    document.getElementById('perPageSelect').value = projectsPerPage;
+
+    // Add event listener: update pagination when the value changes
+    document.getElementById('perPageSelect').addEventListener('change', (e) => {
+      const newPerPage = parseInt(e.target.value, 10);
+      updateItemsPerPage(newPerPage);
+    });
+  }
+}
+
+// For example, start the pagination with the imported default
+initPagination(allProjects, projectsPerPage);
 });

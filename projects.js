@@ -1,3 +1,4 @@
+import * as bootstrap from 'bootstrap'; // Added to import Bootstrap module
 import { initPagination } from './pagination.js';
 import { getPlaceholderForStack,  } from './rsc/js/placeholderBuilder.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
@@ -171,104 +172,15 @@ function expandStack(container, stackArray, max, linkElement) {
 
 // TODO: collapse Stack
 
-/** Open modal */
-// export function openProjectModal(projectId) {
-//   const project = allProjects.find(p => p.id === projectId);
-//   if (!project) return;
-// // Get references to the modal and elements
-//   const modal = document.getElementById('projectModal');
-//   const modalTitle = document.getElementById('modalTitle');
-//   const modalDesc = document.getElementById('modalDescription');
-//   const modalStack = document.getElementById('modalStack');
-//   const modalImages = document.getElementById('modalImages');
-
-//   modalStack.innerHTML = '';
-
-//   // For each tech in the project’s stack, create an icon `<img>`
-//   project.stack.forEach(tech => {
-//     const iconEl = renderOneStackIcon(tech);
-//     modalStack.appendChild(iconEl);
-//   });
-
-//   // Clear any old data
-//   modalTitle.innerText = '';
-//   modalDesc.innerText = '';
-//   modalStack.innerHTML = '';
-//   modalImages.innerHTML = '';
-
-//   const fullStackContainer = document.createElement('div');
-//   fullStackContainer.classList.add('stack-icons');
-//   project.stack.forEach(tech => {
-//     const techSpan = document.createElement('span');
-//     techSpan.classList.add('stack-icon');
-//     techSpan.textContent = tech;
-//     fullStackContainer.appendChild(techSpan);
-//   });
-
-//   const previewContainer = document.createElement('div');
-//   previewContainer.style.marginTop = '10px';
-//   if (project.previewImages && project.previewImages.length > 0) {
-//     project.previewImages.forEach(imgSrc => {
-//       const img = document.createElement('img');
-//       img.src = imgSrc;
-//       img.alt = project.title;
-//       img.style.width = '100%';
-//       img.style.marginBottom = '10px';
-//       previewContainer.appendChild(img);
-//     });
-//   }
-
-//   // Populate text fields
-//   modalTitle.innerText = project.title;
-//   modalDesc.innerText = project.description || 'No description available';
-
-//   // Display the stack items or icons
-//   if (project.stack && project.stack.length > 0) {
-//     project.stack.forEach(tech => {
-//       const techSpan = document.createElement('span');
-//       techSpan.classList.add('stack-icon');
-//       techSpan.textContent = tech;
-//       modalStack.appendChild(techSpan);
-
-//       // OR if using `getIcon` from tech-stack-icons:
-//       getIcon(tech).then(iconUrl => {
-//         const iconImg = document.createElement('img');
-//         iconImg.src = iconUrl;
-//         iconImg.alt = tech;
-//         iconImg.classList.add('modal-image');
-//         modalStack.appendChild(iconImg);
-//         }).catch(err => {
-//           console.warn('Failed to get icon for', tech, err);
-//           });
-//           /*
-//       */
-//     });
-//   }
- 
-
-// // If images is empty, show placeholder
-//   if (!project.images || project.images.length === 0) {
-//     const placeholderSrc = getPlaceholderForStack(project.stack);
-//     const imgElement = document.createElement('img');
-//     imgElement.src = placeholderSrc;
-//     imgElement.classList.add('modal-image');
-//     modalImages.appendChild(imgElement);
-//   } else {
-//     // Show all images
-//     project.images.forEach(imgSrc => {
-//       const imgElement = document.createElement('img');
-//       imgElement.src = imgSrc;
-//       imgElement.classList.add('modal-image');
-//       modalImages.appendChild(imgElement);
-//     });
-//   } 
-
-//   modal.style.display = 'block';
-// }
 
 export function openProjectModal(projectId) {
   const project = allProjects.find(p => p.id === projectId);
-  if (!project) return;
+  console.log('Opening modal for project:', project); // Debug log
+
+  if (!project) {
+    console.error('Project not found:', projectId);
+    return;
+  }
 
   // Show the modal
   const modal = document.getElementById('projectModal');
@@ -278,28 +190,89 @@ export function openProjectModal(projectId) {
   const modalTitle = document.getElementById('modalTitle');
   modalTitle.textContent = project.title;
 
-  // Images
+  // Images / Carousel rendering
   const modalImages = document.getElementById('modalImages');
-  modalImages.innerHTML = '';
+  modalImages.innerHTML = ''; // Clear previous content
+
   if (project.images && project.images.length > 0) {
-    project.images.forEach(imgSrc => {
+    // Create carousel container without auto-ride attribute
+    const carousel = document.createElement('div');
+    carousel.id = 'projectImageCarousel';
+    carousel.className = 'carousel slide';
+
+    const carouselInner = document.createElement('div');
+    carouselInner.className = 'carousel-inner';
+
+    project.images.forEach((imgSrc, index) => {
+      const carouselItem = document.createElement('div');
+      carouselItem.classList.add('carousel-item');
+      if (index === 0) carouselItem.classList.add('active');
+
       const img = document.createElement('img');
-      img.src = imgSrc;
-      modalImages.appendChild(img);
+      const finalSrc = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
+        ? imgSrc 
+        : imgSrc.includes('/')
+          ? `rsc/images/${imgSrc}`
+          : `rsc/images/recipes/${imgSrc}`; // Default to recipes subfolder
+
+      console.log('Final image path:', finalSrc);
+      img.src = finalSrc;
+      img.classList.add('d-block', 'w-100');
+      img.alt = `Project image ${index + 1}`;
+
+      carouselItem.appendChild(img);
+      carouselInner.appendChild(carouselItem);
     });
+
+    carousel.appendChild(carouselInner);
+
+    // Create carousel controls
+    const btnPrev = document.createElement('button');
+    btnPrev.className = 'carousel-control-prev';
+    btnPrev.setAttribute('type', 'button');
+    btnPrev.setAttribute('data-bs-target', '#projectImageCarousel');
+    btnPrev.setAttribute('data-bs-slide', 'prev');
+    btnPrev.innerHTML = `
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    `;
+
+    const btnNext = document.createElement('button');
+    btnNext.className = 'carousel-control-next';
+    btnNext.setAttribute('type', 'button');
+    btnNext.setAttribute('data-bs-target', '#projectImageCarousel');
+    btnNext.setAttribute('data-bs-slide', 'next');
+    btnNext.innerHTML = `
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    `;
+
+    carousel.appendChild(btnPrev);
+    carousel.appendChild(btnNext);
+    modalImages.appendChild(carousel);
+
+    // Optionally fix the height so description is visible
+    carousel.style.maxHeight = '375px';
+
+    // Initialize Bootstrap carousel
+    new bootstrap.Carousel(carousel, { interval: false, wrap: true });
   } else {
-    // fallback placeholder
-    const placeholderSrc = getPlaceholderForStack(project.stack);
-    const imgElement = document.createElement('img');
-    imgElement.src = placeholderSrc;
-    modalImages.appendChild(imgElement);
+    // No images: render fallback placeholder without carousel
+    const fallbackDiv = document.createElement('div');
+    // Optionally, set a max height so description is immediately visible
+    fallbackDiv.style.maxHeight = '200px'; 
+    const img = document.createElement('img');
+    img.src = getPlaceholderForStack(project.stack);
+    img.className = 'd-block w-100';
+    img.alt = 'Project placeholder';
+    fallbackDiv.appendChild(img);
+    modalImages.appendChild(fallbackDiv);
   }
 
   // Stack
   const modalStack = document.getElementById('modalStack');
   modalStack.innerHTML = '';
   project.stack.forEach(tech => {
-    // Possibly use your dynamic icon loader:
     const iconEl = renderOneStackIcon(tech);
     modalStack.appendChild(iconEl);
   });
