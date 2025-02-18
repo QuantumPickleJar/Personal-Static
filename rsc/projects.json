@@ -27,7 +27,7 @@
     "description": "Leveraged largely pre-established infrastructure, extended functionality using existing schemas, and migrated the project from dotnet 3.1 to dotnet 6.X.",
     "stack": [
       "jwt",
-      "Visual Studio",
+      "VSCommunity",
       "Docker",
       "NETCore",
       "ReSharper",
@@ -51,10 +51,10 @@
       "Docker",
       "dotNET",
       "Confluence",
-      "Visual Studio",
-      "VS Code",
-      "NodeJS",
-      "MermaidJS"
+      "VSCommunity",
+      "VSCode",
+      "NodeJs",
+      "MermaidJs"
     ],
     "mermaid": "",
     "images": [],
@@ -125,7 +125,7 @@
       "Claude",
       "Tensorflow",
       "Keras",
-      "Jupyter Notebook"
+      "Jupyter"
     ],
     "mermaid": "",
     "images": []
@@ -150,14 +150,14 @@
     ],
     "mermaid": "",
     "images": [
-      "recipes/addrecipe_p1.png",
-      "recipes/addrecipe_p2.png",
-      "recipes/addrecipe_p2noqty.png",
-      "recipes/addrecipe_p3_1.png",
-      "recipes/dietaryrestrictions.png",
-      "recipes/ingredientselector.png",
-      "recipes/test_page.png",
-      "recipes/timepickerdialog.png"
+      "flavorflav/addrecipe_p1.png",
+      "flavorflav/addrecipe_p2.png",
+      "flavorflav/addrecipe_p2noqty.png",
+      "flavorflav/addrecipe_p3_1.png",
+      "flavorflav/dietaryrestrictions.png",
+      "flavorflav/ingredientselector.png",
+      "flavorflav/test_page.png",
+      "flavorflav/timepickerdialog.png"
     ]
   },
   {
@@ -194,9 +194,9 @@
       "Jira",
       "VSCommunity",
       "GoogleMaps",
-      "AzureDevops",
-      "Azure",
-      "Canva"
+      "AzureDevOps",
+      "Canva",
+      "Azure"
     ],
     "mermaid": "",
     "images": []
@@ -231,7 +231,6 @@
     "description": "Built to allow frequent changes of venues and authentication for the owner to maintain a local store of files on a Replit-hosted server.",
     "stack": [
       "PugJS",
-      "Replit",
       "HTML5",
       "CSS3",
       "Javascript",
@@ -240,8 +239,8 @@
     ],
     "mermaid": "",
     "images": [
-      "frugal-fashion-mid-fidelity-mockup.png",
-      "frugal-fashion-mid-fidelity-mockup-alt.png"
+      "frugal-fashion/frugal-fashion-mid-fidelity-mockup.png",
+      "frugal-fashion/frugal-fashion-mid-fidelity-mockup-alt.png"
     ]
   },
   {
@@ -284,12 +283,11 @@
     "shortForm": "Produce a Dart/Flutter UI mockup for a flight-tracking app.",
     "description": "My job was to produce a Dart/Flutter UI mockup for a flight-tracking app. The app was to be used by a pilots to track which airports they've visited with a plane",
     "stack": [
-      "Python",
-      "Jupyter",
-      "Google CoLab",
-      "Tensorflow"
+      "Figma",
+      "Canva",
+      "Teams"
     ],
     "mermaid": "",
-    "images": ["lab3-select-airport-ui.png"]
+    "images": ["fwappa/lab3-select-airport-ui.png"]
   }
 ]
