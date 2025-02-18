@@ -208,19 +208,26 @@ export function openProjectModal(projectId) {
       carouselItem.classList.add('carousel-item');
       if (index === 0) carouselItem.classList.add('active');
 
+      
       const img = document.createElement('img');
       const finalSrc = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
-        ? imgSrc 
-        : imgSrc.includes('/')
-          ? `rsc/images/${imgSrc}`
-          : `rsc/images/recipes/${imgSrc}`; // Default to recipes subfolder
+      ? imgSrc 
+      : imgSrc.includes('/')
+      ? `rsc/images/${imgSrc}`
+      : `rsc/images/recipes/${imgSrc}`; // Default to recipes subfolder
+      
+      // Instead of just <img ...>, do something like:
+      const anchor = document.createElement('a');
+      anchor.href = finalSrc;                // large/full-size image URL
+      anchor.setAttribute('data-lightbox', 'carousel-images'); 
+      anchor.appendChild(img);
+      carouselItem.appendChild(anchor);
 
       console.log('Final image path:', finalSrc);
       img.src = finalSrc;
       img.classList.add('d-block', 'w-100');
       img.alt = `Project image ${index + 1}`;
 
-      carouselItem.appendChild(img);
       carouselInner.appendChild(carouselItem);
     });
 
