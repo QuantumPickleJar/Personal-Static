@@ -37,6 +37,13 @@
             "request": "launch",
             "program": "${workspaceFolder}/launchSVGConverter.js",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Node: Prepare Image Paths",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/buildImageDir.js",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
