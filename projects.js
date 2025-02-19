@@ -3,6 +3,8 @@ import { initPagination } from './pagination.js';
 import { getPlaceholderForStack,  } from './rsc/js/placeholderBuilder.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { getIcon, renderOneStackIcon } from './rsc/js/stackIconLoader.js';
+import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+
 export let allProjects = []; // stored projects go here
 
 /** Fetch projects.json and render gallery */
@@ -13,8 +15,20 @@ export function loadProjects() {
       allProjects = data;
       console.log('Projects loaded:', allProjects);
       initPagination(allProjects, 6);
-    })
-    .catch(err => console.error('Failed to load projects:', err));
+    // Set up search input listener
+    const searchInput = document.querySelector('#searchBar');
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        const term = searchInput.value.trim();
+        // Filter
+        const filtered = filterProjectsBySearchTerm(allProjects, term);
+        // Re-render or re-paginate with the filtered array
+        // For a simple re-render:
+        renderProjectsGallery(filtered);
+      });
+    }
+  })
+  .catch(err => console.error('Failed to load projects:', err));
 }
 
 

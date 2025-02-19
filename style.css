@@ -70,6 +70,7 @@ footer {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  margin: 0.75rem;
 }
 
 .project-card {
@@ -109,6 +110,15 @@ footer {
   border-radius: 4px;
   font-size: 0.8rem;
 }
+
+.no-images-text {
+  display: block;      /* So it sits on its own line */
+  margin-top: 0.5rem;  /* Spacing above the text */
+  font-size: 0.9rem;   /* Slightly smaller text if desired */
+  color: #666;         /* Subtle color */
+  text-align: center;  /* Center it horizontally */
+}
+
 
 .more-link {
   color: blue;
