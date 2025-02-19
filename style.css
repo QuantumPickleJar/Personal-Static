@@ -327,16 +327,29 @@ footer {
 }
 
 /* Academic Label styling */
-.academic-label {
+.academic-label.academic, .academic-label.personal {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: red;
+  background: red; 
   color: white;
   padding: 2px 6px;
   font-size: 0.7rem;
   border-radius: 4px;
 }
+
+
+.academic-label.academic {
+  background-color: yellow;
+  color: black;
+}
+
+.academic-label.personal {
+  background-color: cornflowerblue;
+  color: white;
+}
+
+
 
 #paginationContainer {
   flex: 1;

@@ -34,7 +34,14 @@ export function renderProjectsGalleryOld(projects) {
     // Academic label (top right corner)
     const academicLabel = document.createElement('span');
     academicLabel.classList.add('academic-label');
-    academicLabel.textContent = project.academic ? "Academic" : "Personal";
+
+    if (project.academic) {
+      academicLabel.classList.add('label-academic');
+      academicLabel.textContent = 'Academic';
+    } else {
+      academicLabel.classList.add('label-personal');
+      academicLabel.textContent = 'Personal';
+    }
     card.appendChild(academicLabel);
 
     // Thumbnail
@@ -102,10 +109,18 @@ export function renderProjectsGallery(projects) {
     card.style.position = 'relative';
 
     // Academic label (top right corner)
-    const academicLabel = document.createElement('span');
-    academicLabel.classList.add('academic-label');
-    academicLabel.textContent = project.academic ? "Academic" : "Personal";
-    card.appendChild(academicLabel);
+// Example snippet in your renderProjectsGallery:
+const academicLabel = document.createElement('span');
+academicLabel.classList.add('academic-label');
+academicLabel.textContent = project.academic ? "Academic" : "Personal";
+
+if (project.academic) {
+  academicLabel.classList.add('academic');
+} else {
+  academicLabel.classList.add('personal');
+}
+card.appendChild(academicLabel);
+
 
     // show the Title here
     const titleImg = document.createElement('div');

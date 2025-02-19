@@ -20,8 +20,28 @@ function loadPartial(file, elementId) {
     });
 }
 
-
-
+function renderProjectCard(project) {
+  const card = document.createElement('div');
+  card.className = 'project-card';
+  // Set tooltip for the expanded text on mouseover
+  card.title = project.description || '';
+  
+  card.innerHTML = `
+    <!-- Card header: Title and academic info -->
+    <div class="card-header">
+      ${project.title} ${project.academic ? '(Academic)' : ''}
+    </div>
+    <!-- Card body: show shortForm instead of the duplicated Title -->
+    <div class="card-body">
+      ${project.shortForm}
+    </div>
+    <!-- Card footer: tech stack -->
+    <div class="card-footer">
+      ${project.stack.join(', ')}
+    </div>
+  `;
+  return card;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // Load partials
