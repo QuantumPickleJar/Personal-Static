@@ -57,7 +57,7 @@ footer {
   flex: 9
 }
 
-/* MainContainrer */
+/* MainContainer */
 
 #mainContainer {
   height: 100%;
@@ -152,7 +152,7 @@ footer {
   padding: 10px;
   border-bottom: 1px solid #ddd;
   display: flex;
-  gap: 10px;
+  max-height: 375px;
 }
 
 /* Left 2/3 column inside top */
@@ -160,7 +160,7 @@ footer {
   flex: 2;             /* 2/3 ratio */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  max-height: 375px;
   overflow: hidden;
 }
 
@@ -178,7 +178,21 @@ footer {
   border-left: 1px solid #ddd;
   padding-left: 10px;
   overflow-y: auto;     /* If stack is tall, it scrolls */
-  max-height: 100%;
+  max-height: 375px;
+  height: 100%;
+}
+
+.modal-top-right-upper {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.modal-top-right-lower {
+  flex: 0 0 auto;
+  border-top: 1px solid #ddd;
+  padding: 8px 4px 0;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 /* Bottom container */
@@ -259,7 +273,7 @@ footer {
 }
 
 .modal-images .carousel-item {
-  height: 400px; /* Should match max-height above */
+  height: 300px; /* Should match max-height above */
 }
 
 .modal-images .carousel-item img {
@@ -283,7 +297,7 @@ footer {
 }
 
 #modalStack {
-  max-height: 200px;
+  /* max-height: 200px; */
   overflow-y: auto;
 }
 
@@ -303,6 +317,14 @@ footer {
   cursor: pointer;
 }
 
+/* Center the fallback container and its image */
+/* Styles for fallback placeholders */
+.fallback-placeholder {
+  display: block;
+  margin: 0 auto;            /* Centers horizontally in its container */
+  transform: scale(2.5);       /* Makes the image 3x larger */
+  transform-origin: 50% 0%;  /* Ensures the scaling centers from the middle */
+}
 
 /* Academic Label styling */
 .academic-label {

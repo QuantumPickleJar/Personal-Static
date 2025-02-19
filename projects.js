@@ -89,7 +89,6 @@ export function renderProjectsGalleryOld(projects) {
     gallery.appendChild(card);
   });
 }
-
 /** Render the gallery with a given array of projects */
 export function renderProjectsGallery(projects) {
   console.log('Rendering projects:', projects);
@@ -108,16 +107,16 @@ export function renderProjectsGallery(projects) {
     academicLabel.textContent = project.academic ? "Academic" : "Personal";
     card.appendChild(academicLabel);
 
-    // Thumbnail
-    const thumb = document.createElement('img');
-    thumb.classList.add('project-thumbnail');
-    thumb.src = project.thumbnail || 'rsc/images/placeholder.jpg';
-    thumb.alt = project.title;
+    // show the Title here
+    const titleImg = document.createElement('div');
+    titleImg.classList.add('project-title');
+    titleImg.textContent = project.title;
+    card.appendChild(titleImg);
 
-    // Title
-    const title = document.createElement('div');
-    title.classList.add('project-title');
-    title.textContent = project.title;
+    const shortForm = document.createElement('div');
+    shortForm.classList.add('project-shortForm');
+    shortForm.textContent = project.shortForm;
+    card.appendChild(shortForm);
 
     // Stack Icons
     const stackContainer = document.createElement('div');
@@ -145,8 +144,6 @@ export function renderProjectsGallery(projects) {
       stackContainer.appendChild(moreLink);
     }
 
-    card.appendChild(thumb);
-    card.appendChild(title);
     card.appendChild(stackContainer);
 
     card.addEventListener('click', () => {
@@ -266,14 +263,16 @@ export function openProjectModal(projectId) {
   } else {
     // No images: render fallback placeholder without carousel
     const fallbackDiv = document.createElement('div');
-    // Optionally, set a max height so description is immediately visible
-    fallbackDiv.style.maxHeight = '200px'; 
+    fallbackDiv.classList.add('fallback-placeholder'); // Use the CSS class for styling
+    fallbackDiv.style.maxHeight = '400px';
     const img = document.createElement('img');
-    img.src = getPlaceholderForStack(project.stack);
+    img.src = getPlaceholderForStack(project);
     img.className = 'd-block w-100';
     img.alt = 'Project placeholder';
+
     fallbackDiv.appendChild(img);
     modalImages.appendChild(fallbackDiv);
+
   }
 
   // Stack

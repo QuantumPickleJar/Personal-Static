@@ -35,6 +35,7 @@
             <button onClick="filterStatus">STATUS</button>
           </div>
         </div>
+
         <!-- Project Gallery -->
         <div id="projectsGallery" class="projects-gallery"></div>
       </main>
@@ -76,10 +77,16 @@
         </div>
       </div>
 
-      <!-- Right 1/3: Stack icons -->
+      <!-- Right 1/3: Split into two vertical sub-sections -->
       <div class="modal-top-right">
-        <h5>Tech Stack</h5>
-        <div id="modalStack" class="vertical-stack"></div>
+        <div class="modal-top-right-upper">
+          <h5>Tech Stack</h5>
+          <div id="modalStack" class="vertical-stack"></div>
+        </div>
+        <div class="modal-top-right-lower">
+          <p id="projectStatus"></p>
+          <p id="projectType"></p>
+        </div>
       </div>
     </div>
 
@@ -87,7 +94,6 @@
     <div class="modal-bottom">
       <div id="modalMetadata">
         <!-- Project status, date, description -->
-        <p id="projectStatus"></p>
         <p id="projectDates"></p>
         <p id="modalDescription"></p>
       </div>

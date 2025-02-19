@@ -1,7 +1,8 @@
+import { projectsPerPage } from './perPageSettings.js';
 import { renderProjectsGallery, allProjects } from './projects.js';
 
 let currentPage = 1;
-let itemsPerPage = 6; // adjust as needed
+let itemsPerPage = projectsPerPage;
 let totalPages = 1;
 
 /** Initialize pagination using the provided projects array and items per page */
@@ -68,4 +69,12 @@ function renderPaginationControls() {
   paginationWrapper.appendChild(nextButton);
 
   container.appendChild(paginationWrapper);
+}
+
+
+export function updateItemsPerPage(newPerPage) {
+  itemsPerPage = newPerPage;
+  totalPages = Math.ceil(allProjects.length / itemsPerPage);
+  renderPage(1);
+  renderPaginationControls();
 }
