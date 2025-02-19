@@ -9,7 +9,7 @@
 ## Un-added projects:
 - steering wheel
 - 3D Printer
-
+- Airport App (FWAPPA?)
 ## Profile
 - employment
 - picture
@@ -57,9 +57,9 @@
 
 ##### Modal
 
-- list of stack images should be **vertical**
 In the case that there are no images, we'll build one based off of the tech stack.  E.g:
 bubbles containing the small tech stack image should be used here
+- list of stack images should be **vertical**
 Example Shapes:
 if **two** : One at N and one at S
 if **four**: one at each Cardinal Direction
@@ -106,3 +106,7 @@ Expected files:
 - Pending
   - Implement imageLoader.js & stackStylesheet.css
 
+
+----
+- search bar on projects page
+- center the text 
