@@ -1,9 +1,10 @@
 import * as bootstrap from 'bootstrap'; // Added to import Bootstrap module
 import { initPagination } from './pagination.js';
 import { getPlaceholderForStack,  } from './rsc/js/placeholderBuilder.js';
-import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
+import { filterProjByTitle, filterByDate, createTruncatedSpan } from './gallery-sorting.js';
 import { getIcon, renderOneStackIcon } from './rsc/js/stackIconLoader.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+import { projectsPerPage } from './perPageSettings.js';
 
 export let allProjects = []; // stored projects go here
 
@@ -14,7 +15,7 @@ export function loadProjects() {
     .then(data => {
       allProjects = data;
       console.log('Projects loaded:', allProjects);
-      initPagination(allProjects, 6);
+      initPagination(allProjects, projectsPerPage);
     // Set up search input listener
     const searchInput = document.querySelector('#searchBar');
     if (searchInput) {
@@ -44,7 +45,16 @@ export function renderProjectsGalleryOld(projects) {
     card.classList.add('project-card');
     card.dataset.projectId = project.id;
     card.style.position = 'relative';
+    
+    // Date label (top left corner)
+    const dateLabel = document.createElement('span');
+    dateLabel.classList.add('date-label');
+    
+    // parse the datetime from the `dates` parameter, which will need a helper function
+    dateLabel.textContent = project.dates;    // for now, this will suffice
 
+    card.appendChild(dateLabel);
+    
     // Academic label (top right corner)
     const academicLabel = document.createElement('span');
     academicLabel.classList.add('academic-label');
@@ -57,6 +67,7 @@ export function renderProjectsGalleryOld(projects) {
       academicLabel.textContent = 'Personal';
     }
     card.appendChild(academicLabel);
+
 
     // Thumbnail
     const thumb = document.createElement('img');
@@ -122,35 +133,47 @@ export function renderProjectsGallery(projects) {
     card.dataset.projectId = project.id;
     card.style.position = 'relative';
 
-    // Academic label (top right corner)
-// Example snippet in your renderProjectsGallery:
-const academicLabel = document.createElement('span');
-academicLabel.classList.add('academic-label');
-academicLabel.textContent = project.academic ? "Academic" : "Personal";
+    // Thumbnail
+    const thumb = document.createElement('img');
+    thumb.classList.add('project-thumbnail');
+    thumb.src = project.thumbnail || 'images/placeholder.jpg';
+    thumb.alt = project.title;
+    card.appendChild(thumb);
 
-if (project.academic) {
-  academicLabel.classList.add('academic');
-} else {
-  academicLabel.classList.add('personal');
-}
-card.appendChild(academicLabel);
+    // Academic label
+    const academicLabel = document.createElement('span');
+    academicLabel.classList.add('academic-label');
+    academicLabel.textContent = project.academic ? "Academic" : "Personal";
+    if (project.academic) {
+      academicLabel.classList.add('academic');
+    } else {
+      academicLabel.classList.add('personal');
+    }
+    card.appendChild(academicLabel);
 
+    // If multiple images, show an icon
+    if (project.images && project.images.length > 1) {
+      const imageCountIcon = document.createElement('div');
+      imageCountIcon.classList.add('image-count-icon');
+      imageCountIcon.innerHTML = `<span class="icon">&#128247;</span><span class="count">${project.images.length}</span>`;
+      card.appendChild(imageCountIcon);
+    }
 
-    // show the Title here
-    const titleImg = document.createElement('div');
-    titleImg.classList.add('project-title');
-    titleImg.textContent = project.title;
-    card.appendChild(titleImg);
+    // Title
+    const titleDiv = document.createElement('div');
+    titleDiv.classList.add('project-title');
+    titleDiv.textContent = project.title;
+    card.appendChild(titleDiv);
 
-    const shortForm = document.createElement('div');
-    shortForm.classList.add('project-shortForm');
-    shortForm.textContent = project.shortForm;
-    card.appendChild(shortForm);
+    // Use createTruncatedSpan to show shortForm (or fallback to description) in a tooltip if > 100 chars
+    const shortOrDesc = project.shortForm || project.description || '';
+    const truncatedSpan = createTruncatedSpan(shortOrDesc, 100);
+    truncatedSpan.classList.add('short-form-truncated'); 
+    card.appendChild(truncatedSpan);
 
     // Stack Icons
     const stackContainer = document.createElement('div');
     stackContainer.classList.add('stack-icons');
-
     const MAX_VISIBLE_STACK = 3;
     const totalStack = project.stack.length;
 
@@ -161,7 +184,7 @@ card.appendChild(academicLabel);
       stackContainer.appendChild(techSpan);
     });
 
-    // "+N more" link if needed
+    // +N more if needed
     if (totalStack > MAX_VISIBLE_STACK) {
       const moreLink = document.createElement('span');
       moreLink.classList.add('more-link');
@@ -172,9 +195,9 @@ card.appendChild(academicLabel);
       });
       stackContainer.appendChild(moreLink);
     }
-
     card.appendChild(stackContainer);
 
+    // Click => open modal
     card.addEventListener('click', () => {
       openProjectModal(project.id);
     });
@@ -182,6 +205,7 @@ card.appendChild(academicLabel);
     gallery.appendChild(card);
   });
 }
+
 
 /** Expand stack icons */
 function expandStack(container, stackArray, max, linkElement) {

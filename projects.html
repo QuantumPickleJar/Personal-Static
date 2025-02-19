@@ -20,22 +20,30 @@
     <!-- Sidebar partial -->
     <div id="sidebarContainer"></div>
     
+
+  
+
     <!-- Main Container -->
     <div id="mainContainer">
       <main id="mainContent">
         <!-- Advanced Search Container: search bar and dropdown adjacent -->
-        <div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3">
-          <div style="max-width: 300px;">
-            <label for="searchBar" class="visually-hidden">Search Projects:</label>
-            <input type="text" id="searchBar" placeholder="Search Projects..." class="form-control">
-          </div>
-          <div style="max-width: 200px;">
-            <select id="filterDropdown" class="form-select">
-              <option value="">Sort Projects...</option>
-              <option value="title">Filter by Title</option>
-              <option value="date">Filter by Date</option>
-              <option value="status">Filter by Status</option>
-            </select>
+        <div class="how-to">
+          <p>Below are projects that have enough of a footprint to warrant<br/>
+            listing here.
+          </p>
+          <div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3">
+            <div>
+              <label for="searchBar" class="visually-hidden">Search Projects:</label>
+              <input type="text" id="searchBar" placeholder="Search Projects..." class="form-control">
+            </div>
+            <div style="max-width: 200px;">
+              <select id="filterDropdown" class="form-select">
+                <option value="">Sort Projects...</option>
+                <option value="title">Filter by Title</option>
+                <option value="date">Filter by Date</option>
+                <option value="status">Filter by Status</option>
+              </select>
+            </div>
           </div>
         </div>
         
@@ -47,6 +55,7 @@
       <div id="paginationContainer"></div>
     </div>
   </div>
+
 
   <!-- Footer partial -->
   <div id="footerContainer"></div>
