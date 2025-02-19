@@ -1,5 +1,8 @@
 import { projectsPerPage } from './perPageSettings.js';
-import { loadProjects, closeModal } from './projects.js';
+import { closeModal, loadProjects } from './projects.js';
+import { initPagination } from './pagination.js';
+import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
+import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 
 /**
  * Load partial files into the main page
@@ -43,6 +46,18 @@ function renderProjectCard(project) {
   return card;
 }
 
+async function init() {
+  const projects = await loadProjects();
+  console.log('Projects loaded:', projects);
+  
+  // If a search term is provided by the UI, apply the filter:
+  const searchTerm = document.querySelector('#searchInput')?.value || '';
+  const filteredProjects = filterProjectsBySearchTerm(projects, searchTerm);
+  console.log('Filtered Projects:', filteredProjects);
+  
+  // ...existing code to render projects...
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Load partials
   loadPartial('partials/header.html', 'headerContainer');
@@ -52,7 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check if the current page is projects.html
   if (window.location.pathname.endsWith('projects.html')) {
     // Load projects.json
-    loadProjects();
+    init();
+    //loadProjects();
 
     // Close modal when user clicks the X button
     document.getElementById('closeModal').addEventListener('click', closeModal);
@@ -64,37 +80,59 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();
       }
     });
+    
+    // Filtering dropdown event listener
+    const filterDropdown = document.getElementById('filterDropdown');
+    if (filterDropdown) {
+      filterDropdown.addEventListener('change', (e) => {
+        const value = e.target.value;
+        switch (value) {
+          case 'title':
+            filterProjByTitle();
+            break;
+          case 'date':
+            filterByDate();
+            break;
+          case 'status':
+            console.log('Filter by status not implemented.');
+            break;
+          default:
+            break;
+        }
+      });
+    }
   }
 
+  // TODO: make this its own component or partial
   // Only render the control on projects.html
-if (window.location.pathname.endsWith('projects.html')) {
-  // Assume the sidebar is rendered (from sidebar.html)
-  const sidebar = document.getElementById('sidebar');
-  if (sidebar) {
-    const perPageContainer = document.createElement('div');
-    perPageContainer.id = 'perPageSettings';
-    perPageContainer.innerHTML = `
-      <label for="perPageSelect">Projects per page: </label>
-      <select id="perPageSelect">
-        <option value="6">6</option>
-        <option value="9">9</option>
-        <option value="12">12</option>
-      </select>
-    `;
-    // Append the control at the end of the sidebar
-    sidebar.appendChild(perPageContainer);
+  if (window.location.pathname.endsWith('projects.html')) {
+    // Assume the sidebar is rendered (from sidebar.html)
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      const perPageContainer = document.createElement('div');
+      perPageContainer.id = 'perPageSettings';
+      perPageContainer.innerHTML = `
+        <label for="perPageSelect">Projects per page: </label>
+        <select id="perPageSelect">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="12">12</option>
+        </select>
+      `;
+      // Append the control at the end of the sidebar
+      sidebar.appendChild(perPageContainer);
 
-    // set initial select value
-    document.getElementById('perPageSelect').value = projectsPerPage;
+      // set initial select value
+      document.getElementById('perPageSelect').value = projectsPerPage;
 
-    // Add event listener: update pagination when the value changes
-    document.getElementById('perPageSelect').addEventListener('change', (e) => {
-      const newPerPage = parseInt(e.target.value, 10);
-      updateItemsPerPage(newPerPage);
-    });
+      // Add event listener: update pagination when the value changes
+      document.getElementById('perPageSelect').addEventListener('change', (e) => {
+        const newPerPage = parseInt(e.target.value, 10);
+        updateItemsPerPage(newPerPage);
+      });
+    }
   }
-}
 
-// For example, start the pagination with the imported default
-initPagination(allProjects, projectsPerPage);
+  // start the pagination with the imported default
+  // initPagination(allProjects, projectsPerPage);
 });

@@ -7,6 +7,7 @@ let totalPages = 1;
 
 /** Initialize pagination using the provided projects array and items per page */
 export function initPagination(projects, perPage) {
+  perPage = perPage || projectsPerPage;
   itemsPerPage = perPage;
   totalPages = Math.ceil(projects.length / itemsPerPage);
   currentPage = 1;

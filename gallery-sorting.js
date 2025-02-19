@@ -1,4 +1,6 @@
-import { allProjects, renderProjectsGallery } from './projects.js';
+import { allProjects } from './projects.js';
+import { projectsPerPage } from './perPageSettings.js';
+import { initPagination } from './pagination.js';
 
 /**
  * Contains functions that `projects.js` uses to change the sorting 
@@ -15,6 +17,8 @@ export function filterProjByTitle() {
   const sortedProjects = [...allProjects].sort((a, b) =>
     isAscending ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
   );
+  // reinitialize pagination with sorted projects using default projectsPerPage
+  initPagination(sortedProjects, projectsPerPage);
   renderProjectsGallery(sortedProjects);
 }
 
@@ -24,5 +28,7 @@ export function filterByDate() {
     const dateB = new Date(b.dates.split(' to ')[1] || b.dates);
     return isAscending ? dateA - dateB : dateB - dateA;
   });
+  // reinitialize pagination with sorted projects using default projectsPerPage
+  initPagination(sortedProjects, projectsPerPage);
   renderProjectsGallery(sortedProjects);
 }

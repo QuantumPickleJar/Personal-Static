@@ -1,0 +1,1 @@
+export const projectsPerPage = 8;
