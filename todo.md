@@ -110,3 +110,5 @@ Expected files:
 ----
 - search bar on projects page
 - center the text 
+- circle is too large on some projects without images (based on their description size, thus how much space is alotted to the `bottomContainer`)
+- booksPage

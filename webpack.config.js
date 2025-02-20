@@ -9,7 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: 'bundle.js',
     publicPath: '/',
     clean: true
   },
@@ -39,6 +39,7 @@ module.exports = {
         { from: 'partials/', to: 'partials/' },
         { from: 'rsc/', to: 'rsc/' },
         { from: 'style.css', to: 'style.css' },
+        { from: 'css/', to: 'css/' }
       ],
     }),
   ],
