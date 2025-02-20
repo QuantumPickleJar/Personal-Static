@@ -17,7 +17,21 @@ async function loadPartial(containerId, partialPath) {
   }
 }
 
-function renderProjectCard(project) {
+
+// export function initPage() {
+//   // Load and apply stored pagination settings before rendering
+//   applyPagination();
+  
+//   // Optionally, reinitialize pagination with sorted or default projects
+//   initPagination(allProjects, projectsPerPage);
+  
+//   // Render the gallery with the updated projectsPerPage
+//   renderProjectsGallery(allProjects);
+// }
+
+// window.addEventListener('DOMContentLoaded', initPage);
+
+export function renderProjectCard(project) {
   const card = document.createElement('div');
   card.className = 'project-card';
   // Set tooltip for the expanded text on mouseover
@@ -40,16 +54,38 @@ function renderProjectCard(project) {
   return card;
 }
 
+
+/**
+ * Initializes the application by loading projects, filtering them based on a search term, 
+ * and logging both the full and filtered lists of projects.
+ *
+ * This asynchronous function performs the following steps:
+ * 1. Retrieves a list of projects using the loadProjects function.
+ * 2. Logs the complete list of projects.
+ * 3. Retrieves the search term from an input element with the ID "searchInput". If the input 
+ *    element's value is null or empty, it defaults to an empty string.
+ * 4. Filters the projects using filterProjectsBySearchTerm if a search term is provided; otherwise, 
+ *    it uses the full list of projects.
+ * 5. Logs the filtered list of projects.
+ *
+ * @async
+ * @function init
+ * @returns {Promise<void>} A promise that resolves when the initialization process is complete.
+ */
 async function init() {
   const projects = await loadProjects();
   console.log('Projects loaded:', projects);
 
-  // If a search term is provided by the UI, apply the filter:
-  const searchTerm = document.querySelector('#searchInput')?.value || '';
-  const filteredProjects = filterProjectsBySearchTerm(projects, searchTerm);
-  console.log('Filtered Projects:', filteredProjects);
+  // Obtain the search term from the input, defaulting to an empty string if it's null
+  const searchInput = document.querySelector('#searchInput');
+  const searchTerm = searchInput?.value || '';
 
-  // ...existing code to render projects...
+  // Apply the filter only if searchTerm is not empty; otherwise, use all projects
+  const filteredProjects = searchTerm 
+    ? filterProjectsBySearchTerm(projects, searchTerm)
+    : projects;
+    
+  console.log('Filtered Projects:', filteredProjects);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -69,7 +105,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.location.pathname.endsWith('projects.html')) {
     // Load projects.json
     init();
-    //loadProjects();
 
     // Close modal when user clicks the X button
     document.getElementById('closeModal').addEventListener('click', closeModal);
