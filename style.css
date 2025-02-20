@@ -42,6 +42,25 @@ footer {
   color: white;
   padding: 20px;
   height: 100%;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+/* Enforce a static width for the sidebar */
+#sidebar {
+  width: 300px !important;
+  max-width: 300px !important;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+/* Ensure the sidebar remains consistent */
+#sidebar {
+  width: 300px;
+  max-width: 300px;
+  box-sizing: border-box;
 }
 
 .profile-photo {
@@ -63,24 +82,34 @@ footer {
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin: 0.75rem;
+  width: 100%; /* Ensure mainContainer takes full width */
 }
 
 /* 6) Project Gallery Styles */
 .projects-gallery {
+  position: relative; /* Ensure it doesn't spin */
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin: 0.75rem;
+  z-index: 1; /* Ensure it's below the modal */
+  /* margin: 0.75rem; */
 }
 
 .project-card {
+  /* 50% width minus gap */
+  flex: 1 1 calc(50% - 16px);
+  max-width: calc(50% - 16px);
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 250px;
-  padding: 10px;
-  cursor: pointer;
   background-color: #fff;
-  transition: transform 0.2s;
+  position: relative;
+  /* Let content determine height */
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .project-card:hover {
@@ -88,9 +117,7 @@ footer {
 }
 
 .project-thumbnail {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
+  display: none;
 }
 
 .project-title {
@@ -130,10 +157,9 @@ footer {
 
 /* 7) Modal Styles */
 .modal {
-  display: none;
-  /* Hidden by default */
+  display: none; /* Hidden by default */
   position: fixed;
-  z-index: 999;
+  z-index: 9999; /* Ensure it's on top of everything */
   left: 0;
   top: 0;
   width: 100%;
@@ -359,7 +385,15 @@ footer {
   color: white;
 }
 
-
+/* Position date in-line with the academic label, but with no BG */
+.date-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: black;
+  background-color: white;
+  font-size: 0.7rem;
+}
 
 #paginationContainer {
   flex: 1;
@@ -411,4 +445,182 @@ footer {
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
   opacity: 1;
+}
+
+.image-count-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.image-count-icon .icon {
+  margin-right: 3px;
+}
+
+.image-count-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5; /* Ensure the icon floats atop other elements */
+  width: 24px;
+  height: 24px;
+}
+
+.image-count-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor; /* Uses inherited color, or define your color */
+}
+
+.image-count-indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 10;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Style shortForm project fields, 
+apply consistent card height. */
+.short-form-truncated {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #333;
+  max-height: 4em; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+  .project-card {
+    /* Full width cards on mobile */
+    flex: 1 1 100%;
+    max-width: 100%;
+    /* Let content determine height or set a more appropriate mobile value */
+    height: auto;
+    margin-right: 8px;
+  }
+  .contentContainer {
+    flex-direction: column;
+  }
+  #sidebar {
+    width: 100%;
+    max-width: none; /* Override fixed sidebar width */
+  }
+  #mainContainer {
+    width: 100%;
+  }
+  body {
+    overflow: auto; /* Re-enable vertical scrolling */
+  }
+}
+
+/* For very small screens (max-width: 400px) force single-column project cards */
+@media (max-width: 400px) {
+  .project-card {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 8px 0; /* optional: space between cards */
+  }
+  
+  /* Ensure the sidebar remains consistent */
+  #sidebar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* For medium and larger screens */
+@media (min-width: 768px) {
+  .projects-gallery {
+    position: relative; /* Ensure it doesn't spin */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .project-card {
+    flex: 1 1 300px;   /* Fixed basis for a consistent 300px width */
+    max-width: 300px;
+    height: auto; /* Set height to auto for content-driven height */
+  }
+  /* Fix the width of the inline pagination container */
+  #inlinePaginationContainer {
+    min-width: 320px;
+    text-align: center;
+  }
+}
+
+/* For medium and larger screens */
+@media (min-width: 768px) {
+  #paginationContainer {
+    display: none; /* Hide bottom pagination */
+  }
+
+  #inlinePaginationContainer {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center; /* Vertically align with search bar and dropdown */
+    padding: 10px;
+    width: auto; /* Changed from min-width: 320px; to width: auto; */
+  }
+
+  /* Adjustments for advancedSearchContainer to accommodate inline pagination */
+  #advancedSearchContainer {
+    display: flex;
+    justify-content: space-between; /* Spread out search/filter and pagination */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 1rem;
+    width: 100%; /* Take up full width */
+  }
+
+  #mainContainer {
+    width: 100%; /* Ensure mainContainer takes full width */
+  }
+
+  #mainContent {
+    flex: 1; /* Ensure mainContent takes remaining space */
+    width: 100%; /* Ensure mainContent takes full width */
+  }
+}
+
+/* Loading Overlay styles */
+#loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1000; /* Ensure it's above other elements */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #333;
+}
+
+@keyframes rotateLoading {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(90deg); }
+  100% { transform: rotate(360deg); }
 }
