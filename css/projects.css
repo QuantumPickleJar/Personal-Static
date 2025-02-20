@@ -1,0 +1,82 @@
+/* projects.css - Project gallery and card styles */
+
+.projects-gallery {
+  position: relative; /* Ensure it doesn't spin */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  z-index: 1; /* Ensure it's below the modal */
+  /* margin: 0.75rem; */
+}
+
+.project-card {
+  /* 50% width minus gap */
+  flex: 1 1 calc(50% - 16px);
+  max-width: calc(50% - 16px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  position: relative;
+  /* Let content determine height */
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-card:hover {
+  transform: scale(1.02);
+}
+
+.project-thumbnail {
+  display: none;
+}
+
+.project-title {
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+
+.stack-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stack-icon {
+  background-color: #eee;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.no-images-text {
+  display: block;      /* So it sits on its own line */
+  margin-top: 0.5rem;  /* Spacing above the text */
+  font-size: 0.9rem;   /* Slightly smaller text if desired */
+  color: #666;         /* Subtle color */
+  text-align: center;  /* Center it horizontally */
+}
+
+
+.more-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-left: 8px;
+}
+
+/* Style shortForm project fields, 
+apply consistent card height. */
+.short-form-truncated {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #333;
+  max-height: 4em; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+}

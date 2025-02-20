@@ -1,0 +1,14 @@
+/* header-footer.css - Styles for header and footer */
+
+header {
+  background-color: gray;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+footer {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  text-align: center;
+}

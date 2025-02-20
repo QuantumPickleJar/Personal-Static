@@ -8,10 +8,10 @@
     "shortForm": "A dual-purpose app to allow general querying of player statistics and plugging into an EventStream from real-time game sessions via DaybreakGames' Census API.",
     "description": "Functionally equivalent to FISU's services that players are offered. Key functionalities learned include Event Listeners, WebSockets, and JSON De/Serialization. Adapter pattern unwittingly used in payload categorization.",
     "stack": [
-      "Xamarin Forms",
-      "C#",
+      "Xamarin",
+      "Csharp",
       "JSON",
-      "Visual Studio",
+      "VSCommunity",
       "XML"
     ],
     "mermaid": "",
@@ -21,15 +21,15 @@
     "id": "uwo-rostar",
     "title": "RoStar Housing",
     "academic": true,
-    "dates": "",
+    "dates": "6-12-24 to 10-31-24",
     "status": "Complete",
     "shortForm": "Integrated the ability to query room numbers and relationally pull up the UUID of the booked student.",
     "description": "Leveraged largely pre-established infrastructure, extended functionality using existing schemas, and migrated the project from dotnet 3.1 to dotnet 6.X.",
     "stack": [
-      "JWT",
-      "Visual Studio",
-      "Docker Compose",
-      "dotNet",
+      "jwt",
+      "Docker",
+      "VSCommunity",
+      "NETCore",
       "ReSharper",
       "Postman",
       "DataGrip",
@@ -44,18 +44,17 @@
     "academic": false,
     "dates": "",
     "status": "",
-    "shortForm": "Debugged a service containing multiple APIs with dual-purpose support for two run configurations.",
+    "shortForm": "Multi-API project beckoned for dual-purpose support with run configurations.",
     "description": "Debugged a service containing multiple APIs, each serving its own purpose, and provided user-friendly dual-purpose support for two run configurations.",
     "stack": [
-      "Docker-compose",
-      "redis",
+      "Redis",
       "Docker",
       "dotNET",
-      "Visual Studio",
-      "Visual Studio Code",
-      "NodeJS",
-      "MermaidJS",
-      "Confluence"
+      "Confluence",
+      "VSCommunity",
+      "VSCode",
+      "NodeJs",
+      "MermaidJs"
     ],
     "mermaid": "",
     "images": [],
@@ -70,7 +69,7 @@
     "dates": "",
     "status": "",
     "shortForm": "Wrote a 3-page guide on how teammates could modify their environment to enhance debugging capabilities.",
-    "description": "The pages were first drafted in Obsidian and then ported into Confluence pending formatting changes. - conversion",
+    "description": "The pages were first drafted in Obsidian and then ported into Confluence pending formatting changes.  Conversion was handled through Obsidian's Convert to PDF feature, and several other teammates were then enabled to ",
     "stack": [
       "Obsidian",
       "Confluence",
@@ -95,17 +94,19 @@
     "id": "vtm-portfolio",
     "title": "Personal Site",
     "academic": false,
-    "dates": "",
-    "status": "",
+    "dates": "12-18-24 to Present",
+    "status": "In-Progress",
     "link": "https://github.com/QuantumPickleJar/Personal-Static",
-    "shortForm": "",
-    "description": "",
+    "shortForm": "Having a QR Code on your card warrants a website",
+    "description": "A portfolio to link to my resume and provide a more interactive experience for potential employers.  Built using a suite of AI-driven tools, designed around the Jekyll environment that Github Pages supports.",
     "stack": [
-      "Github Pages",
-      "Replit",
-      "Visual Studio",
-      "CSS",
-      "JS"
+      "GitHub",
+      "Copilot",
+      "VSCode",
+      "CSS3",
+      "Javascript",
+      "HTML5",
+      "Webpack"
     ],
     "mermaid": "",
     "images": []
@@ -118,7 +119,14 @@
     "status": "",
     "shortForm": "A single graphic detailing principles, ordered steps, and guidelines for leveraging abstractions at a linguistic level.",
     "description": "Non technical; emphasizes the importance of leveraging abstractions instead of a technical, object-oriented approach.",
-    "stack": [],
+    "stack": [
+      "OpenAI",
+      "Gemini",
+      "Claude",
+      "Tensorflow",
+      "Keras",
+      "Jupyter"
+    ],
     "mermaid": "",
     "images": []
   },
@@ -128,21 +136,28 @@
     "academic": true,
     "dates": "5-10-2023 to 12-10-2023",
     "status": "",
-    "shortForm": "Provides means for many users to publish recipes using a database of ingredients. Scope reduced after losing a teammate on sprint 3.",
-    "description": "Features include autocomplete, a strategy pattern, and unit testing on the Android platform.",
+    "shortForm": "Recipe-oriented Social Media Platform",
+    "description": "Features include autocomplete, a strategy pattern, and unit testing on the Android platform.  More notably, the autocomplete was written following the Strategy design pattern, and was very effective in capturing the stakeholder (audience)'s attenion during demonstration.",
     "stack": [
       "MAUI",
       "Flutter",
       "Dart",
-      "Visual Studio",
-      "PostGresSQL",
+      "VSCommunity",
+      "Postgres",
       "Figma",
-      "CockroachDB",
+      "cockroachdb",
       "DBeaver"
     ],
     "mermaid": "",
     "images": [
-      "flavor-flav-addrecipe-2.png"
+      "flavorflav/addrecipe_p1.png",
+      "flavorflav/addrecipe_p2.png",
+      "flavorflav/addrecipe_p2noqty.png",
+      "flavorflav/addrecipe_p3_1.png",
+      "flavorflav/dietaryrestrictions.png",
+      "flavorflav/ingredientselector.png",
+      "flavorflav/test_page.png",
+      "flavorflav/timepickerdialog.png"
     ]
   },
   {
@@ -153,34 +168,35 @@
     "status": "Submitted",
     "link": "https://github.com/QuantumPickleJar/uwo_athlete_surveyor",
     "shortForm": "An app for faculty to check in on the well-being of students with form generation for reports.",
-    "description": "",
+    "description": "Although ultimately unpublished, the amount of work that was poured into the schema was something we were greatful for early on.  Having everything mapped out concretely allowed us to develop for changing needs with much more ease, and ",
     "stack": [
       "Dart",
       "Flutter",
-      "Visual Studio",
+      "VSCode",
+      "VSCommunity",
       "GitHub",
       "Figma",
       "DBeaver",
-      "CockroachDB"
+      "cockroachdb"
     ],
     "mermaid": "",
     "images": []
   },
   {
-    "id": "fvtc-poitracker",
-    "title": "POITracker (Archived)",
+    "id": "fvtc-poi-tracker",
+    "title": "POITracker",
     "academic": true,
     "dates": "1-12-2019 to 4-30-2019",
-    "status": "",
+    "status": "Archived",
     "shortForm": "Product of a 5-week agile simulation for tracking changes.",
     "description": "Team Foundations for tracking changes.",
     "stack": [
       "Jira",
-      "Windows Forms",
-      "Google Maps API",
-      "Visual Studio",
-      "Azure",
-      "Canva"
+      "VSCommunity",
+      "GoogleMaps",
+      "AzureDevOps",
+      "Canva",
+      "Azure"
     ],
     "mermaid": "",
     "images": []
@@ -190,14 +206,17 @@
     "title": "Temperature Tracker",
     "academic": false,
     "dates": "",
-    "status": "",
+    "status": "In-progress",
     "shortForm": "Deploying bare-bone temperature units using a microcontroller and ESP-01 to relay readings via Wi-Fi.",
     "description": "Data is visualized using an IFTTT endpoint to collect readings into a spreadsheet.",
     "stack": [
-      "C++",
-      "HTML",
+      "cpp",
+      "HTML5",
       "Express",
-      "Websocket"
+      "Websocket",
+      "GitHub",
+      "handlebars",
+      "IFTTT"
     ],
     "mermaid": "",
     "images": []
@@ -211,16 +230,18 @@
     "shortForm": "A site built for a local fashion merchant with features for non-technical users.",
     "description": "Built to allow frequent changes of venues and authentication for the owner to maintain a local store of files on a Replit-hosted server.",
     "stack": [
-      "EJS",
-      "Replit",
-      "HTML",
-      "CSS",
-      "JS",
+      "PugJS",
+      "HTML5",
+      "CSS3",
+      "Javascript",
       "DBeaver",
-      "CockroachDB"
+      "cockroachdb"
     ],
     "mermaid": "",
-    "images": []
+    "images": [
+      "frugal-fashion/frugal-fashion-mid-fidelity-mockup.png",
+      "frugal-fashion/frugal-fashion-mid-fidelity-mockup-alt.png"
+    ]
   },
   {
     "id": "workflow-playground",
@@ -230,7 +251,7 @@
     "status": "Completed",
     "shortForm": "Experimenting with automated workflows bound to repositories.",
     "description": "Continuous deployment with GitHub repository integration.",
-    "stack": [],
+    "stack": ["tensorflow", "keras", "Jupyter"],
     "mermaid": "",
     "images": []
   },
@@ -245,11 +266,28 @@
     "description": "Investigated the effectiveness of a CNN trained to recognize images using a centralized dataset versus poor handwriting.",
     "stack": [
       "Python",
-      "Jupyter Notebook",
+      "Jupyter",
       "Google CoLab",
       "Tensorflow"
     ],
     "mermaid": "",
     "images": []
+  },
+  {
+    "id": "fwappa",
+    "title": "Flutter UI Mockup",
+    "academic": true,
+    "dates": "",
+    "status": "Complete",
+    "link": "https://github.com/QuantumPickleJar/",
+    "shortForm": "Produce a Dart/Flutter UI mockup for a flight-tracking app.",
+    "description": "My job was to produce a Dart/Flutter UI mockup for a flight-tracking app. The app was to be used by a pilots to track which airports they've visited with a plane",
+    "stack": [
+      "Figma",
+      "Canva",
+      "Teams"
+    ],
+    "mermaid": "",
+    "images": ["fwappa/lab3-select-airport-ui.png"]
   }
 ]

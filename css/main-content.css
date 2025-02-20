@@ -1,0 +1,23 @@
+/* main-content.css - Styles for the main content area */
+
+.contentContainer {
+  /* This flex container takes all available space between header & footer */
+  flex: 1;
+  display: flex;
+}
+
+#mainContent {
+  /* width: 75%; */
+  /* padding: 20px; */
+  flex: 1; /* Changed from 9 to 1 */
+  width: 100%; /* Added to ensure it takes full width */
+}
+
+/* MainContainer */
+#mainContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0.75rem;
+  width: 100%; /* Ensure mainContainer takes full width */
+}

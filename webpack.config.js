@@ -1,44 +1,54 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  // Entry point of your application
-  entry: './main.js', // Adjust if needed
-  
-  // Output bundling config
+  mode: 'development',
+  entry: {
+    main: './main.js', // your main entry
+  },
   output: {
-    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/',
+    clean: true
   },
-  
-  // Set the mode to 'development' or 'production'
-  mode: process.env.NODE_ENV || 'development',
-  
-  // Module rules configuration
-  module: {
-    rules: [
-      {
-        test: /\.js$/, // Transpile ES6+ code using Babel
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env']
-          }
-        },
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i, // Handling images
-        type: 'asset/resource',
-      },
-    ],
-  },
-  
-  // Webpack dev server configuration
+  plugins: [
+    // Generates dist/index.html from your src/index.html
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      filename: 'index.html',
+      chunks: ['main'], // which entry chunk(s) to include
+    }),
+    // Generates dist/projects.html from your src/projects.html
+    new HtmlWebpackPlugin({
+      template: './projects.html',
+      filename: 'projects.html',
+      chunks: ['main'], // or a separate chunk if you want
+    }),
+    // If you have contact.html, do the same:
+    new HtmlWebpackPlugin({
+      template: './contact.html',
+      filename: 'contact.html',
+      chunks: ['main'],
+    }),
+
+    // Copy partials, JSON, etc. so they appear in dist/ as well
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'partials/', to: 'partials/' },
+        { from: 'rsc/', to: 'rsc/' },
+        { from: 'style.css', to: 'style.css' },
+        { from: 'css/', to: 'css/' }
+      ],
+    }),
+  ],
   devServer: {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
-    compress: true,
     port: 9000,
+    hot: true,
+    open: true,
   },
 };

@@ -1,0 +1,20 @@
+/* sidebar.css - Styles for the sidebar */
+
+/* Directly target the sidebar element */
+#sidebar {
+  width: 300px;
+  max-width: 300px;
+  background-color: #0000a0;
+  border-right: 1px solid #ddd;
+  color: white;
+  padding: 20px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+}
+
+.profile-photo {
+  width: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}

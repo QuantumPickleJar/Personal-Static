@@ -1,0 +1,96 @@
+/* mobile.css - Styles for mobile devices */
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+  .project-card {
+    /* Full width cards on mobile */
+    flex: 1 1 100%;
+    max-width: 100%;
+    /* Let content determine height or set a more appropriate mobile value */
+    height: auto;
+    margin-right: 8px;
+  }
+  .contentContainer {
+    flex-direction: column;
+  }
+  #sidebar {
+    width: 100%;
+    max-width: none; /* Override fixed sidebar width */
+  }
+  #mainContainer {
+    width: 100%;
+  }
+  body {
+    overflow: auto; /* Re-enable vertical scrolling */
+  }
+}
+
+/* For very small screens (max-width: 400px) force single-column project cards */
+@media (max-width: 400px) {
+  .project-card {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 8px 0; /* optional: space between cards */
+  }
+  
+  /* Ensure the sidebar remains consistent */
+  #sidebar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* For medium and larger screens */
+@media (min-width: 768px) {
+  .projects-gallery {
+    position: relative; /* Ensure it doesn't spin */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .project-card {
+    flex: 1 1 300px;   /* Fixed basis for a consistent 300px width */
+    max-width: 300px;
+    height: auto; /* Set height to auto for content-driven height */
+  }
+  /* Fix the width of the inline pagination container */
+  #inlinePaginationContainer {
+    min-width: 320px;
+    text-align: center;
+  }
+}
+
+/* For medium and larger screens */
+@media (min-width: 768px) {
+  #paginationContainer {
+    display: none; /* Hide bottom pagination */
+  }
+
+  #inlinePaginationContainer {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center; /* Vertically align with search bar and dropdown */
+    padding: 10px;
+    width: auto; /* Changed from min-width: 320px; to width: auto; */
+  }
+
+  /* Adjustments for advancedSearchContainer to accommodate inline pagination */
+  #advancedSearchContainer {
+    display: flex;
+    justify-content: space-between; /* Spread out search/filter and pagination */
+    align-items: center; /* Vertically align items */
+    margin-bottom: 1rem;
+    width: 100%; /* Take up full width */
+  }
+
+  #mainContainer {
+    width: 100%; /* Ensure mainContainer takes full width */
+  }
+
+  #mainContent {
+    flex: 1; /* Ensure mainContent takes remaining space */
+    width: 100%; /* Ensure mainContent takes full width */
+  }
+}
