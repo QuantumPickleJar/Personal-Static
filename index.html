@@ -4,11 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Vincent's GitHub Page - Home</title>
-  <!-- Link to the main CSS and optionally Bootstrap -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Load Bootstrap first -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- Add modal CSS -->
-  <!-- <link rel="stylesheet" href="css/modal.css"> -->
+  <!-- Load our main CSS file which imports all others -->
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
@@ -27,33 +26,10 @@
         <p>This is the home page where you'll find my latest news, updates, and featured projects.</p>
         <br/>
         <p>I'm currently looking for a long-term position, head on over to my <a href="contact.html">contact page</a>
-        for more information about my current working status if you're an employer or talent scout.</p>
-        <!-- Additional home page content can be added here -->
+          for more information about my current working status if you're an employer or talent scout.</p>
       </main>
     </div>
   </div>
-
-<div id="filterContols">
-          <div class="how-to">
-            <p>Below are projects that have enough of a footprint to warrant<br/>
-              listing here.
-            </p>
-          </div>
-          <div id="sortOptions">
-            <button onClick="filterTitle">TITLE</button>
-            <button onClick="filterDate">DATE</button>
-            <button onClick="filterStatus">STATUS</button>
-          </div>
-        </div>
-        <!-- Project Gallery -->
-        <div id="projectsGallery" class="projects-gallery"></div>
-      </main>
-      <!-- Pagination controls -->
-      <div id="paginationContainer"></div>
-    </div>
-  </div>
-
-
 
   <!-- Footer partial will be dynamically inserted -->
   <div id="footerContainer"></div>
@@ -64,12 +40,14 @@
       <span class="close-button" id="closeModal">&times;</span>
       <div id="modalTitle"></div>
       <div id="modalDescription"></div>
-            <div id="modalStack"></div>
+      <div id="modalStack"></div>
       <div id="modalImages"></div>
     </div>
   </div>
+
   <!-- Include Bootstrap JavaScript bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Main JavaScript file -->
   <script type="module" src="main.js"></script>
 
 </body>

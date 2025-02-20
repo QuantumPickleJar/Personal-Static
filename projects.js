@@ -16,20 +16,26 @@ export function loadProjects() {
       allProjects = data;
       console.log('Projects loaded:', allProjects);
       initPagination(allProjects, projectsPerPage);
-    // Set up search input listener
-    const searchInput = document.querySelector('#searchBar');
-    if (searchInput) {
-      searchInput.addEventListener('input', () => {
-        const term = searchInput.value.trim();
-        // Filter
-        const filtered = filterProjectsBySearchTerm(allProjects, term);
-        // Re-render or re-paginate with the filtered array
-        // For a simple re-render:
-        renderProjectsGallery(filtered);
-      });
-    }
-  })
-  .catch(err => console.error('Failed to load projects:', err));
+      // Hide the loading overlay once projects are loaded
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      if (loadingOverlay) {
+        loadingOverlay.style.display = 'none';
+      }
+      
+      // Set up search input listener
+      const searchInput = document.querySelector('#searchBar');
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          const term = searchInput.value.trim();
+          // Filter
+          const filtered = filterProjectsBySearchTerm(allProjects, term);
+          // Re-render or re-paginate with the filtered array
+          // For a simple re-render:
+          renderProjectsGallery(filtered);
+        });
+      }
+    })
+    .catch(err => console.error('Failed to load projects:', err));
 }
 
 
