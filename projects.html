@@ -32,8 +32,13 @@
     <!-- Main Container -->
     <div id="mainContainer">
       <main id="mainContent">
-        <div class="how-to">
-          <p>Below are projects that have enough of a footprint to warrant<br /> listing here.</p>
+        <!-- New row for how-to and projects per page dropdown -->
+        <div id="how-to" class="how-to d-flex align-items-center justify-content-between flex-wrap">
+          <p class="mb-0">
+            Below are projects that have enough of a footprint to warrant a listing here.<br>
+            <strong>Mouseover</strong> descriptions that are truncated, and click to see more info
+          </p>
+          <div id="perPageContainer" class="per-page-container"></div>
         </div>
 
         <div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3">

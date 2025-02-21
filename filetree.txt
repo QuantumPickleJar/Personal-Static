@@ -1,0 +1,21 @@
+.
+├── index.html
+├── projects.html
+├── contact.html
+├── style.css
+├── main.js
+├── css/
+│   ├── base.css
+│   ├── header-footer.css
+│   ├── sidebar.css
+│   ├── main-content.css
+│   ├── projects.css
+│   ├── modal.css
+│   ├── pagination.css
+│   ├── loading.css
+│   └── mobile.css
+├── partials/
+│   ├── header.html
+│   ├── sidebar.html
+│   └── footer.html
+└── filetree.txt
