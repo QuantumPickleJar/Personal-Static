@@ -1,0 +1,18 @@
+[
+    {
+      "title": "Google",
+      "url": "https://www.google.com",
+      "category": "Search Engines"
+    },
+    {
+      "title": "GitHub",
+      "url": "https://github.com",
+      "category": "Development"
+    },
+    {
+      "title": "Mozilla",
+      "url": "https://www.mozilla.org",
+      "category": "Development"
+    }
+  ]
+  
