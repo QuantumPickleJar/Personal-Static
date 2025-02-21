@@ -11,7 +11,8 @@ export function computeProjectsPerPage() {
   // Full rows based on viewport height
   const rows = Math.max(1, Math.floor(window.innerHeight / cardHeight));
   
-  return columns * rows;
+  // Ensure at least 6 cards fit
+  return Math.max(6, columns * rows);
 }
 
 // Initialize projectsPerPage value
