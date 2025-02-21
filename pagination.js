@@ -7,7 +7,8 @@ let totalPages = 1;
 let currentProjects = []; // Store the active projects list
 
 export function initPagination(projects, perPage) {
-  currentProjects = projects; // Save the sorted/filtered list here
+  // Ensure projects is an array; if it's not, convert it
+  currentProjects = Array.isArray(projects) ? projects : Array.from(projects);
   itemsPerPage = perPage || itemsPerPage;
   totalPages = Math.ceil(currentProjects.length / itemsPerPage);
   currentPage = 1;
