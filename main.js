@@ -17,20 +17,6 @@ async function loadPartial(containerId, partialPath) {
   }
 }
 
-
-// export function initPage() {
-//   // Load and apply stored pagination settings before rendering
-//   applyPagination();
-  
-//   // Optionally, reinitialize pagination with sorted or default projects
-//   initPagination(allProjects, projectsPerPage);
-  
-//   // Render the gallery with the updated projectsPerPage
-//   renderProjectsGallery(allProjects);
-// }
-
-// window.addEventListener('DOMContentLoaded', initPage);
-
 export function renderProjectCard(project) {
   const card = document.createElement('div');
   card.className = 'project-card';

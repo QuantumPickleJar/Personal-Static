@@ -11,6 +11,7 @@ export function initPagination(projects, perPage) {
   currentProjects = Array.isArray(projects) ? projects : Array.from(projects);
   itemsPerPage = perPage || itemsPerPage;
   totalPages = Math.ceil(currentProjects.length / itemsPerPage);
+  console.log('Initializing pagination:', { totalPages, itemsPerPage });
   currentPage = 1;
   renderPage(currentPage);
   renderPaginationControls();
