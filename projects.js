@@ -51,6 +51,11 @@ export function renderProjectsGalleryOld(projects) {
     card.dataset.projectId = project.id;
     card.style.position = 'relative';
     
+    // Academic label (top right corner)
+    const labelRow = document.createElement('div');
+    labelRow.classList.add('label-row');
+    card.appendChild(labelRow);
+    
     // Date label (top left corner)
     const dateLabel = document.createElement('span');
     dateLabel.classList.add('date-label');
@@ -58,9 +63,9 @@ export function renderProjectsGalleryOld(projects) {
     // parse the datetime from the `dates` parameter, which will need a helper function
     dateLabel.textContent = project.dates;    // for now, this will suffice
 
-    card.appendChild(dateLabel);
+    labelRow.appendChild(dateLabel);
+
     
-    // Academic label (top right corner)
     const academicLabel = document.createElement('span');
     academicLabel.classList.add('academic-label');
 
@@ -71,7 +76,7 @@ export function renderProjectsGalleryOld(projects) {
       academicLabel.classList.add('label-personal');
       academicLabel.textContent = 'Personal';
     }
-    card.appendChild(academicLabel);
+    labelRow.appendChild(academicLabel);
 
 
     // Thumbnail
@@ -126,6 +131,8 @@ export function renderProjectsGalleryOld(projects) {
     gallery.appendChild(card);
   });
 }
+
+
 /** Render the gallery with a given array of projects */
 export function renderProjectsGallery(projects) {
   console.log('Rendering projects:', projects);
@@ -144,6 +151,21 @@ export function renderProjectsGallery(projects) {
     thumb.src = project.thumbnail || 'images/placeholder.jpg';
     thumb.alt = project.title;
     card.appendChild(thumb);
+
+    // Academic label (top right corner)
+    const labelRow = document.createElement('div');
+    labelRow.classList.add('label-row');
+    card.appendChild(labelRow);
+
+    // Date label (top left corner)
+    const dateLabel = document.createElement('span');
+    dateLabel.classList.add('date-label');
+
+    // parse the datetime from the `dates` parameter, which will need a helper function
+    dateLabel.textContent = project.date;    // for now, this will suffice
+
+    labelRow.appendChild(dateLabel);
+
 
     // Academic label
     const academicLabel = document.createElement('span');

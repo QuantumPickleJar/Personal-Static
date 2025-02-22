@@ -4,6 +4,9 @@
   /* This flex container takes all available space between header & footer */
   flex: 1;
   display: flex;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1200px;
 }
 
 #mainContent {

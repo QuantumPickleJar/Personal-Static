@@ -132,7 +132,7 @@ apply consistent card height. */
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: cornflowerblue;
   color: white;
   padding: 5px 8px;
   border-radius: 4px;
@@ -188,4 +188,56 @@ apply consistent card height. */
 /* When visible, the tooltip fades in */
 .tooltip-dates.visible {
   opacity: 1;
+}
+
+/* Position academic label at top left */
+.project-card .academic-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Position image count icon (or other image icons) at top right if images exist */
+.project-card .image-count-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* Initially hide the date label */
+.project-card .date-label {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* Ensure it sits beneath the academic-label */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+/* Reveal the date info when hovering over the academic label */
+.project-card .academic-label:hover + .date-label,
+.project-card .academic-label:hover ~ .date-label {
+  opacity: 1;
+}
+
+
+.academic-label.academic {
+  /* Your academic-specific styles here */
+  background-color: #ffeb3b; /* Example: yellow background for academic labels */
+  color: #000;
+  border: 1px solid #ccc;
+  opacity: 60%;
+
+}
+
+.academic-label.personal {
+  background-color: lightcoral;
+  opacity: 60%;
 }

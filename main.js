@@ -239,6 +239,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // start the pagination with the imported default
   // initPagination(allProjects, projectsPerPage);
+
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) {
+    if (window.location.pathname.endsWith('projects.html')) {
+      sidebar.classList.add('slide-left');
+    } else {
+      sidebar.classList.remove('slide-left');
+    }
+  }
 });
 
 // Contact form handler
