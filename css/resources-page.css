@@ -1,0 +1,77 @@
+/* resources-page.css */
+
+/* Ensure the overall contentContainer uses flex to position sidebar and main content side by side */
+.contentContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Force the sidebar container to have a fixed width on larger screens */
+#sidebarContainer {
+  flex: 0 0 300px;
+}
+
+/* Let the main container expand to fill available space */
+#mainContainer {
+  flex: 1;
+}
+
+/* Section Titles for both Books and Bookmarks */
+.section-title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+/* Books & Bookmarks Sections */
+.section-books,
+.section-bookmarks {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Containers for injected content */
+.books-container,
+.bookmarks-container {
+  margin-top: 20px;
+}
+
+/* Controls for bookmarks filtering */
+.bookmark-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.bookmark-label,
+.bookmark-select {
+  font-size: 1rem;
+}
+
+/* Divider styling between sections */
+.section-divider {
+  border: 0;
+  border-top: 1px solid #e0e0e0;
+  margin: 40px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+  #sidebarContainer {
+    flex: 1 1 100%;
+  }
+}

@@ -26,3 +26,5 @@
 
 /* Mobile-specific styles */
 @import './css/mobile.css';
+
+@import './css/resources-page.css';
