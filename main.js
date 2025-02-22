@@ -3,6 +3,8 @@ import { closeModal, loadProjects } from './projects.js';
 import { initPagination, updateItemsPerPage } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+import './rsc/js/books.js';
+import './rsc/js/bookmarks.js';
 
 /**
  * Load partial files into the main page
@@ -17,7 +19,7 @@ async function loadPartial(containerId, partialPath) {
   }
 }
 
-function renderProjectCard(project) {
+export function renderProjectCard(project) {
   const card = document.createElement('div');
   card.className = 'project-card';
 
@@ -110,6 +112,24 @@ function renderPerPageDropdown() {
   }
 }
 
+
+/**
+ * Initializes the application by loading projects, filtering them based on a search term, 
+ * and logging both the full and filtered lists of projects.
+ *
+ * This asynchronous function performs the following steps:
+ * 1. Retrieves a list of projects using the loadProjects function.
+ * 2. Logs the complete list of projects.
+ * 3. Retrieves the search term from an input element with the ID "searchInput". If the input 
+ *    element's value is null or empty, it defaults to an empty string.
+ * 4. Filters the projects using filterProjectsBySearchTerm if a search term is provided; otherwise, 
+ *    it uses the full list of projects.
+ * 5. Logs the filtered list of projects.
+ *
+ * @async
+ * @function init
+ * @returns {Promise<void>} A promise that resolves when the initialization process is complete.
+ */
 async function init() {
   const projects = await loadProjects();
   console.log('Projects loaded:', projects);

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resources & Reading</title>
+  <!-- Base and global styles -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header-footer.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/main-content.css">
+  <link rel="stylesheet" href="css/projects.css">
+  <!-- Books-specific styles -->
+  <link rel="stylesheet" href="css/books.css">
+  
+</head>
+<body>
+  <!-- Header partial -->
+  <div id="headerContainer"></div>
+
+  <!-- Main sandwich container -->
+  <div class="contentContainer">
+    <!-- Sidebar partial -->
+    <div id="sidebarContainer"></div>
+
+    <!-- Main Container -->
+    <div id="mainContainer">
+      <main id="mainContent">
+        <!-- Books Section -->
+        <section id="booksSection">
+          <h1>Books I've Been Reading Recently</h1>
+          <div id="booksContainer">
+            <!-- Books will be injected here by books.js -->
+          </div>
+        </section>
+
+        <hr />
+
+        <!-- Bookmarks Section -->
+        <section id="bookmarksSection">
+          <h1>Bookmarks</h1>
+          <div>
+            <label for="bookmarkCategory">Choose a category:</label>
+            <select id="bookmarkCategory">
+              <!-- Options will be added dynamically (with an “All” option by default) -->
+            </select>
+          </div>
+          <div id="bookmarksContainer">
+            <!-- Bookmarks will be injected here by bookmarks.js -->
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer partial -->
+  <div id="footerContainer"></div>
+
+  <script type="module" src="main.js"></script>
+  <!-- Include separate JavaScript modules for the page functionality -->
+  <!-- <script type="module" src="rsc/js/books.js"></script>
+  <script type="module" src="rsc/js/bookmarks.js"></script> -->
+</body>
+</html>

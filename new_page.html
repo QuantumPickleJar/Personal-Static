@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Vincent's GitHub Page</title>
+  <!-- Updated CSS path -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="header-footer.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="main-content.css">
+  <link rel="stylesheet" href="projects.css">
+  <link rel="stylesheet" href="modal.css">
+  <link rel="stylesheet" href="pagination.css">
+  <link rel="stylesheet" href="loading.css">
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Header partial -->
+  <div id="headerContainer"></div>
+
+  <!-- Main sandwich container -->
+  <div class="contentContainer">
+    <!-- Sidebar partial -->
+    <div id="sidebarContainer"></div>
+
+    <!-- Main Container -->
+    <div id="mainContainer">
+      <main id="mainContent">
+        <!-- New row for how-to and projects per page dropdown -->
+        <div id="how-to" class="how-to d-flex align-items-center justify-content-between flex-wrap">
+          <p class="mb-0">
+            Below are projects that have enough of a footprint to warrant a listing here.<br>
+            <strong>Mouseover</strong> descriptions that are truncated, and click to see more info
+          </p>
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Footer partial -->
+  <div id="footerContainer"></div>
+
+  <!-- Include only the entry point as module -->
+  <script type="module" src="main.js"></script>
+
+</body>
+
+</html>
