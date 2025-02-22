@@ -3,6 +3,8 @@ import { closeModal, loadProjects } from './projects.js';
 import { initPagination, updateItemsPerPage } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+import './rsc/js/books.js';
+import './rsc/js/bookmarks.js';
 
 /**
  * Load partial files into the main page
