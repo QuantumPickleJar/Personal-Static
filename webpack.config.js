@@ -26,10 +26,9 @@ module.exports = {
       filename: 'projects.html',
       chunks: ['main'], // or a separate chunk if you want
     }),
-    // If you have contact.html, do the same:
     new HtmlWebpackPlugin({
-      template: './contact.html',
-      filename: 'contact.html',
+      template: './resources.html',
+      filename: 'resources.html',
       chunks: ['main'],
     }),
 

@@ -7,6 +7,7 @@ import { allProjects } from './projects.js';
 import { projectsPerPage } from './perPageSettings.js';
 import { initPagination } from './pagination.js';
 import { renderProjectsGallery } from './projects.js';
+import { applyPagination } from './perPageSettings.js';
 
 // set to true when sorting by:
 // Z-A
@@ -17,10 +18,10 @@ export function filterProjByTitle() {
   const sortedProjects = [...allProjects].sort((a, b) =>
     isAscending ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
   );
-  // reinitialize pagination with sorted projects using default projectsPerPage
+  // Only initialize pagination, which handles rendering
   initPagination(sortedProjects, projectsPerPage);
-  // renderProjectsGallery(sortedProjects);
 }
+
 
 /**
  * @todo implement datetime parsing on projects before usage
@@ -31,10 +32,13 @@ export function filterByDate() {
     const dateB = new Date(b.dates.split(' to ')[1] || b.dates);
     return isAscending ? dateA - dateB : dateB - dateA;
   });
-  // reinitialize pagination with sorted projects using default projectsPerPage
+  // Update pagination settings from localStorage before initializing pagination
+  applyPagination();
+  // Now initialize pagination, which internally handles rendering the correct page
   initPagination(sortedProjects, projectsPerPage);
-  renderProjectsGallery(sortedProjects);
 }
+
+
 
 /**
  * Creates a <span> with truncated text (100 chars by default).
