@@ -163,7 +163,7 @@
   {
     "id": "uwo-surveyor",
     "title": "Athlete Surveyor",
-    "academic": false,
+    "academic": true,
     "dates": "5-10-2022 to 12-10-2022",
     "status": "Submitted",
     "link": "https://github.com/QuantumPickleJar/uwo_athlete_surveyor",

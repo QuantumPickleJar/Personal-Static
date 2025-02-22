@@ -10,7 +10,7 @@ export let allProjects = []; // stored projects go here
 
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
-  fetch('rsc/projects.json')
+  fetch('rsc/json/projects.json')
     .then(response => response.json())
     .then(data => {
       allProjects = data;
@@ -29,9 +29,8 @@ export function loadProjects() {
           const term = searchInput.value.trim();
           // Filter
           const filtered = filterProjectsBySearchTerm(allProjects, term);
-          // Re-render or re-paginate with the filtered array
-          // For a simple re-render:
-          renderProjectsGallery(filtered);
+          // Reinitialize pagination with filtered projects to update pagination controls
+          initPagination(filtered, projectsPerPage);
         });
       }
     })
