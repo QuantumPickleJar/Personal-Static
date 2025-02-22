@@ -3,7 +3,12 @@
     "id": "proj-ps2c",
     "title": "Planetside 2 Companion",
     "academic": true,
-    "dates": "11-15-2018 to 12-20-2018",
+    "date": "11-15-2018 to 12-20-2018",
+    "dates": {
+      "started": "11-15-2018",
+      "modified": "12-20-2018",
+      "released": "N/A"
+    },
     "status": "",
     "shortForm": "A dual-purpose app to allow general querying of player statistics and plugging into an EventStream from real-time game sessions via DaybreakGames' Census API.",
     "description": "Functionally equivalent to FISU's services that players are offered. Key functionalities learned include Event Listeners, WebSockets, and JSON De/Serialization. Adapter pattern unwittingly used in payload categorization.",
@@ -21,7 +26,12 @@
     "id": "uwo-rostar",
     "title": "RoStar Housing",
     "academic": true,
-    "dates": "6-12-24 to 10-31-24",
+    "date": "6-12-24 to 10-31-24",
+    "dates": {
+      "started": "6-12-24",
+      "modified": "10-31-24",
+      "released": "N/A"
+    },
     "status": "Complete",
     "shortForm": "Integrated the ability to query room numbers and relationally pull up the UUID of the booked student.",
     "description": "Leveraged largely pre-established infrastructure, extended functionality using existing schemas, and migrated the project from dotnet 3.1 to dotnet 6.X.",
@@ -42,7 +52,12 @@
     "id": "uwo-dockerization",
     "title": "Orchestration (Docker-compose)",
     "academic": false,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "",
     "shortForm": "Multi-API project beckoned for dual-purpose support with run configurations.",
     "description": "Debugged a service containing multiple APIs, each serving its own purpose, and provided user-friendly dual-purpose support for two run configurations.",
@@ -66,7 +81,12 @@
     "id": "uwo-docker-guides",
     "title": "Docker Guides",
     "academic": false,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "",
     "shortForm": "Wrote a 3-page guide on how teammates could modify their environment to enhance debugging capabilities.",
     "description": "The pages were first drafted in Obsidian and then ported into Confluence pending formatting changes.  Conversion was handled through Obsidian's Convert to PDF feature, and several other teammates were then enabled to ",
@@ -82,7 +102,12 @@
     "id": "media-server",
     "title": "Media Server",
     "academic": false,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "in-progress",
     "shortForm": "",
     "description": "",
@@ -94,7 +119,12 @@
     "id": "vtm-portfolio",
     "title": "Personal Site",
     "academic": false,
-    "dates": "12-18-24 to Present",
+    "date": "12-18-24 to Present",
+    "dates": {
+      "started": "12-18-24",
+      "modified": "Present",
+      "released": "N/A"
+    },
     "status": "In-Progress",
     "link": "https://github.com/QuantumPickleJar/Personal-Static",
     "shortForm": "Having a QR Code on your card warrants a website",
@@ -115,7 +145,12 @@
     "id": "vtm",
     "title": "Safe GenAI Flowchart",
     "academic": false,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "",
     "shortForm": "A single graphic detailing principles, ordered steps, and guidelines for leveraging abstractions at a linguistic level.",
     "description": "Non technical; emphasizes the importance of leveraging abstractions instead of a technical, object-oriented approach.",
@@ -134,7 +169,12 @@
     "id": "flavorflav",
     "title": "FlavorFlav (Team Project)",
     "academic": true,
-    "dates": "5-10-2023 to 12-10-2023",
+    "date": "5-10-2023 to 12-10-2023",
+    "dates": {
+      "started": "5-10-2023",
+      "modified": "12-10-2023",
+      "released": "N/A"
+    },
     "status": "",
     "shortForm": "Recipe-oriented Social Media Platform",
     "description": "Features include autocomplete, a strategy pattern, and unit testing on the Android platform.  More notably, the autocomplete was written following the Strategy design pattern, and was very effective in capturing the stakeholder (audience)'s attenion during demonstration.",
@@ -164,7 +204,12 @@
     "id": "uwo-surveyor",
     "title": "Athlete Surveyor",
     "academic": true,
-    "dates": "5-10-2022 to 12-10-2022",
+    "date": "5-10-2022 to 12-10-2022",
+    "dates": {
+      "started": "5-10-2022",
+      "modified": "12-10-2022",
+      "released": "N/A"
+    },
     "status": "Submitted",
     "link": "https://github.com/QuantumPickleJar/uwo_athlete_surveyor",
     "shortForm": "An app for faculty to check in on the well-being of students with form generation for reports.",
@@ -186,7 +231,12 @@
     "id": "fvtc-poi-tracker",
     "title": "POITracker",
     "academic": true,
-    "dates": "1-12-2019 to 4-30-2019",
+    "date": "1-12-2019 to 4-30-2019",
+    "dates": {
+      "started": "1-12-2019",
+      "modified": "4-30-2019",
+      "released": "N/A"
+    },
     "status": "Archived",
     "shortForm": "Product of a 5-week agile simulation for tracking changes.",
     "description": "Team Foundations for tracking changes.",
@@ -205,7 +255,12 @@
     "id": "temperature-tracker",
     "title": "Temperature Tracker",
     "academic": false,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "In-progress",
     "shortForm": "Deploying bare-bone temperature units using a microcontroller and ESP-01 to relay readings via Wi-Fi.",
     "description": "Data is visualized using an IFTTT endpoint to collect readings into a spreadsheet.",
@@ -225,7 +280,12 @@
     "id": "frugal-fashion",
     "title": "Frugal Fashion",
     "academic": true,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "",
     "shortForm": "A site built for a local fashion merchant with features for non-technical users.",
     "description": "Built to allow frequent changes of venues and authentication for the owner to maintain a local store of files on a Replit-hosted server.",
@@ -247,7 +307,12 @@
     "id": "workflow-playground",
     "title": "Workflow Playground",
     "academic": false,
-    "dates": "12-4-2023 - 1-1-2024",
+    "date": "12-4-2023 - 1-1-2024",
+    "dates": {
+      "started": "12-4-2023",
+      "modified": "1-1-2024",
+      "released": "N/A"
+    },
     "status": "Completed",
     "shortForm": "Experimenting with automated workflows bound to repositories.",
     "description": "Continuous deployment with GitHub repository integration.",
@@ -259,7 +324,12 @@
     "id": "handwriting-visualizer-pipeline",
     "title": "Handwriting Visualizer Pipeline",
     "academic": true,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "",
     "link": "https://github.com/QuantumPickleJar/ImageTraining-A4/blob/dysgraphia_sample/MNist-custom.ipynb",
     "shortForm": "A variation on a handwriting recognition dataset handcrafted with a LiveScribe pen.",
@@ -277,7 +347,12 @@
     "id": "fwappa",
     "title": "Flutter UI Mockup",
     "academic": true,
-    "dates": "",
+    "date": "",
+    "dates": {
+      "started": "N/A",
+      "modified": "N/A",
+      "released": "N/A"
+    },
     "status": "Complete",
     "link": "https://github.com/QuantumPickleJar/",
     "shortForm": "Produce a Dart/Flutter UI mockup for a flight-tracking app.",
