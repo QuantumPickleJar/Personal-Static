@@ -27,3 +27,7 @@
 .slide-left {
   transform: translateX(-50%);
 }
+
+.profile-links {
+  text-align: center;
+}
