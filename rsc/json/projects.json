@@ -33,9 +33,9 @@
       "ReSharper",
       "Postman",
       "DataGrip",
-      "MermaidJS"
+      "MermaidJs"
     ],
-    "mermaid": "",
+    "mermaid": "erDiagram\n    Hall {\n        int HallId PK\n        string HallName\n    }\n    RoomBase {\n\t    int RoomBaseId PK\n\t    string CustomString1    \n\t    string Description\n\t    int BedCapacity\n    }\n    Resident {\n        string CampusId PK\n        string FirstName\n        string PreferredFirstName\n        string LastName\n        int Gender\n        string GenderDescription\n        int Standing\n        int HallId FK \"Redundant, but necessary\"\n        RoomBase RoomBase \"may be null\"\n\t\tstring EMContactInfo\n        string EMContactRelation\n        string RoomNumber \"Redundant, but necessary\"\n    }\n    Hall ||--o{ RoomBase : contains\n    Resident }o--|| Hall : resides_in",
     "images": []
   },
   {
@@ -179,7 +179,7 @@
       "DBeaver",
       "cockroachdb"
     ],
-    "mermaid": "",
+    "mermaid": "erDiagram\n    tbl_forms {\n        string form_id PK\n        string user_id FK\n        string form_title\n        string sport_id FK\n        datetime form_date_created\n    }\n    tbl_questions {\n        string question_id PK\n        string form_id FK\n        string content\n        int order_in_form\n        enum response_enum\n        string header\n        boolean res_required\n        string linked_file_key\n    }\n    \n    tbl_responses {\n        string response_id PK\n        string question_id FK\n        string request_id FK\n        string answer\n        enum response_type\n    }\n    tbl_sports {\n        string sport_id PK\n        string activity \n    }\n    tbl_requests {\n        string request_id PK\n        string form_id FK\n        string staff_id FK\n        datetime created_date\n    }\n    tbl_requestees {\n        string requestee_id PK\n        string request_id FK\n        string student_id FK\n        boolean completed\n        datetime completion_date\n    }\n    tbl_users {\n        string uuid_user PK\n        string username\n        string password\n        boolean is_admin\n        boolean is_temp_password\n        string first_name\n        string last_name\n    }\n    tbl_studentlist {\n        string student_id PK\n        string sport_id FK\n        string student_name\n        int grade\n    }\n    tbl_inbox {\n        string from_uuid FK\n        string to_uuid FK\n        datetime date_received\n        string subject_line\n        string body\n    }\n\n    tbl_forms ||--o{ tbl_questions : \"has\"\n    tbl_forms ||--o{ tbl_requests : \"used for\"\n    tbl_questions ||--o{ tbl_responses : \"asked in\"\n    tbl_requests ||--o{ tbl_requestees : \"sent to\"\n    tbl_responses ||--|{ tbl_requestees : \"submitted by\"\n    tbl_users ||--o{ tbl_forms : \"created by\"\n    tbl_users ||--o{ tbl_requests : \"makes\"\n    %% tbl_users ||--o{ tbl_requestees : \"is\"\n    tbl_users ||--o{ tbl_inbox : \"sends\/receives\"\n    tbl_studentlist ||--o{ tbl_requestees : \"is\"\n    %% tbl_studentlist ||--|{ tbl_sports : \"plays in\"\n    tbl_sports ||--|{ tbl_studentlist : \"plays in\"\n",
     "images": []
   },
   {
