@@ -228,6 +228,17 @@ apply consistent card height. */
 }
 
 
+
+#mermaidContainer {
+  width: 100%;            /* Or a fixed width like 600px */
+  max-height: 500px;      /* Set a maximum height */
+  overflow: hidden;       /* Hide any overflowing content */
+  touch-action: none;     /* Allow pan/zoom on touch devices */
+  cursor: grab;           /* Gives a visual cue that it’s draggable */
+  position: relative;     /* Ensure proper positioning */
+}
+
+
 .academic-label.academic {
   /* Your academic-specific styles here */
   background-color: #ffeb3b; /* Example: yellow background for academic labels */

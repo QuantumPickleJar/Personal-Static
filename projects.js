@@ -5,8 +5,14 @@ import { filterProjByTitle, filterByDate, createTruncatedSpan } from './gallery-
 import { getIcon, renderOneStackIcon } from './rsc/js/stackIconLoader.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { projectsPerPage } from './perPageSettings.js';
+import { parseMermaidCode } from './rsc/js/json-parser.js';
+import panzoom from 'panzoom';
+import mermaid from 'mermaid';
+window.mermaid = mermaid;
 
 export let allProjects = []; // stored projects go here
+
+mermaid.initialize({ startOnLoad: false });
 
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
@@ -247,7 +253,92 @@ function expandStack(container, stackArray, max, linkElement) {
 
 
 
-// TODO: collapse Stack
+function showImagesInModal() {
+  // Show the carousel container.
+  const modalImages = document.getElementById('modalImages');
+  modalImages.style.display = 'block';
+  
+  // Remove any existing mermaid container.
+  const mermaidContainer = document.getElementById('mermaidContainer');
+  if (mermaidContainer) {
+    mermaidContainer.remove();
+  }
+}
+
+
+function showMermaidDiagramInModal(project) {
+  // Use the same container that normally holds the carousel.
+  const modalImages = document.getElementById('modalImages');
+  modalImages.innerHTML = '';
+  modalImages.style.display = 'block';
+
+  // Create a container for the Mermaid diagram.
+  const mermaidContainer = document.createElement('div');
+  mermaidContainer.id = 'mermaidContainer';
+  mermaidContainer.className = 'mermaid';
+  modalImages.appendChild(mermaidContainer);
+
+  // Get the Mermaid code (make sure your JSON has quotes escaped properly)
+  const mermaidCode = parseMermaidCode(project);
+  // Place the raw Mermaid code in the container.
+  mermaidContainer.textContent = mermaidCode;
+
+  // Delay the initialization so the container is fully in the DOM.
+  setTimeout(() => {
+    try {
+      // This call scans the container for elements with the 'mermaid' class and renders them.
+      mermaid.init(undefined, mermaidContainer);
+      panzoom(mermaidContainer, {
+        smoothScroll: false, // or true, as desired
+        maxZoom: 5,
+        minZoom: 0.5
+      })
+    } catch (err) {
+      console.error('Error initializing Mermaid or panzoom:', err);
+    }
+  }, 100);
+
+  
+}
+
+
+function setupModalToggleFABs(project) {
+  // Create the container for the FABs.
+  const fabContainer = document.createElement('div');
+  fabContainer.className = 'fab-container';
+
+  // Create Images FAB.
+  const imagesFab = document.createElement('button');
+  imagesFab.className = 'fab toggle-images';
+  imagesFab.innerHTML = '<img src="images/stack/ImageIcon.png" alt="Images" />';
+
+  // Create Mermaid FAB.
+  const mermaidFab = document.createElement('button');
+  mermaidFab.className = 'fab toggle-mermaid';
+  mermaidFab.innerHTML = '<img src="images/stack/MermaidJs.png" alt="Mermaid Diagram" />';
+
+  // Toggle event listeners.
+  imagesFab.addEventListener('click', () => {
+    imagesFab.classList.add('selected');
+    mermaidFab.classList.remove('selected');
+    showImagesInModal();
+  });
+  mermaidFab.addEventListener('click', () => {
+    mermaidFab.classList.add('selected');
+    imagesFab.classList.remove('selected');
+    showMermaidDiagramInModal(project);
+  });
+
+  // Append buttons to the container.
+  fabContainer.appendChild(imagesFab);
+  fabContainer.appendChild(mermaidFab);
+
+  // Insert the container into the modal. For example, right after the vertical stack:
+  const modalStack = document.getElementById('modalStack');
+  if (modalStack && modalStack.parentNode) {
+    modalStack.parentNode.insertBefore(fabContainer, modalStack.nextSibling);
+  }
+}
 
 
 export function openProjectModal(projectId) {
@@ -293,7 +384,6 @@ export function openProjectModal(projectId) {
       ? `rsc/images/${imgSrc}`
       : `rsc/images/recipes/${imgSrc}`; // Default to recipes subfolder
       
-      // Instead of just <img ...>, do something like:
       const anchor = document.createElement('a');
       anchor.href = finalSrc;                // large/full-size image URL
       anchor.setAttribute('data-lightbox', 'carousel-images'); 
@@ -362,6 +452,9 @@ export function openProjectModal(projectId) {
     const iconEl = renderOneStackIcon(tech);
     modalStack.appendChild(iconEl);
   });
+
+
+  setupModalToggleFABs(project);
 
   // Bottom container
   const projectStatus = document.getElementById('projectStatus');
