@@ -5,7 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-
+  target: 'web',
   // 1) The main entry for your JS
   entry: {
     main: './main.js' // Make sure this file is at project root or adjust path
@@ -59,7 +59,7 @@ module.exports = {
       directory: path.join(__dirname, 'dist'),
     },
     port: 9000,
-    hot: true,
+    hot: false,
     open: true,
   },
 };
