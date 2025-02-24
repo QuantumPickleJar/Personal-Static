@@ -11,6 +11,7 @@ import mermaid from 'mermaid';
 window.mermaid = mermaid;
 
 export let allProjects = []; // stored projects go here
+const MAX_STACK_CHARS = 20; // Adjust this value to your needs
 
 mermaid.initialize({ startOnLoad: false });
 
@@ -207,24 +208,22 @@ export function renderProjectsGallery(projects) {
     // Stack Icons
     const stackContainer = document.createElement('div');
     stackContainer.classList.add('stack-icons');
-    const MAX_VISIBLE_STACK = 3;
-    const totalStack = project.stack.length;
+    const { items, remaining } = getVisibleStackItems(project.stack);
 
-    project.stack.slice(0, MAX_VISIBLE_STACK).forEach(tech => {
+    items.forEach(tech => {
       const techSpan = document.createElement('span');
       techSpan.classList.add('stack-icon');
       techSpan.textContent = tech;
       stackContainer.appendChild(techSpan);
     });
 
-    // +N more if needed
-    if (totalStack > MAX_VISIBLE_STACK) {
+    if (remaining > 0) {
       const moreLink = document.createElement('span');
       moreLink.classList.add('more-link');
-      moreLink.textContent = `+${totalStack - MAX_VISIBLE_STACK} more`;
+      moreLink.textContent = `+${remaining} more`;
       moreLink.addEventListener('click', e => {
         e.stopPropagation();
-        expandStack(stackContainer, project.stack, MAX_VISIBLE_STACK, moreLink);
+        expandStack(stackContainer, project.stack, items.length, moreLink);
       });
       stackContainer.appendChild(moreLink);
     }
@@ -240,7 +239,7 @@ export function renderProjectsGallery(projects) {
 }
 
 
-/** Expand stack icons */
+// E/xpand stack icons 
 function expandStack(container, stackArray, max, linkElement) {
   container.removeChild(linkElement);
   stackArray.slice(max).forEach(tech => {
@@ -254,7 +253,7 @@ function expandStack(container, stackArray, max, linkElement) {
 
 function showImagesInModal(project) {
   const modalImages = document.getElementById('modalImages');
-  // Clear container and reset classes/inline styles.
+  // Clear container and reset classes/inline styles
   modalImages.innerHTML = '';
   modalImages.classList.remove('mermaid-view');
   modalImages.classList.add('images-view');
@@ -262,7 +261,7 @@ function showImagesInModal(project) {
   modalImages.style.overflow = '';
 
   if (project.images && project.images.length > 0) {
-    // Render the carousel view if images exist.
+    // Render the carousel view if images exist
     const carousel = document.createElement('div');
     carousel.id = 'projectImageCarousel';
     carousel.className = 'carousel slide';
@@ -294,7 +293,7 @@ function showImagesInModal(project) {
     });
 
     carousel.appendChild(carouselInner);
-    // Create carousel controls.
+    // Create carousel controls
     const btnPrev = document.createElement('button');
     btnPrev.className = 'carousel-control-prev';
     btnPrev.setAttribute('type', 'button');
@@ -401,14 +400,20 @@ function setupModalToggleFABs(project) {
   imagesFab.className = 'fab toggle-images';
   imagesFab.innerHTML = '<img src="rsc/images/fab-image-icon.png" alt="Images" style="width:24px; height:24px;">';
 
-  // Create Mermaid FAB.
+  // Create Mermaid FAB with initial disabled state
   const mermaidFab = document.createElement('button');
   mermaidFab.className = 'fab toggle-mermaid';
-  mermaidFab.innerHTML = '<img src="images/stack/MermaidJs.png" alt="Mermaid Diagram" />';
+  mermaidFab.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />';
+  
+  // Check for mermaid content immediately and set disabled state
+  if (!project.mermaid || !project.mermaid.trim()) {
+    mermaidFab.setAttribute('disabled', 'true');
+    mermaidFab.classList.add('disabled');
+  }
 
   // Attach tooltip on mouseover for the mermaid FAB.
   mermaidFab.addEventListener('click', () => {
-    // Create tooltip only if not already present.
+    // Only show tooltip if project has mermaid content
     let tooltip = mermaidFab.querySelector('.fab-tooltip');
     if (!tooltip) {
       tooltip = document.createElement('div');
@@ -435,28 +440,18 @@ function setupModalToggleFABs(project) {
     showImagesInModal(currentProject);
   });
   mermaidFab.addEventListener('click', () => {
-    mermaidFab.classList.add('selected');
-    imagesFab.classList.remove('selected');
-    // Create tooltip in the body
-  const tooltip = document.createElement('div');
-  tooltip.className = 'fab-tooltip show';
-  tooltip.textContent = 'drag and scroll to explore the ERD';
-
-  // Position the tooltip near the mermaidFab’s bounding box
-  document.body.appendChild(tooltip);
-
-  // Calculate position:
-  const rect = mermaidFab.getBoundingClientRect();
-  tooltip.style.left = `${rect.left + rect.width / 2}px`;
-  tooltip.style.top = `${rect.top - 10}px`; 
-  tooltip.style.transform = 'translate(-50%, -100%)';
-
-  // After 3s, remove
-  setTimeout(() => {
-    tooltip.remove();
-  }, 3000);
-  showMermaidDiagramInModal(currentProject);
-});
+    if (!mermaidFab.disabled) {  // Only execute if not disabled
+      mermaidFab.classList.add('selected');
+      imagesFab.classList.remove('selected');
+      showMermaidDiagramInModal(currentProject);
+      
+      // Show tooltip
+      const tooltip = document.createElement('div');
+      tooltip.className = 'fab-tooltip show';
+      tooltip.textContent = 'drag and scroll to explore the ERD';
+      // ...rest of tooltip code...
+    }
+  });
 
   // Append buttons to the container.
   fabContainer.appendChild(imagesFab);
@@ -510,9 +505,6 @@ export function openProjectModal(projectId) {
 }
 
 
-
-
-
 /** Close the modal and "reset" it*/
 export function closeModal() {
   const modal = document.getElementById('projectModal');
@@ -528,6 +520,26 @@ export function closeModal() {
   document.getElementById('modalDescription').innerText = '';
   document.getElementById('modalStack').innerHTML = '';
   document.getElementById('modalImages').innerHTML = '';
+}
+
+
+function getVisibleStackItems(stackArray) {
+  let charCount = 0;
+  let visibleItems = [];
+
+  for (const tech of stackArray) {
+    if (charCount + tech.length <= MAX_STACK_CHARS) {
+      charCount += tech.length;
+      visibleItems.push(tech);
+    } else {
+      break;
+    }
+  }
+
+  return {
+    items: visibleItems,
+    remaining: stackArray.length - visibleItems.length
+  };
 }
 
 

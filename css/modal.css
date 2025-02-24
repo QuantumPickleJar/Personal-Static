@@ -286,6 +286,12 @@
   overflow: visible; /* So tooltip can appear outside the button */
 }
 
+.fab img {
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
+}
+
 /* Hover and selected state for FABs */
 .fab:hover {
   background-color: #e1e1e1;
@@ -294,6 +300,13 @@
 .fab.selected {
   background-color: #007bff;
   color: #fff;
+}
+
+.fab.disabled,
+.fab[disabled] {
+  filter: grayscale(100%);
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Tooltip bubble styling */
