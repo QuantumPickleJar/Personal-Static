@@ -31,3 +31,9 @@
 .profile-links {
   text-align: center;
 }
+
+/* Only target anchors that are inside .profile-links */
+.profile-links a {
+  color: pink;
+  text-align: center;
+}

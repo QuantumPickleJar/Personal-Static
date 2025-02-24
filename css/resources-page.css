@@ -66,6 +66,11 @@
   margin: 40px 0;
 }
 
+.book-cover, .book-cover > img { 
+  max-width: calc(25vw - 10px) !important;
+  height: auto !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .contentContainer {
