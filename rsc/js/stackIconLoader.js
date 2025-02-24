@@ -22,10 +22,10 @@ export function getIcon(techName) {
   // Trim whitespace from the techName for consistency
   const normalizedTech = techName.trim();
   // Debug: log the normalized name and lookup result
-  console.log(`Looking up icon for tech: "${normalizedTech}"`);
+  // console.log(`Looking up icon for tech: "${normalizedTech}"`);
   // Attempt to find an inline SVG from the map
   const rawSvg = iconSvgs[normalizedTech];
-  console.log(`Found icon:`, rawSvg);
+  // console.log(`Found icon:`, rawSvg);
   if (!rawSvg) {
     // not found -> return null so you can fallback to local .png
     return null;

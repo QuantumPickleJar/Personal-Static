@@ -1,3 +1,5 @@
+import barba from '@barba/core';
+
 document.addEventListener('DOMContentLoaded', function() {
   barba.init({
     transitions: [{

@@ -252,122 +252,20 @@ function expandStack(container, stackArray, max, linkElement) {
 }
 
 
-
-function showImagesInModal() {
-  // Show the carousel container.
+function showImagesInModal(project) {
   const modalImages = document.getElementById('modalImages');
-  modalImages.style.display = 'block';
-  
-  // Remove any existing mermaid container.
-  const mermaidContainer = document.getElementById('mermaidContainer');
-  if (mermaidContainer) {
-    mermaidContainer.remove();
-  }
-}
-
-
-function showMermaidDiagramInModal(project) {
-  // Use the same container that normally holds the carousel.
-  const modalImages = document.getElementById('modalImages');
+  // Clear container and reset classes/inline styles.
   modalImages.innerHTML = '';
-  modalImages.style.display = 'block';
-
-  // Create a container for the Mermaid diagram.
-  const mermaidContainer = document.createElement('div');
-  mermaidContainer.id = 'mermaidContainer';
-  mermaidContainer.className = 'mermaid';
-  modalImages.appendChild(mermaidContainer);
-
-  // Get the Mermaid code (make sure your JSON has quotes escaped properly)
-  const mermaidCode = parseMermaidCode(project);
-  // Place the raw Mermaid code in the container.
-  mermaidContainer.textContent = mermaidCode;
-
-  // Delay the initialization so the container is fully in the DOM.
-  setTimeout(() => {
-    try {
-      // This call scans the container for elements with the 'mermaid' class and renders them.
-      mermaid.init(undefined, mermaidContainer);
-      panzoom(mermaidContainer, {
-        smoothScroll: false, // or true, as desired
-        maxZoom: 5,
-        minZoom: 0.5
-      })
-    } catch (err) {
-      console.error('Error initializing Mermaid or panzoom:', err);
-    }
-  }, 100);
-
-  
-}
-
-
-function setupModalToggleFABs(project) {
-  // Create the container for the FABs.
-  const fabContainer = document.createElement('div');
-  fabContainer.className = 'fab-container';
-
-  // Create Images FAB.
-  const imagesFab = document.createElement('button');
-  imagesFab.className = 'fab toggle-images';
-  imagesFab.innerHTML = '<img src="images/stack/ImageIcon.png" alt="Images" />';
-
-  // Create Mermaid FAB.
-  const mermaidFab = document.createElement('button');
-  mermaidFab.className = 'fab toggle-mermaid';
-  mermaidFab.innerHTML = '<img src="images/stack/MermaidJs.png" alt="Mermaid Diagram" />';
-
-  // Toggle event listeners.
-  imagesFab.addEventListener('click', () => {
-    imagesFab.classList.add('selected');
-    mermaidFab.classList.remove('selected');
-    showImagesInModal();
-  });
-  mermaidFab.addEventListener('click', () => {
-    mermaidFab.classList.add('selected');
-    imagesFab.classList.remove('selected');
-    showMermaidDiagramInModal(project);
-  });
-
-  // Append buttons to the container.
-  fabContainer.appendChild(imagesFab);
-  fabContainer.appendChild(mermaidFab);
-
-  // Insert the container into the modal. For example, right after the vertical stack:
-  const modalStack = document.getElementById('modalStack');
-  if (modalStack && modalStack.parentNode) {
-    modalStack.parentNode.insertBefore(fabContainer, modalStack.nextSibling);
-  }
-}
-
-
-export function openProjectModal(projectId) {
-  const project = allProjects.find(p => p.id === projectId);
-  console.log('Opening modal for project:', project); // Debug log
-
-  if (!project) {
-    console.error('Project not found:', projectId);
-    return;
-  }
-
-  // Show the modal
-  const modal = document.getElementById('projectModal');
-  modal.style.display = 'block';
-
-  // Title
-  const modalTitle = document.getElementById('modalTitle');
-  modalTitle.textContent = project.title;
-
-  // Images / Carousel rendering
-  const modalImages = document.getElementById('modalImages');
-  modalImages.innerHTML = ''; // Clear previous content
+  modalImages.classList.remove('mermaid-view');
+  modalImages.classList.add('images-view');
+  modalImages.style.maxHeight = '';
+  modalImages.style.overflow = '';
 
   if (project.images && project.images.length > 0) {
-    // Create carousel container without auto-ride attribute
+    // Render the carousel view if images exist.
     const carousel = document.createElement('div');
     carousel.id = 'projectImageCarousel';
     carousel.className = 'carousel slide';
-
     const carouselInner = document.createElement('div');
     carouselInner.className = 'carousel-inner';
 
@@ -376,21 +274,18 @@ export function openProjectModal(projectId) {
       carouselItem.classList.add('carousel-item');
       if (index === 0) carouselItem.classList.add('active');
 
-      
       const img = document.createElement('img');
       const finalSrc = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
-      ? imgSrc 
-      : imgSrc.includes('/')
-      ? `rsc/images/${imgSrc}`
-      : `rsc/images/recipes/${imgSrc}`; // Default to recipes subfolder
-      
+        ? imgSrc
+        : imgSrc.includes('/')
+          ? `rsc/images/${imgSrc}`
+          : `rsc/images/recipes/${imgSrc}`;
       const anchor = document.createElement('a');
-      anchor.href = finalSrc;                // large/full-size image URL
-      anchor.setAttribute('data-lightbox', 'carousel-images'); 
+      anchor.href = finalSrc;
+      anchor.setAttribute('data-lightbox', 'carousel-images');
       anchor.appendChild(img);
       carouselItem.appendChild(anchor);
 
-      console.log('Final image path:', finalSrc);
       img.src = finalSrc;
       img.classList.add('d-block', 'w-100');
       img.alt = `Project image ${index + 1}`;
@@ -399,8 +294,7 @@ export function openProjectModal(projectId) {
     });
 
     carousel.appendChild(carouselInner);
-
-    // Create carousel controls
+    // Create carousel controls.
     const btnPrev = document.createElement('button');
     btnPrev.className = 'carousel-control-prev';
     btnPrev.setAttribute('type', 'button');
@@ -410,7 +304,6 @@ export function openProjectModal(projectId) {
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     `;
-
     const btnNext = document.createElement('button');
     btnNext.className = 'carousel-control-next';
     btnNext.setAttribute('type', 'button');
@@ -420,32 +313,179 @@ export function openProjectModal(projectId) {
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     `;
-
     carousel.appendChild(btnPrev);
     carousel.appendChild(btnNext);
     modalImages.appendChild(carousel);
-
-    // Optionally fix the height so description is visible
     carousel.style.maxHeight = '375px';
-
-    // Initialize Bootstrap carousel
     new bootstrap.Carousel(carousel, { interval: false, wrap: true });
-  } else {
-    // No images: render fallback placeholder without carousel
+  }  else {
+    // Render fallback placeholder.
     const fallbackDiv = document.createElement('div');
-    fallbackDiv.classList.add('fallback-placeholder'); // Use the CSS class for styling
-    fallbackDiv.style.maxHeight = '400px';
+    fallbackDiv.className = 'fallback-placeholder';
+    // Ensure the fallback has fixed dimensions.
+    fallbackDiv.style.width = '250px';
+    fallbackDiv.style.height = '250px';
+    fallbackDiv.style.flex = '0 0 auto'; // Prevent flex from stretching it.
     const img = document.createElement('img');
     img.src = getPlaceholderForStack(project);
-    img.className = 'd-block w-100';
     img.alt = 'Project placeholder';
-
+    // Remove any conflicting inline styles from img.
+    img.removeAttribute('style');
     fallbackDiv.appendChild(img);
+    // Center the fallbackDiv within modalImages.
+    modalImages.style.display = 'flex';
+    modalImages.style.justifyContent = 'center';
+    modalImages.style.alignItems = 'center';
     modalImages.appendChild(fallbackDiv);
+  }
+}
 
+
+
+function showMermaidDiagramInModal(project) {
+  const modalImages = document.getElementById('modalImages');
+  // Switch to mermaid view
+  modalImages.innerHTML = '';
+  modalImages.classList.remove('images-view');
+  modalImages.classList.add('mermaid-view');
+  modalImages.style.display = 'block';
+
+  const mermaidContainer = document.createElement('div');
+  mermaidContainer.id = 'mermaidContainer';
+  mermaidContainer.className = 'mermaid';
+  // Remove any inline overflow that might clip the fallback
+  mermaidContainer.style.overflow = '';
+  modalImages.appendChild(mermaidContainer);
+
+  const mermaidCode = parseMermaidCode(project);
+  if (!mermaidCode.trim()) {
+    // Render fallback with a red slash overlay
+    // Set inline style to force a min-height if needed:
+    mermaidContainer.style.minHeight = '300px';
+    mermaidContainer.innerHTML = '<div class="no-mermaid">No Mermaid Diagram Available</div>';
+    return;
   }
 
-  // Stack
+  // Otherwise, render the Mermaid diagram.
+  mermaidContainer.textContent = mermaidCode;
+  setTimeout(() => {
+    try {
+      mermaid.init(undefined, mermaidContainer);
+      panzoom(mermaidContainer, {
+        smoothScroll: false,
+        maxZoom: 5,
+        minZoom: 0.5
+      });
+    } catch (err) {
+      console.error('Error initializing Mermaid or panzoom:', err);
+    }
+  }, 100);
+}
+
+
+
+function setupModalToggleFABs(project) {
+  const currentProject = project;
+  // Remove any existing FAB container if necessary
+  const existingFAB = document.querySelector('.fab-container');
+  if (existingFAB) {
+    existingFAB.remove();
+  }
+  
+  // Create the container for the FABs.
+  const fabContainer = document.createElement('div');
+  fabContainer.className = 'fab-container';
+
+  // Create Images FAB.
+  const imagesFab = document.createElement('button');
+  imagesFab.className = 'fab toggle-images';
+  imagesFab.innerHTML = '<img src="images/fab-image-icon.png" alt="Images" style="width:24px; height:24px;">';
+
+  // Create Mermaid FAB.
+  const mermaidFab = document.createElement('button');
+  mermaidFab.className = 'fab toggle-mermaid';
+  mermaidFab.innerHTML = '<img src="images/stack/MermaidJs.png" alt="Mermaid Diagram" />';
+
+  // Attach tooltip on mouseover for the mermaid FAB.
+  mermaidFab.addEventListener('click', () => {
+    // Create tooltip only if not already present.
+    let tooltip = mermaidFab.querySelector('.fab-tooltip');
+    if (!tooltip) {
+      tooltip = document.createElement('div');
+      tooltip.className = 'fab-tooltip';
+      tooltip.textContent = 'drag and scroll to explore the ERD';
+      mermaidFab.appendChild(tooltip);
+      // Force a reflow so that the transition works.
+      void tooltip.offsetWidth;
+      tooltip.classList.add('show');
+      // After 3 seconds, fade out and remove the tooltip.
+      setTimeout(() => {
+        tooltip.classList.remove('show');
+        setTimeout(() => {
+          tooltip.remove();
+        }, 500);
+      }, 3000);
+    }
+  });
+
+  // Toggle event listeners.
+  imagesFab.addEventListener('click', () => {
+    imagesFab.classList.add('selected');
+    mermaidFab.classList.remove('selected');
+    showImagesInModal(currentProject);
+  });
+  mermaidFab.addEventListener('click', () => {
+    mermaidFab.classList.add('selected');
+    imagesFab.classList.remove('selected');
+    // Create tooltip in the body
+  const tooltip = document.createElement('div');
+  tooltip.className = 'fab-tooltip show';
+  tooltip.textContent = 'drag and scroll to explore the ERD';
+
+  // Position the tooltip near the mermaidFab’s bounding box
+  document.body.appendChild(tooltip);
+
+  // Calculate position:
+  const rect = mermaidFab.getBoundingClientRect();
+  tooltip.style.left = `${rect.left + rect.width / 2}px`;
+  tooltip.style.top = `${rect.top - 10}px`; 
+  tooltip.style.transform = 'translate(-50%, -100%)';
+
+  // After 3s, remove
+  setTimeout(() => {
+    tooltip.remove();
+  }, 3000);
+  showMermaidDiagramInModal(currentProject);
+});
+
+  // Append buttons to the container.
+  fabContainer.appendChild(imagesFab);
+  fabContainer.appendChild(mermaidFab);
+
+  // Insert the container into the modal; for example, right after the vertical stack.
+  const modalStack = document.getElementById('modalStack');
+  if (modalStack && modalStack.parentNode) {
+    modalStack.parentNode.insertBefore(fabContainer, modalStack.nextSibling);
+  }
+}
+
+export function openProjectModal(projectId) {
+  const project = allProjects.find(p => p.id === projectId);
+  if (!project) {
+    console.error('Project not found:', projectId);
+    return;
+  }
+
+  // Show the modal and set the title.
+  const modal = document.getElementById('projectModal');
+  modal.style.display = 'block';
+  const modalTitle = document.getElementById('modalTitle');
+  modalTitle.textContent = project.title;
+
+  // Render the images view (or fallback).
+  showImagesInModal(project);
+
+  // Render stack icons.
   const modalStack = document.getElementById('modalStack');
   modalStack.innerHTML = '';
   project.stack.forEach(tech => {
@@ -453,26 +493,36 @@ export function openProjectModal(projectId) {
     modalStack.appendChild(iconEl);
   });
 
-
+  // Remove any existing FAB container.
+  const existingFAB = document.querySelector('.fab-container');
+  if (existingFAB) {
+    existingFAB.remove();
+  }
   setupModalToggleFABs(project);
 
-  // Bottom container
+  // Render bottom container details.
   const projectStatus = document.getElementById('projectStatus');
   projectStatus.textContent = `Status: ${project.status || 'N/A'}`;
-
   const projectDates = document.getElementById('projectDates');
   projectDates.textContent = `Dates: ${project.dates || 'Unknown'}`;
-
   const modalDesc = document.getElementById('modalDescription');
   modalDesc.textContent = project.description || 'No description available';
 }
+
+
+
 
 
 /** Close the modal and "reset" it*/
 export function closeModal() {
   const modal = document.getElementById('projectModal');
   modal.style.display = 'none';
-
+  
+  const fabContainer = document.querySelector('.fab-container');
+  if (fabContainer) {
+    fabContainer.remove();
+  }
+  
   // Optionally clear fields so it’s fresh next time
   document.getElementById('modalTitle').innerText = '';
   document.getElementById('modalDescription').innerText = '';

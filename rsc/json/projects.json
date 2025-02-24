@@ -114,7 +114,7 @@
   {
     "id": "vtm",
     "title": "Safe GenAI Flowchart",
-    "academic": false,
+    "academic": true,
     "dates": "",
     "status": "",
     "shortForm": "A single graphic detailing principles, ordered steps, and guidelines for leveraging abstractions at a linguistic level.",
