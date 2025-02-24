@@ -1,15 +1,33 @@
 [
     {
-      "title": "Book Title 1",
-      "author": "Author Name",
-      "cover": "images/book1.png",
-      "description": "A brief description of Book Title 1."
+      "title": "Design Patterns Explained",
+      "author": "Alan Shalloway & James R. Trott",
+      "cover": "/rsc/images/books/design-patterns-cover.jpg",
+      "description": "A clear and practical introduction to the most widely used design patterns in software engineering."
     },
     {
       "title": "Artificial Intelligence: A Modern Approach",
       "author": "Peter Norvig",
-      "cover": "images/peter_novig_aiama.png",
+      "cover":"/rsc/images/books/aima4e-cover.jpg",
       "description": "A brief description of Book Title 2."
+    },
+    {
+      "title": "Debugging Teams",
+      "author": "Brian Fitzpatrick & Ben Collins-Sussman",
+      "cover": "/rsc/images/books/debugging-teams.jpg",
+      "description": "This book offers practical insights into building and managing effective teams that excel in debugging complex software issues.  Focusing heavily on collaboration, communication, and proven strategies to transform the challenges of bug hunting into opportunities for team growth."
+    },
+    {
+      "title": "High-Performance Browser Networking",
+      "author": "",
+      "cover": "/rsc/images/",
+      "description": ""
+    },
+    {
+      "title": "",
+      "author": "",
+      "cover": "/rsc/images/",
+      "description": ""
     }
   ]
   
