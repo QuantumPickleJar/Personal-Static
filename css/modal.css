@@ -235,6 +235,11 @@
 }
 
 
+.modal-top-left.mermaid-mode,
+.modal-images.mermaid-view {
+  max-height: none !important;
+  overflow: visible !important;
+}
 
 /* For the images/carousel view */
 .modal-images.images-view {
@@ -242,14 +247,13 @@
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center; /* Center fallback if needed */
-  overflow: hidden;
 }
 
 /* For the Mermaid view */
 .modal-images.mermaid-view {
   max-width: 100%;
   max-height: 375px;
-  overflow: auto; /* Allow scrolling if diagram is large */
+  overflow: visible; /* Allow scrolling if diagram is large */
 }
 
 

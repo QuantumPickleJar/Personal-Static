@@ -399,7 +399,7 @@ function setupModalToggleFABs(project) {
   // Create Images FAB.
   const imagesFab = document.createElement('button');
   imagesFab.className = 'fab toggle-images';
-  imagesFab.innerHTML = '<img src="images/fab-image-icon.png" alt="Images" style="width:24px; height:24px;">';
+  imagesFab.innerHTML = '<img src="rsc/images/fab-image-icon.png" alt="Images" style="width:24px; height:24px;">';
 
   // Create Mermaid FAB.
   const mermaidFab = document.createElement('button');
