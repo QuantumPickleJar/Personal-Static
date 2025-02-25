@@ -312,9 +312,9 @@
 /* Tooltip bubble styling */
 .fab-tooltip {
   position: absolute;
-  bottom: 100%; /* position above the button */
+  bottom: 100%; /* This positions it above its containing button (mermaidFab) */
   left: 50%;
-  transform: translate(-50%, -10px); /* shift a bit above */
+  transform: translate(-50%, -10px);
   margin-bottom: 8px;
   padding: 6px 10px;
   background: rgba(0, 0, 0, 0.8);
@@ -325,9 +325,8 @@
   opacity: 0;
   transition: opacity 0.5s ease;
   pointer-events: none;
-  z-index: 19999;  /* a high z-index to ensure it sits on top */
+  z-index: 19999;
 }
 .fab-tooltip.show {
   opacity: 1;
-
 }

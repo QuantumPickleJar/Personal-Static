@@ -167,9 +167,7 @@ export function renderProjectsGallery(projects) {
     // Date label (top left corner)
     const dateLabel = document.createElement('span');
     dateLabel.classList.add('date-label');
-
-    // parse the datetime from the `dates` parameter, which will need a helper function
-    dateLabel.textContent = project.date;    // for now, this will suffice
+    dateLabel.textContent = project.dates || 'No date'; // Changed from project.date to project.dates
 
     labelRow.appendChild(dateLabel);
 
@@ -184,6 +182,7 @@ export function renderProjectsGallery(projects) {
       academicLabel.classList.add('personal');
     }
     card.appendChild(academicLabel);
+    card.appendChild(dateLabel); // Move the dateLabel append after the academic label
 
     // If multiple images, show an icon
     if (project.images && project.images.length > 1) {
@@ -236,6 +235,28 @@ export function renderProjectsGallery(projects) {
       stackContainer.appendChild(moreLink);
     }
     card.appendChild(stackContainer);
+
+    // Inside renderProjectsGallery(), appending badges 
+    if ((project.images && project.images.length > 1) || (project.mermaid && project.mermaid.trim())) {
+      const badgeContainer = document.createElement('div');
+      badgeContainer.classList.add('badge-container');
+      
+      if (project.images && project.images.length > 1) {
+        const imageCountIcon = document.createElement('div');
+        imageCountIcon.classList.add('image-count-icon');
+        imageCountIcon.innerHTML = `<span class="icon">&#128247;</span><span class="count">${project.images.length}</span>`;
+        badgeContainer.appendChild(imageCountIcon);
+      }
+      
+      if (project.mermaid && project.mermaid.trim()) {
+        const mermaidIcon = document.createElement('div');
+        mermaidIcon.classList.add('mermaid-icon');
+        mermaidIcon.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
+        badgeContainer.appendChild(mermaidIcon);
+      }
+      
+      card.appendChild(badgeContainer);
+    }
 
     // Click => open modal
     card.addEventListener('click', () => {
@@ -407,6 +428,8 @@ function setupModalToggleFABs(project) {
   const imagesFab = document.createElement('button');
   imagesFab.className = 'fab toggle-images';
   imagesFab.innerHTML = '<img src="rsc/images/fab-image-icon.png" alt="Images" style="width:24px; height:24px;">';
+  // -- Add selected class by default --
+  imagesFab.classList.add('selected');
 
   // Create Mermaid FAB with initial disabled state
   const mermaidFab = document.createElement('button');
@@ -429,9 +452,19 @@ function setupModalToggleFABs(project) {
       tooltip.className = 'fab-tooltip';
       tooltip.textContent = 'drag and scroll to explore the ERD';
       mermaidFab.appendChild(tooltip);
-      // Force a reflow so that the transition works.
+      
+      // Compute and set the tooltip's position relative to mermaidFab
+      const tooltipHeight = tooltip.offsetHeight || 30; // default if not rendered yet
+      tooltip.style.position = 'absolute';
+      tooltip.style.top = `-${tooltipHeight + 5}px`; // 5px above mermaidFab
+      tooltip.style.left = '50%';
+      tooltip.style.transform = 'translateX(-50%)';
+      tooltip.style.zIndex = '20000';
+      
+      // Force a reflow so the transition works.
       void tooltip.offsetWidth;
       tooltip.classList.add('show');
+      
       // After 3 seconds, fade out and remove the tooltip.
       setTimeout(() => {
         tooltip.classList.remove('show');
@@ -463,12 +496,7 @@ function setupModalToggleFABs(project) {
       mermaidFab.classList.add('selected');
       imagesFab.classList.remove('selected');
       showMermaidDiagramInModal(currentProject);
-      
-      // Show tooltip
-      const tooltip = document.createElement('div');
-      tooltip.className = 'fab-tooltip show';
-      tooltip.textContent = 'drag and scroll to explore the ERD';
-      // ...rest of tooltip code...
+      // (Tooltip code above handles the bubble.)
     }
   });
 
