@@ -15,7 +15,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    publicPath: '/', // This is fine if you serve from root locally.
+    publicPath: '/Personal-Static/',
     clean: true
   },
 
