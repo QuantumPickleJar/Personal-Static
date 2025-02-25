@@ -71,7 +71,43 @@ export function renderProjectsGallery(projects) {
     // Date label (top left corner)
     const dateLabel = document.createElement('span');
     dateLabel.classList.add('date-label');
-    dateLabel.textContent = project.dates || 'No date'; // Changed from project.date to project.dates
+
+    // Use date instead of dates as instructed
+    const dateText = project.date || project.dates || 'No date';
+    dateLabel.textContent = dateText;
+    dateLabel.dataset.tooltip = dateText; // Store date in a data attribute for the tooltip
+
+    // Add mouseover event to show tooltip
+    dateLabel.addEventListener('mouseover', (e) => {
+      // Create tooltip if it doesn't exist
+      let tooltip = dateLabel.querySelector('.tooltip-date');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.className = 'tooltip-date';
+        
+        // Use innerHTML with inline styles to ensure text visibility
+        tooltip.innerHTML = `<span style="color:white; display:inline-block;">${dateText}</span>`;
+        
+        // Add some insurance that the tooltip will be visible
+        tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        tooltip.style.padding = '5px 8px';
+        tooltip.style.zIndex = '100';
+        
+        dateLabel.appendChild(tooltip);
+        
+        // Force render before adding visible class
+        void tooltip.offsetWidth;
+      }
+      tooltip.classList.add('visible');
+    });
+
+    // Hide tooltip on mouseout
+    dateLabel.addEventListener('mouseout', () => {
+      const tooltip = dateLabel.querySelector('.tooltip-date');
+      if (tooltip) {
+        tooltip.classList.remove('visible');
+      }
+    });
 
     labelRow.appendChild(dateLabel);
 
@@ -86,7 +122,38 @@ export function renderProjectsGallery(projects) {
       academicLabel.classList.add('personal');
     }
     card.appendChild(academicLabel);
-    card.appendChild(dateLabel); // Move the dateLabel append after the academic label
+
+    // Add mouseover event to show tooltip
+    academicLabel.addEventListener('mouseover', (e) => {
+      // Create tooltip if it doesn't exist
+      let tooltip = academicLabel.querySelector('.tooltip-date');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.className = 'tooltip-date';
+        
+        // Use innerHTML with inline styles to ensure text visibility
+        tooltip.innerHTML = `<span style="color:white; display:inline-block;">${dateText}</span>`;
+        
+        // Add some insurance that the tooltip will be visible
+        tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        tooltip.style.padding = '5px 8px';
+        tooltip.style.zIndex = '100';
+        
+        academicLabel.appendChild(tooltip);
+        
+        // Force render before adding visible class
+        void tooltip.offsetWidth;
+      }
+      tooltip.classList.add('visible');
+    });
+
+    // Hide tooltip on mouseout
+    academicLabel.addEventListener('mouseout', () => {
+      const tooltip = academicLabel.querySelector('.tooltip-date');
+      if (tooltip) {
+        tooltip.classList.remove('visible');
+      }
+    });
 
     // If multiple images, show an icon
     if (project.images && project.images.length > 1) {
