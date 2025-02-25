@@ -148,7 +148,7 @@
       "cockroachdb",
       "DBeaver"
     ],
-    "mermaid": "",
+    "mermaid": "erDiagram\n    USERS {\n      bigint user_id PK\n      varchar username\n      varchar email\n      varchar password\n      varchar profile_pic\n    }\n    \n    USER_SETTINGS {\n      bigint user_id PK \"FK to USERS\"\n      varchar settings\n    }\n    \n    DIETARY_PREFERENCES {\n      bigint user_id \"FK to USERS\"\n      varchar preference\n    }\n    \n    USER_FOLLOWING_USER {\n      bigint follower_user_id \"FK to USERS\"\n      bigint followed_user_id \"FK to USERS\"\n    }\n    \n    RECIPES {\n      bigint recipe_id PK\n      bigint author_id \"FK to USERS\"\n      int rating_sum\n      int rating_count\n      %% (other recipe-specific fields could exist)\n    }\n    \n    INGREDIENTS {\n      bigint ingredient_id PK\n      varchar name\n      %% (optional: quantity and unit columns may be defined here)\n    }\n    \n    RECIPE_INGREDIENTS {\n      bigint recipe_id \"FK to RECIPES\"\n      bigint ingredient_id \"FK to INGREDIENTS\"\n      varchar quantity\n      varchar unit\n    }\n    \n    USERS ||--|| USER_SETTINGS : \"has\"\n    USERS ||--o{ DIETARY_PREFERENCES : \"has\"\n    USERS ||--o{ USER_FOLLOWING_USER : \"follows\"\n    USERS ||--o{ RECIPES : \"authors\"\n    RECIPES ||--o{ RECIPE_INGREDIENTS : \"includes\"\n    INGREDIENTS ||--o{ RECIPE_INGREDIENTS : \"used in\"\n",
     "images": [
       "flavorflav/addrecipe_p1.png",
       "flavorflav/addrecipe_p2.png",
