@@ -5,82 +5,144 @@
   <meta charset="UTF-8">
   <title>Vincent's GitHub Page</title>
   <!-- Updated CSS path -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/header-footer.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/main-content.css">
+  <link rel="stylesheet" href="/css/projects.css">
+  <link rel="stylesheet" href="/css/pagination.css">
+  <link rel="stylesheet" href="/css/loading.css">
+  <link rel="stylesheet" href="/css/mobile.css">
+  <link rel="stylesheet" href="/css/modal.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Add Barba.js CDN -->
+  <script src="https://unpkg.com/@barba/core"></script>
 </head>
 
 <body>
-  <!-- Header partial -->
-  <div id="headerContainer"></div>
+  <!-- Wrap with Barba containers -->
+  <div id="barba-wrapper" data-barba="wrapper">
+    <div data-barba="container" data-barba-namespace="projects">
+      <!-- Header partial -->
+      <div id="headerContainer"></div>
 
-  <!-- sandwich container: sidebar (1/4) + main content (3/4) -->
-  <div class="contentContainer">
-    <!-- Sidebar partial will be injected here -->
-    <div id="sidebarContainer"></div>
+      <!-- Main sandwich container -->
+      <div class="contentContainer">
+        <!-- Sidebar partial -->
+        <div id="sidebarContainer"></div>
 
-    <!-- Main Container: holds content and pagination -->
-    <div id="mainContainer">
-      <main id="mainContent">
-        <div id="filterContols">
-          <div class="how-to">
-            <p>Below are projects that have enough of a footprint to warrant<br/>
-              listing here.
-            </p>
+        <!-- Main Container -->
+        <div id="mainContainer">
+          <main id="mainContent">
+            <!-- New row for how-to and projects per page dropdown -->
+            <div id="how-to" class="how-to d-flex align-items-center justify-content-between flex-wrap">
+              <p class="mb-0">
+                Below are projects that have enough of a footprint to warrant a listing here.<br>
+                <strong>Mouseover</strong> descriptions that are truncated, and click to see more info
+              </p>
+              <div id="perPageContainer" class="per-page-container"></div>
+            </div>
+
+            <div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <div>
+                  <label for="searchBar" class="visually-hidden">Search Projects:</label>
+                  <input type="text" id="searchBar" placeholder="Search Projects..." class="form-control">
+                </div>
+                <div style="max-width: 200px;">
+                  <select id="filterDropdown" class="form-select">
+                    <option value="">Sort Projects...</option>
+                    <option value="title">Filter by Title</option>
+                    <option value="date">Filter by Date</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Inline pagination for larger screens -->
+              <div id="inlinePaginationContainer"></div>
+            </div>
+            <!-- The projects gallery container now includes the loading overlay -->
+            <div id="projectsGallery" class="projects-gallery">
+              <div id="loadingOverlay">Loading</div>
+            </div>
+
+            <!-- Bottom pagination for small screens -->
+            <div id="paginationContainer"></div>
+          </main>
+        </div>
+      </div>
+
+      <!-- Footer partial -->
+      <div id="footerContainer"></div>
+
+      <!-- Modal for expanded project details -->
+      <div id="projectModal" class="modal">
+        <div class="modal-content" id="modalContent">
+
+          <!-- Close button -->
+          <span class="close-button" id="closeModal">&times;</span>
+
+          <!-- Top Container: 40% height -->
+          <div class="modal-top">
+            <!-- Left 2/3: Title + Carousel/Images -->
+            <div class="modal-top-left">
+              <h4 id="modalTitle"></h4>
+              <!-- Main image area (carousel or just a grid) -->
+              <div id="modalImages" class="modal-images">
+                <div id="projectImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    <!-- Images will be inserted here by JavaScript -->
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#projectImageCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#projectImageCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 1/3: Split into two vertical sub-sections -->
+            <div class="modal-top-right">
+              <div class="modal-top-right-upper">
+                <h5>Tech Stack</h5>
+                <div id="modalStack" class="vertical-stack"></div>
+              </div>
+              <div class="modal-top-right-lower">
+                <p id="projectStatus"></p>
+                <p id="projectType"></p>
+              </div>
+            </div>
           </div>
-          <div id="sortOptions">
-            <button onClick="filterTitle">TITLE</button>
-            <button onClick="filterDate">DATE</button>
-            <button onClick="filterStatus">STATUS</button>
+
+          <!-- Bottom Container: 60% height -->
+          <div class="modal-bottom">
+            <div id="modalMetadata">
+              <!-- Project status, date, description -->
+              <p id="projectDates"></p>
+              <p id="modalDescription"></p>
+            </div>
           </div>
         </div>
-        <!-- Project Gallery -->
-        <div id="projectsGallery" class="projects-gallery"></div>
-      </main>
-      <!-- Pagination controls -->
-      <div id="paginationContainer"></div>
-    </div>
-  </div>
-
-  <div id="paginationContainer"></div>
-
-  <!-- Footer partial -->
-  <div id="footerContainer"></div>
-
-  <!-- Modal for expanded project details -->
-<div id="projectModal" class="modal">
-  <div class="modal-content" id="modalContent">
-
-    <!-- Close button -->
-    <span class="close-button" id="closeModal">&times;</span>
-
-    <!-- Top Container: 40% height -->
-    <div class="modal-top">
-      <!-- Left 2/3: Title + Carousel/Images -->
-      <div class="modal-top-left">
-        <h4 id="modalTitle"></h4>
-        <!-- Main image area (carousel or just a grid) -->
-        <div id="modalImages" class="modal-images"></div>
-      </div>
-
-      <!-- Right 1/3: Stack icons -->
-      <div class="modal-top-right">
-        <h5>Tech Stack</h5>
-        <div id="modalStack" class="vertical-stack"></div>
-      </div>
-    </div>
-
-    <!-- Bottom Container: 60% height -->
-    <div class="modal-bottom">
-      <div id="modalMetadata">
-        <!-- Project status, date, description -->
-        <p id="projectStatus"></p>
-        <p id="projectDates"></p>
-        <p id="modalDescription"></p>
       </div>
     </div>
   </div>
-</div>
 
+
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false });
+  </script>
+<!-- Transition script -->
+  <script src="./transition.js"></script>
   <!-- Include only the entry point as module -->
   <script type="module" src="main.js"></script>
 

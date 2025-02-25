@@ -9,76 +9,63 @@
  *   // iconUrl => remote SVG if found, else local fallback.
  */
 
-// NOTE: If you're using 'tech-stack-icons' in a purely client-side environment,
-// you'll need to ensure the package is either shipped as a compiled library
-// or you have a bundler that includes it. If that’s too tricky, you can
-// store a small local library of icons in rsc/images/stack/.
-
-
-/**
- * Load an icon from 'tech-stack-icons' if possible, else fallback.
- * @param {string} techName - The technology name, e.g. 'React', 'NodeJS', 'DotNet'.
- * @param {string} localPath - Path to local fallback icons directory.
- * @returns {Promise<string>} The URL (or data URI) of the icon.
- */
-import { iconSvgs } from './stackIconMap.js';
+import { iconSvgs } from './stackSvgMap.js';
 
 /**
  * @function getIcon
  * @description Looks up an inline SVG by name and returns it as a base64 Data URI
- *              so it can be used in `<img src="...">` directly
- * @param {string} techName - e.g. 'C#', 'Angular'
- * @returns {string|null} data URI of the inline SVG or null if not found
+ *              so it can be used in <img src="...">.
+ * @param {string} techName - e.g. 'React', 'NodeJS', 'dotNet'
+ * @returns {string|null} - data URI of the inline SVG or null if not found
  */
 export function getIcon(techName) {
-  const svg = iconSvgs[techName];
-  if (!svg) return null; // or fallback to a local .png
-
-  const base64Encoded = btoa(svg);
-  return `data:image/svg+xml;base64,${base64Encoded}`;
-}
-
-
-  // this might be redundant code, wrote this in a daze
-  /** Supposed to make a default image for projects lacking any for the carousel
-   * to be populated with
-   */
-  export function createStackImage(tech) {
-  try {
-    const iconUrl = getIcon(tech);
-    if (iconUrl) {
-      const img = document.createElement('img');
-      img.src = iconUrl;
-      img.alt = tech;
-      return img;
-    }
-  } catch (err) {
-    console.error('Failed to load icon for', tech, err);
+  // Trim whitespace from the techName for consistency
+  const normalizedTech = techName.trim();
+  // Debug: log the normalized name and lookup result
+  // console.log(`Looking up icon for tech: "${normalizedTech}"`);
+  // Attempt to find an inline SVG from the map
+  const rawSvg = iconSvgs[normalizedTech];
+  // console.log(`Found icon:`, rawSvg);
+  if (!rawSvg) {
+    // not found -> return null so you can fallback to local .png
+    return null;
   }
-  // fallback if no icon
-  const fallbackImg = document.createElement('img');
-  fallbackImg.src = `rsc/images/${tech.toLowerCase()}.png`;
-  return fallbackImg;
+
+  // Convert the raw <svg> string to base64
+  const base64 = btoa(rawSvg);
+  // Return as a data URI
+  return `data:image/svg+xml;base64,${base64}`;
 }
 
 export function renderOneStackIcon(tech) {
+  const normalizedTech = tech.trim();
   // Attempt to load an inline SVG
-  const iconUrl = getIcon(tech);
+  let iconUrl = getIcon(normalizedTech);
   if (iconUrl) {
-    // Use a data URI
+    // Use the inline SVG data URI
     const imgEl = document.createElement('img');
     imgEl.src = iconUrl;
-    imgEl.alt = tech;
+    imgEl.alt = normalizedTech;
     imgEl.classList.add('stack-image');
     return imgEl;
   } else {
-    // If not found, fallback to local .png
+    // If not found, fallback to local PNG in the "rsc/images/stack" directory
+    let pngPath = `rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
+    console.log(`Fallback triggered for ${normalizedTech}. Attempting to load PNG from: ${pngPath}`);
     const fallback = document.createElement('img');
-    fallback.src = `rsc/images/${tech.toLowerCase()}.png`;
-    fallback.alt = tech;
+    fallback.src = pngPath;
+    fallback.alt = normalizedTech;
     fallback.classList.add('stack-image');
+    fallback.onerror = () => {
+      console.error(`Failed to load image: ${fallback.src}`);
+      // Attempt to load the image with the original casing
+      pngPath = `rsc/images/stack/${tech}.png`;
+      fallback.src = pngPath;
+      fallback.onerror = () => {
+        console.error(`Failed to load image with original casing: ${fallback.src}`);
+        fallback.src = 'rsc/images/placeholder-generic.png'; // Use a generic placeholder on error
+      };
+    };
     return fallback;
   }
 }
-
-  

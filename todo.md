@@ -9,7 +9,7 @@
 ## Un-added projects:
 - steering wheel
 - 3D Printer
-
+- Airport App (FWAPPA?)
 ## Profile
 - employment
 - picture
@@ -57,9 +57,9 @@
 
 ##### Modal
 
-- list of stack images should be **vertical**
 In the case that there are no images, we'll build one based off of the tech stack.  E.g:
 bubbles containing the small tech stack image should be used here
+- list of stack images should be **vertical**
 Example Shapes:
 if **two** : One at N and one at S
 if **four**: one at each Cardinal Direction
@@ -106,3 +106,13 @@ Expected files:
 - Pending
   - Implement imageLoader.js & stackStylesheet.css
 
+
+----
+- search bar on projects page
+- center the text 
+
+> So my advanced search bar does not update when the windows is resized. Secondarily, the "projects per page" needs be attached to the main content container, right now it attaches to the sidebar. When I tried targeting mainContent or mainContainer, it failed saying it was null. #codebase
+
+- circle is too large on some projects without images (based on their description size, thus how much space is alotted to the `bottomContainer`)
+- booksPage
+- placeholder only renders SVGs, needs to render PNGS too

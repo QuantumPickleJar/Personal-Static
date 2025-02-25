@@ -1,271 +1,30 @@
-/* 1) Base Reset/Global */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* style.css - Main CSS file that imports all other CSS modules */
 
-body {
-  font-family: Arial, sans-serif;
-  /* Manage layout with a container, not directly on body */
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+/* Base resets and global styles */
+@import './css/base.css';
 
-/* 2) Header & Footer */
-header {
-  background-color: gray;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-}
+/* Header and footer specific styles */
+@import './css/header-footer.css';
 
-footer {
-  background-color: #f0f0f0;
-  padding: 1rem;
-  text-align: center;
-}
+/* Sidebar styles */
+@import './css/sidebar.css';
 
-/* 3) The "Sandwich" Container */
-.contentContainer {
-  /* This flex container takes all available space between header & footer */
-  flex: 1;
-  display: flex;
-}
+/* Main content styles */
+@import './css/main-content.css';
 
-/* 4) Sidebar (1/4 width) */
-#sidebar {
-  max-width: 300px;
-  background-color: #0000a0;
-  border-right: 1px solid #ddd;
-  color: white;
-  padding: 20px;
-  height: 100%;
-}
+/* Project gallery and card styles */
+@import './css/projects.css';
 
-.profile-photo {
-  width: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-}
+/* Modal styles */
+@import './css/modal.css';
 
-/* 5) Main Content (3/4 width) */
-#mainContent {
-  /* width: 75%; */
-  /* padding: 20px; */
-  flex: 9
-}
+/* Pagination styles */
+@import './css/pagination.css';
 
-/* MainContainrer */
+/* Loading overlay styles */
+@import './css/loading.css';
 
-#mainContainer {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
+/* Mobile-specific styles */
+@import './css/mobile.css';
 
-/* 6) Project Gallery Styles */
-.projects-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.project-card {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 250px;
-  padding: 10px;
-  cursor: pointer;
-  background-color: #fff;
-  transition: transform 0.2s;
-}
-
-.project-card:hover {
-  transform: scale(1.02);
-}
-
-.project-thumbnail {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-}
-
-.project-title {
-  font-weight: bold;
-  margin: 10px 0 5px;
-}
-
-.stack-icons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.stack-icon {
-  background-color: #eee;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
-
-.more-link {
-  color: blue;
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 0.8rem;
-  margin-left: 8px;
-}
-
-/* 7) Modal Styles */
-.modal {
-  display: none;
-  /* Hidden by default */
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-/* The actual white content box */
-.modal-content {
-  background-color: #fff;
-  margin: 2% auto;
-  width: 60%;           /* Adjust as needed */
-  max-width: 800px;     /* Example max width */
-  height: 80vh;         /* Let’s fix to 80% of viewport height */
-  border-radius: 6px;
-  position: relative;
-  display: flex;        /* We'll do vertical flex layout in the content */
-  flex-direction: column;
-}
-
-/* Top container = 40% of the modal */
-.modal-top {
-  flex: 0 0 40%;
-  display: flex;        /* row flex */
-  gap: 10px;
-  border-bottom: 1px solid #ddd;
-  padding: 10px;
-}
-
-/* Left 2/3 column inside top */
-.modal-top-left {
-  flex: 2;             /* 2/3 ratio */
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Right 1/3 column inside top */
-.modal-top-right {
-  flex: 1;             /* 1/3 ratio */
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #ddd;
-  padding-left: 10px;
-  overflow-y: auto;     /* If stack is tall, it scrolls */
-}
-
-/* Bottom container = 60% of the modal */
-.modal-bottom {
-  flex: 1;            /* Remaining space (60%) */
-  /* padding: 15px; */
-  overflow-y: auto;   /* Scroll if content is tall */
-}
-
-
-.modal-image {
-  max-width: 100px;
-  margin-right: 8px;
-  margin-bottom: 8px;
-}
-
-/* For the images area (carousel or just a row) */
-.modal-images {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  /* TODO: look into custom carousel lib*/
-}
-
-.stack-image {
-  width: 32px;
-  height: 32px;
-  margin: 4px;
-  object-fit: contain;
-}
-
-.modal-images img {
-  max-width: 150px;
-  max-height: 100px;
-  object-fit: cover;
-}
-
-/* For vertical stack icons */
-.vertical-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Example stack-icon style */
-.vertical-stack .stack-icon,
-.vertical-stack .modal-image {
-  max-width: 36px;
-  max-height: 36px;
-  object-fit: contain;
-}
-
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-
-/* Academic Label styling */
-.academic-label {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: red;
-  color: white;
-  padding: 2px 6px;
-  font-size: 0.7rem;
-  border-radius: 4px;
-}
-
-#paginationContainer {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-}
-
-/* Basic pagination button styles */
-.pagination-wrapper button {
-  margin: 0 4px;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  cursor: pointer;
-}
-
-.pagination-wrapper button.active-page {
-  background-color: #0000a0;
-  color: #fff;
-}
-
-.pagination-wrapper button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
+@import './css/resources-page.css';
