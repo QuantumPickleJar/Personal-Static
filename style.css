@@ -7,24 +7,24 @@
 @import '/Personal-Static/css/header-footer.css';
 
 /* Sidebar styles */
-@import 'Personal-Static/css/sidebar.css';
+@import '/Personal-Static/css/sidebar.css';
 
 /* Main content styles */
-@import 'Personal-Static/css/main-content.css';
+@import '/Personal-Static/css/main-content.css';
 
 /* Project gallery and card styles */
-@import 'Personal-Static/css/projects.css';
+@import '/Personal-Static/css/projects.css';
 
 /* Modal styles */
-@import 'Personal-Static/css/modal.css';
+@import '/Personal-Static/css/modal.css';
 
 /* Pagination styles */
-@import 'Personal-Static/css/pagination.css';
+@import '/Personal-Static/css/pagination.css';
 
 /* Loading overlay styles */
-@import 'Personal-Static/css/loading.css';
+@import '/Personal-Static/css/loading.css';
 
 /* Mobile-specific styles */
-@import 'Personal-Static/css/mobile.css';
+@import '/Personal-Static/css/mobile.css';
 
-@import 'Personal-Static/css/resources-page.css';
+@import '/Personal-Static/css/resources-page.css';
