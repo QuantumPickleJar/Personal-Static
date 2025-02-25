@@ -1,8 +1,12 @@
 {
   "dependencies": {
+    "@barba/core": "^2.10.3",
     "bootstrap": "^5.3.3",
     "express": "^4.21.2",
+    "mermaid": "^11.4.1",
     "node": "^23.7.0",
+    "nodemon": "^3.1.9",
+    "panzoom": "^9.4.3",
     "tech-stack-icons": "^2.1.0"
   },
   "name": "personal-static",

@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
@@ -132,7 +132,7 @@ apply consistent card height. */
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: cornflowerblue;
   color: white;
   padding: 5px 8px;
   border-radius: 4px;
@@ -188,4 +188,131 @@ apply consistent card height. */
 /* When visible, the tooltip fades in */
 .tooltip-dates.visible {
   opacity: 1;
+}
+
+/* Tooltip element created dynamically and appended to the badge */
+.tooltip-date {
+  position: absolute;
+  bottom: 100%; /* Position above the badge */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+/* When visible, the tooltip fades in */
+.tooltip-date.visible {
+  opacity: 1;
+}
+
+/* Position academic label at top left */
+.project-card .academic-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Position academic label at top left */
+.project-card .academic-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Position image count icon (or other image icons) at top right if images exist */
+.project-card .image-count-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* Badge container styles */
+.image-count-icon, .mermaid-icon {
+  position: absolute;
+  top: 10px;
+  z-index: 2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.image-count-icon {
+  right: 10px;
+}
+
+.mermaid-icon {
+  right: 45px; /* Reduced from 70px to bring it closer to the image count icon */
+}
+
+.mermaid-icon img {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+  object-fit: contain;
+}
+
+/* Existing image count icon styles */
+.image-count-icon .icon {
+  font-size: 1.2em;
+}
+
+.image-count-icon .count {
+  font-size: 0.9em;
+}
+
+/* Initially hide the date label */
+.project-card .date-label {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* Ensure it sits beneath the academic-label */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+/* Reveal the date info when hovering over the academic label */
+.project-card .academic-label:hover + .date-label,
+.project-card .academic-label:hover ~ .date-label {
+  opacity: 1;
+}
+
+#mermaidContainer {
+  width: 100%;            /* Or a fixed width like 600px */
+  max-height: 500px;      /* Set a maximum height */
+  overflow: visible;       /* Hide any overflowing content */
+  touch-action: none;     /* Allow pan/zoom on touch devices */
+  cursor: grab;           /* Gives a visual cue that it’s draggable */
+  position: relative;     /* Ensure proper positioning */
+}
+
+.academic-label.academic {
+  /* Your academic-specific styles here */
+  background-color: #ffeb3b; /* Example: yellow background for academic labels */
+  color: #000;
+  border: 1px solid #ccc;
+  opacity: 60%;
+}
+
+.academic-label.personal {
+  background-color: lightcoral;
+  opacity: 60%;
 }

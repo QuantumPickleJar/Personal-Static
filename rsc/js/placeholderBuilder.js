@@ -41,29 +41,46 @@ function createCircularPlaceholder(stack) {
   const total = stack.length;
   // Arrange all tech icons in a circular layout.
   stack.forEach((tech, index) => {
-    // Use getIcon to fetch the inline SVG as a data URI.
     let iconDataUri = getIcon(tech);
-    // Fallback: if no inline SVG is available, use a local PNG.
+    let isSvg = true;
+
     if (!iconDataUri) {
-      iconDataUri = `rsc/images/stack/${tech.toLowerCase()}.png`;
+      let pngPath = `rsc/images/stack/${tech.toLowerCase()}.png`;
+      iconDataUri = pngPath;
+      isSvg = false;
     }
-    // Calculate angle for even placement.
+
+    const img = document.createElement('img');
+    img.src = iconDataUri;
+    img.onerror = () => {
+      console.error(`Failed to load image: ${img.src}`);
+      // Attempt to load the image with the original casing
+      let pngPath = `rsc/images/stack/${tech}.png`;
+      img.src = pngPath;
+      img.onerror = () => {
+        console.error(`Failed to load image with original casing: ${img.src}`);
+        img.src = 'rsc/images/placeholder-generic.png'; // Use a generic placeholder on error
+      };
+    };
+
     const angle = (2 * Math.PI / total) * index;
-    // Place icons on a smaller circle.
     const iconRadius = 30;
-    const iconX = centerX + iconRadius * Math.cos(angle) - 10; // Centering the 20px wide icon.
-    const iconY = centerY + iconRadius * Math.sin(angle) - 10; // Centering the 20px tall icon.
-    iconsSVG += `<image href="${iconDataUri}" x="${iconX}" y="${iconY}" width="20" height="20" />`;
+    const iconX = centerX + iconRadius * Math.cos(angle) - 10;
+    const iconY = centerY + iconRadius * Math.sin(angle) - 10;
+
+    if (isSvg) {
+      iconsSVG += `<image href="${iconDataUri}" x="${iconX}" y="${iconY}" width="20" height="20" />`;
+    } else {
+      iconsSVG += `<image href="${iconDataUri}" x="${iconX}" y="${iconY}" width="20" height="20" />`;
+    }
   });
 
-  // Build the complete SVG string.
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
       <circle cx="${centerX}" cy="${centerY}" r="${radius}" fill="#fff" stroke="#ccc" stroke-width="2" />
       ${iconsSVG}
     </svg>
   `;
-  
-  // Return the SVG as a Base64-encoded data URI.
+
   return 'data:image/svg+xml;base64,' + btoa(svg);
 }

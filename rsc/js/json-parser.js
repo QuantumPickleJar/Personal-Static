@@ -26,5 +26,10 @@ function parseDates(datesField) {
     // Priority: concluded > last-modified > date-started
     return concluded || modified || started;
   }
+
+  function parseMermaidCode(project) {
+    // Simply return the "mermaid" field (or an empty string if not provided)
+    return project.mermaid || '';
+  }
   
-export { parseDates, getSortDate };
+export { parseDates, getSortDate, parseMermaidCode };

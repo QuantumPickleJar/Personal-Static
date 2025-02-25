@@ -18,10 +18,10 @@
   background-color: #fff;
   margin: 2% auto;
   width: 60%;           /* Adjust as needed */
-  max-width: 800px;     /// Example max width
+  max-width: 1000px;     /* Example max width */
   max-height: 90vh;     /* Use max-height instead of fixed height */
   border-radius: 6px;
-  /* position: relative; */
+  position: relative;
   display: flex;        /* We'll do vertical flex layout in the content */
   flex-direction: column;
 }
@@ -79,7 +79,7 @@
 .modal-bottom {
   flex: 1;            /* Remaining space (60%) */
   padding: 15px;
-  overflow-y: auto;   //Scroll if content is tall
+  overflow-y: auto;   
 }
 
 .modal-image {
@@ -108,7 +108,7 @@
 
 /* Carousel must stay inside its bounds */
 #projectImageCarousel {
-  position: relative; // Ensures arrows are positioned relative to this container
+  position: relative; 
   width: 100%;
   height: 375px;
 }
@@ -198,10 +198,153 @@
 }
 
 /* Center the fallback container and its image */
-/* Styles for fallback placeholders */
 .fallback-placeholder {
-  display: block;
-  margin: 0 auto;            /* Centers horizontally in its container */
-  transform: scale(2.5);       /* Makes the image 3x larger */
-  transform-origin: 50% 0%;  /* Ensures the scaling centers from the middle */
+  width: 250px;           /* Adjust as needed */
+  height: 250px;
+  margin: 0 auto;         /* Center it */
+  overflow: hidden;
+  border-radius: 50%;     /* Makes it circular */
+} 
+.fallback-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* Ensure the image fills the container without distortion */
+}
+
+.no-mermaid {
+  min-height: 300px; /* ensure enough height for the overlay */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  color: #888;
+  font-size: 1.2rem;
+  position: relative;
+  filter: grayscale(100%);
+}
+.no-mermaid::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-top: 4px solid red;
+  transform: rotate(45deg);
+}
+
+
+.modal-top-left.mermaid-mode,
+.modal-images.mermaid-view {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* For the images/carousel view */
+.modal-images.images-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center; /* Center fallback if needed */
+}
+
+/* For the Mermaid view */
+.modal-images.mermaid-view {
+  max-width: 100%;
+  max-height: 375px;
+  overflow: visible; /* Allow scrolling if diagram is large */
+}
+
+
+/* FAB container positioned in the modal */
+.fab-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10000; /* or higher if needed */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: visible;
+}
+
+/* Common FAB styles */
+.fab {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #f1f1f1;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 0.8rem; /* If you want smaller text inside the circle */
+  overflow: visible; /* So tooltip can appear outside the button */
+}
+
+.fab img {
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
+}
+
+/* Hover and selected state for FABs */
+.fab:hover {
+  background-color: #e1e1e1;
+  transform: scale(1.05);
+}
+.fab.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.fab.disabled,
+.fab[disabled] {
+  filter: grayscale(100%);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Tooltip bubble styling */
+.fab-tooltip {
+  position: absolute;
+  bottom: 100%; /* This positions it above its containing button (mermaidFab) */
+  left: 50%;
+  transform: translate(-50%, -10px);
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 19999;
+}
+.fab-tooltip.show {
+  opacity: 1;
+}
+
+.modal-top-left {
+  z-index:999999;
+  position:relative;
+  background-color: white
+}
+
+h4, #modalTitle {
+  z-index:1000000;
+  background-color: white
+}
+
+/* The Mermaid container */
+#mermaidContainer {
+  position: absolute;  /* or fixed, or whatever you need for dragging */
+  z-index: 5;          /* smaller than 10, so it appears behind the text */
+  /* If you have a transform, see notes below. */
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="/rsc/css/front-page-carousel.css" rel="stylesheet" type="text/css">
+    <!-- <link href="/rsc/css/customElements.css" rel="stylesheet" type="text/css"> -->
+  </head>
+  <body>
+
+    <script>
+      console.log('[img-carousel] Inline script executed.');
+    </script>
+
+    
+  <div class="carousel-wrapper">
+    
+      <button id="img-prev" class="arrowButton">
+        &#60;
+      </button>
+      <!-- TODO: "dot" progression indicator -->
+    
+      <!-- displayed resources (images) [TODO] -->
+    
+    <!-- Per W3 docs, use ul and li: https://www.w3.org/WAI/tutorials/carousels/structure/ -->
+      <ul class="carousel-container">
+        <!-- TODO: We want this to accept an array of images  -->
+        <li class="slide-item">
+          <img src="/rsc/images/vincent.jpg">  
+        </li>
+        <li class="slide-item">
+          <img src="/rsc/images/announcement.jpg">  
+        </li>
+        <li class="slide-item">
+          <img src="/rsc/images/me.jpg">  
+        </li>
+       </ul>
+    
+      <button id="img-next" class="arrowButton">
+        &#62;
+      </button>
+    </div>
+    <!-- <script src="/rsc/carousel.js" defer></script> -->
+  </body>
+</html>

@@ -35,15 +35,15 @@
       "DataGrip",
       "MermaidJS"
     ],
-    "mermaid": "",
+    "mermaid": "erDiagram\n    Hall {\n        int HallId PK\n        string HallName\n    }\n    RoomBase {\n\t    int RoomBaseId PK\n\t    string CustomString1    \n\t    string Description\n\t    int BedCapacity\n    }\n    Resident {\n        string CampusId PK\n        string FirstName\n        string PreferredFirstName\n        string LastName\n        int Gender\n        string GenderDescription\n        int Standing\n        int HallId FK \"Redundant, but necessary\"\n        RoomBase RoomBase \"may be null\"\n\t\tstring EMContactInfo\n        string EMContactRelation\n        string RoomNumber \"Redundant, but necessary\"\n    }\n    Hall ||--o{ RoomBase : contains\n    Resident }o--|| Hall : resides_in",
     "images": []
   },
   {
     "id": "uwo-dockerization",
     "title": "Orchestration (Docker-compose)",
     "academic": false,
-    "dates": "",
-    "status": "",
+    "dates": "5-29-23 to 9-29-23",
+    "status": "Complete",
     "shortForm": "Multi-API project beckoned for dual-purpose support with run configurations.",
     "description": "Debugged a service containing multiple APIs, each serving its own purpose, and provided user-friendly dual-purpose support for two run configurations.",
     "stack": [
@@ -54,7 +54,7 @@
       "VSCommunity",
       "VSCode",
       "NodeJs",
-      "MermaidJs"
+      "MermaidJS"
     ],
     "mermaid": "",
     "images": [],
@@ -66,8 +66,8 @@
     "id": "uwo-docker-guides",
     "title": "Docker Guides",
     "academic": false,
-    "dates": "",
-    "status": "",
+    "dates": "9-1-23 to 9-4-23",
+    "status": "Complete",
     "shortForm": "Wrote a 3-page guide on how teammates could modify their environment to enhance debugging capabilities.",
     "description": "The pages were first drafted in Obsidian and then ported into Confluence pending formatting changes.  Conversion was handled through Obsidian's Convert to PDF feature, and several other teammates were then enabled to ",
     "stack": [
@@ -112,11 +112,11 @@
     "images": []
   },
   {
-    "id": "vtm",
+    "id": "vtm-ai-poster",
     "title": "Safe GenAI Flowchart",
-    "academic": false,
+    "academic": true,
     "dates": "",
-    "status": "",
+    "status": "Complete",
     "shortForm": "A single graphic detailing principles, ordered steps, and guidelines for leveraging abstractions at a linguistic level.",
     "description": "Non technical; emphasizes the importance of leveraging abstractions instead of a technical, object-oriented approach.",
     "stack": [
@@ -134,7 +134,7 @@
     "id": "flavorflav",
     "title": "FlavorFlav (Team Project)",
     "academic": true,
-    "dates": "5-10-2023 to 12-10-2023",
+    "dates": "10-9-23 to 12-10-23",
     "status": "",
     "shortForm": "Recipe-oriented Social Media Platform",
     "description": "Features include autocomplete, a strategy pattern, and unit testing on the Android platform.  More notably, the autocomplete was written following the Strategy design pattern, and was very effective in capturing the stakeholder (audience)'s attenion during demonstration.",
@@ -148,7 +148,7 @@
       "cockroachdb",
       "DBeaver"
     ],
-    "mermaid": "",
+    "mermaid": "erDiagram\n    USERS {\n      bigint user_id PK\n      varchar username\n      varchar email\n      varchar password\n      varchar profile_pic\n    }\n    \n    USER_SETTINGS {\n      bigint user_id PK \"FK to USERS\"\n      varchar settings\n    }\n    \n    DIETARY_PREFERENCES {\n      bigint user_id \"FK to USERS\"\n      varchar preference\n    }\n    \n    USER_FOLLOWING_USER {\n      bigint follower_user_id \"FK to USERS\"\n      bigint followed_user_id \"FK to USERS\"\n    }\n    \n    RECIPES {\n      bigint recipe_id PK\n      bigint author_id \"FK to USERS\"\n      int rating_sum\n      int rating_count\n      %% (other recipe-specific fields could exist)\n    }\n    \n    INGREDIENTS {\n      bigint ingredient_id PK\n      varchar name\n      %% (optional: quantity and unit columns may be defined here)\n    }\n    \n    RECIPE_INGREDIENTS {\n      bigint recipe_id \"FK to RECIPES\"\n      bigint ingredient_id \"FK to INGREDIENTS\"\n      varchar quantity\n      varchar unit\n    }\n    \n    USERS ||--|| USER_SETTINGS : \"has\"\n    USERS ||--o{ DIETARY_PREFERENCES : \"has\"\n    USERS ||--o{ USER_FOLLOWING_USER : \"follows\"\n    USERS ||--o{ RECIPES : \"authors\"\n    RECIPES ||--o{ RECIPE_INGREDIENTS : \"includes\"\n    INGREDIENTS ||--o{ RECIPE_INGREDIENTS : \"used in\"\n",
     "images": [
       "flavorflav/addrecipe_p1.png",
       "flavorflav/addrecipe_p2.png",
@@ -179,7 +179,7 @@
       "DBeaver",
       "cockroachdb"
     ],
-    "mermaid": "",
+    "mermaid": "erDiagram\n    tbl_forms {\n        string form_id PK\n        string user_id FK\n        string form_title\n        string sport_id FK\n        datetime form_date_created\n    }\n    tbl_questions {\n        string question_id PK\n        string form_id FK\n        string content\n        int order_in_form\n        enum response_enum\n        string header\n        boolean res_required\n        string linked_file_key\n    }\n    \n    tbl_responses {\n        string response_id PK\n        string question_id FK\n        string request_id FK\n        string answer\n        enum response_type\n    }\n    tbl_sports {\n        string sport_id PK\n        string activity \n    }\n    tbl_requests {\n        string request_id PK\n        string form_id FK\n        string staff_id FK\n        datetime created_date\n    }\n    tbl_requestees {\n        string requestee_id PK\n        string request_id FK\n        string student_id FK\n        boolean completed\n        datetime completion_date\n    }\n    tbl_users {\n        string uuid_user PK\n        string username\n        string password\n        boolean is_admin\n        boolean is_temp_password\n        string first_name\n        string last_name\n    }\n    tbl_studentlist {\n        string student_id PK\n        string sport_id FK\n        string student_name\n        int grade\n    }\n    tbl_inbox {\n        string from_uuid FK\n        string to_uuid FK\n        datetime date_received\n        string subject_line\n        string body\n    }\n\n    tbl_forms ||--o{ tbl_questions : \"has\"\n    tbl_forms ||--o{ tbl_requests : \"used for\"\n    tbl_questions ||--o{ tbl_responses : \"asked in\"\n    tbl_requests ||--o{ tbl_requestees : \"sent to\"\n    tbl_responses ||--|{ tbl_requestees : \"submitted by\"\n    tbl_users ||--o{ tbl_forms : \"created by\"\n    tbl_users ||--o{ tbl_requests : \"makes\"\n    %% tbl_users ||--o{ tbl_requestees : \"is\"\n    tbl_users ||--o{ tbl_inbox : \"sends\/receives\"\n    tbl_studentlist ||--o{ tbl_requestees : \"is\"\n    %% tbl_studentlist ||--|{ tbl_sports : \"plays in\"\n    tbl_sports ||--|{ tbl_studentlist : \"plays in\"\n",
     "images": []
   },
   {
@@ -205,7 +205,7 @@
     "id": "temperature-tracker",
     "title": "Temperature Tracker",
     "academic": false,
-    "dates": "",
+    "dates": "9-20-23 to 12-15-23",
     "status": "In-progress",
     "shortForm": "Deploying bare-bone temperature units using a microcontroller and ESP-01 to relay readings via Wi-Fi.",
     "description": "Data is visualized using an IFTTT endpoint to collect readings into a spreadsheet.",
@@ -225,7 +225,7 @@
     "id": "frugal-fashion",
     "title": "Frugal Fashion",
     "academic": true,
-    "dates": "",
+    "dates": "1-24-23 to 5-12-23",
     "status": "",
     "shortForm": "A site built for a local fashion merchant with features for non-technical users.",
     "description": "Built to allow frequent changes of venues and authentication for the owner to maintain a local store of files on a Replit-hosted server.",
@@ -247,7 +247,7 @@
     "id": "workflow-playground",
     "title": "Workflow Playground",
     "academic": false,
-    "dates": "12-4-2023 - 1-1-2024",
+    "dates": "12-4-2023 to 1-1-2024",
     "status": "Completed",
     "shortForm": "Experimenting with automated workflows bound to repositories.",
     "description": "Continuous deployment with GitHub repository integration.",
@@ -277,7 +277,7 @@
     "id": "fwappa",
     "title": "Flutter UI Mockup",
     "academic": true,
-    "dates": "",
+    "dates": "10-15-23 to 12-10-23",
     "status": "Complete",
     "link": "https://github.com/QuantumPickleJar/",
     "shortForm": "Produce a Dart/Flutter UI mockup for a flight-tracking app.",

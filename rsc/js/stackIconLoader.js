@@ -22,10 +22,10 @@ export function getIcon(techName) {
   // Trim whitespace from the techName for consistency
   const normalizedTech = techName.trim();
   // Debug: log the normalized name and lookup result
-  console.log(`Looking up icon for tech: "${normalizedTech}"`);
+  // console.log(`Looking up icon for tech: "${normalizedTech}"`);
   // Attempt to find an inline SVG from the map
   const rawSvg = iconSvgs[normalizedTech];
-  console.log(`Found icon:`, rawSvg);
+  // console.log(`Found icon:`, rawSvg);
   if (!rawSvg) {
     // not found -> return null so you can fallback to local .png
     return null;
@@ -40,7 +40,7 @@ export function getIcon(techName) {
 export function renderOneStackIcon(tech) {
   const normalizedTech = tech.trim();
   // Attempt to load an inline SVG
-  const iconUrl = getIcon(normalizedTech);
+  let iconUrl = getIcon(normalizedTech);
   if (iconUrl) {
     // Use the inline SVG data URI
     const imgEl = document.createElement('img');
@@ -50,10 +50,22 @@ export function renderOneStackIcon(tech) {
     return imgEl;
   } else {
     // If not found, fallback to local PNG in the "rsc/images/stack" directory
+    let pngPath = `rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
+    console.log(`Fallback triggered for ${normalizedTech}. Attempting to load PNG from: ${pngPath}`);
     const fallback = document.createElement('img');
-    fallback.src = `rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
+    fallback.src = pngPath;
     fallback.alt = normalizedTech;
     fallback.classList.add('stack-image');
+    fallback.onerror = () => {
+      console.error(`Failed to load image: ${fallback.src}`);
+      // Attempt to load the image with the original casing
+      pngPath = `rsc/images/stack/${tech}.png`;
+      fallback.src = pngPath;
+      fallback.onerror = () => {
+        console.error(`Failed to load image with original casing: ${fallback.src}`);
+        fallback.src = 'rsc/images/placeholder-generic.png'; // Use a generic placeholder on error
+      };
+    };
     return fallback;
   }
 }

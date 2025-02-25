@@ -3,8 +3,7 @@ import { closeModal, loadProjects } from './projects.js';
 import { initPagination, updateItemsPerPage } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
-import './rsc/js/books.js';
-import './rsc/js/bookmarks.js';
+import { initCarousel } from './rsc/js/carousel.js';
 
 /**
  * Load partial files into the main page
@@ -18,6 +17,26 @@ async function loadPartial(containerId, partialPath) {
     console.error(`Error loading ${partialPath}:`, error);
   }
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('htmlModules/img-carousel.html')
+    .then(response => response.text())
+    .then(html => {
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      const carousel = temp.querySelector('.carousel-wrapper');
+      if (carousel) {
+        document.querySelector('#carouselContainer').appendChild(carousel);
+        // Now that the carousel is appended, initialize it.
+        initCarousel();
+      }
+    })
+    .catch(err => console.error('Failed to load carousel:', err));
+});
+
+
+
 
 export function renderProjectCard(project) {
   const card = document.createElement('div');
@@ -68,6 +87,24 @@ card.innerHTML = `
 
   return card;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) Insert or fetch your snippet
+  fetch('modules/img-carousel.html')
+    .then((response) => response.text())
+    .then((html) => {
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      const carousel = temp.querySelector('.carousel-wrapper');
+      if (carousel) {
+        document.querySelector('#carouselContainer').appendChild(carousel);
+        // 2) Now we can safely init
+        initCarousel();
+      }
+    })
+    .catch((err) => console.error('Failed to load carousel:', err));
+});
+
 
 // Helper to generate options for projects per page based on screen width
 function generatePerPageOptions() {
