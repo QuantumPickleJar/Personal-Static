@@ -1,11 +1,11 @@
 import * as bootstrap from 'bootstrap'; // Added to import Bootstrap module
 import { initPagination } from './pagination.js';
-import { getPlaceholderForStack,  } from './rsc/js/placeholderBuilder.js';
+import { getPlaceholderForStack,  } from '/Personal-Static/rsc/js/placeholderBuilder.js';
 import { filterProjByTitle, filterByDate, createTruncatedSpan } from './gallery-sorting.js';
-import { getIcon, renderOneStackIcon } from './rsc/js/stackIconLoader.js';
-import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+import { getIcon, renderOneStackIcon } from '/Personal-Static/rsc/js/stackIconLoader.js';
+import { filterProjectsBySearchTerm } from '/Personal-Static/rsc/js/search.js';
 import { projectsPerPage } from './perPageSettings.js';
-import { parseMermaidCode } from './rsc/js/json-parser.js';
+import { parseMermaidCode } from '/Personal-Static/rsc/js/json-parser.js';
 import panzoom from 'panzoom';
 import mermaid from 'mermaid';
 window.mermaid = mermaid;

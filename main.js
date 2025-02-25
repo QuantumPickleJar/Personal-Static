@@ -2,8 +2,8 @@ import { projectsPerPage } from './perPageSettings.js';
 import { closeModal, loadProjects } from './projects.js';
 import { initPagination, updateItemsPerPage } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
-import { filterProjectsBySearchTerm } from './rsc/js/search.js';
-import { initCarousel } from './rsc/js/carousel.js';
+import { filterProjectsBySearchTerm } from '/Personal-Static/rsc/js/search.js';
+import { initCarousel } from '/Personal-Static/rsc/js/carousel.js';
 
 /**
  * Load partial files into the main page
