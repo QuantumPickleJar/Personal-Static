@@ -330,3 +330,21 @@
 .fab-tooltip.show {
   opacity: 1;
 }
+
+.modal-top-left {
+  z-index:999999;
+  position:relative;
+  background-color: white
+}
+
+h4, #modalTitle {
+  z-index:1000000;
+  background-color: white
+}
+
+/* The Mermaid container */
+#mermaidContainer {
+  position: absolute;  /* or fixed, or whatever you need for dragging */
+  z-index: 5;          /* smaller than 10, so it appears behind the text */
+  /* If you have a transform, see notes below. */
+}

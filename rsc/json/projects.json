@@ -33,7 +33,7 @@
       "ReSharper",
       "Postman",
       "DataGrip",
-      "MermaidJs"
+      "MermaidJS"
     ],
     "mermaid": "erDiagram\n    Hall {\n        int HallId PK\n        string HallName\n    }\n    RoomBase {\n\t    int RoomBaseId PK\n\t    string CustomString1    \n\t    string Description\n\t    int BedCapacity\n    }\n    Resident {\n        string CampusId PK\n        string FirstName\n        string PreferredFirstName\n        string LastName\n        int Gender\n        string GenderDescription\n        int Standing\n        int HallId FK \"Redundant, but necessary\"\n        RoomBase RoomBase \"may be null\"\n\t\tstring EMContactInfo\n        string EMContactRelation\n        string RoomNumber \"Redundant, but necessary\"\n    }\n    Hall ||--o{ RoomBase : contains\n    Resident }o--|| Hall : resides_in",
     "images": []
@@ -54,7 +54,7 @@
       "VSCommunity",
       "VSCode",
       "NodeJs",
-      "MermaidJs"
+      "MermaidJS"
     ],
     "mermaid": "",
     "images": [],

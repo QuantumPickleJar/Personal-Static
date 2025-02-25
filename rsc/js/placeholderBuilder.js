@@ -45,9 +45,23 @@ function createCircularPlaceholder(stack) {
     let isSvg = true;
 
     if (!iconDataUri) {
-      iconDataUri = `rsc/images/stack/${tech.toLowerCase()}.png`;
+      let pngPath = `rsc/images/stack/${tech.toLowerCase()}.png`;
+      iconDataUri = pngPath;
       isSvg = false;
     }
+
+    const img = document.createElement('img');
+    img.src = iconDataUri;
+    img.onerror = () => {
+      console.error(`Failed to load image: ${img.src}`);
+      // Attempt to load the image with the original casing
+      let pngPath = `rsc/images/stack/${tech}.png`;
+      img.src = pngPath;
+      img.onerror = () => {
+        console.error(`Failed to load image with original casing: ${img.src}`);
+        img.src = 'rsc/images/placeholder-generic.png'; // Use a generic placeholder on error
+      };
+    };
 
     const angle = (2 * Math.PI / total) * index;
     const iconRadius = 30;
