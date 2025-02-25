@@ -239,6 +239,30 @@ export function renderProjectsGallery(projects) {
 }
 
 
+
+function buildDateTooltip(dates) {
+  if (!dates) {
+    return "No date info available.";
+  }
+
+  // Fallback to "N/A" if any field is missing/blank
+  const started = dates.started || "N/A";
+  const modified = dates.modified || "N/A";
+  // Some projects use "released" instead of "completed" – adapt as needed
+  const completed = dates.completed || dates.released || "N/A";
+
+  // For multiline in HTML, use <br>, or do a small template with divs
+  return `
+    <div>
+      <strong>Started:</strong> ${started}<br>
+      <strong>Modified:</strong> ${modified}<br>
+      <strong>Completed:</strong> ${completed}
+    </div>
+  `;
+}
+
+
+
 // E/xpand stack icons 
 function expandStack(container, stackArray, max, linkElement) {
   container.removeChild(linkElement);
