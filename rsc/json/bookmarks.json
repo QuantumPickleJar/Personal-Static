@@ -1,0 +1,37 @@
+[
+    {
+      "title": "Google",
+      "url": "https://www.google.com",
+      "category": "Search Engines"
+    },
+    {
+      "title": "GitHub",
+      "url": "https://github.com",
+      "category": "Development"
+    },
+    {
+      "title": "Mozilla",
+      "url": "https://www.mozilla.org",
+      "category": "Development"
+    },
+    {
+      "title": "JSON Escaper",
+      "url": "https://www.lambdatest.com/free-online-tools/json-escape",
+      "category": "Tool/Development"
+    },
+    {
+      "title": "Design Patterns - Peter Norvig (PDF)",
+      "url": "http://www.norvig.com/design-patterns/design-patterns.pdf",
+      "category": "Reference"
+    },
+    {
+      "title": "Plaintext Offenders",
+      "url": "https://plaintextoffenders.com/",
+      "category": "Info Repository"
+    },
+    {
+      "title": "New Entry",
+      "url": "",
+      "category": ""
+    }
+  ]

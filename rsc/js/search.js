@@ -1,0 +1,1 @@
+export function filterProjectsBySearchTerm(e,t){if(!t)return e;const r=t.toLowerCase();return e.filter((e=>{const t=(e.title||"").toLowerCase(),o=(e.description||"").toLowerCase(),n=(e.stack||[]).join(" ").toLowerCase();return t.includes(r)||o.includes(r)||n.includes(r)}))}

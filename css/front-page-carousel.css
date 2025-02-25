@@ -1,0 +1,143 @@
+/**
+The styling for the carousel components on Home and About Us pages
+*/
+
+
+/* arrange the buttons to the left and right of the image */
+.carousel-wrapper {
+  overflow: hidden;
+  margin: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+/* 
+Contains the displayed images within the carousel
+We want it to consume all space leftover after the button width is 
+taken into account, so we'll have to use relative scaling
+*/
+.carousel-container {
+  width: 100%; /* take up all leftover horizontal free space inside div */
+  height: calc(50vh - 2rem); /* offset twice the wrapper's margin */
+  display: flex;
+  flex-wrap: nowrap;
+  list-style: none; /* we don't want bullet points either */
+  padding: 0;
+  margin: 0;
+  /* without these lines, we lose the smooth sliding motion */
+  overflow: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+/* hide the scrollbar from the user */
+.carousel-container::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+}
+
+.carousel-container, .carousel-container::webkit-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Targets the div surrounding the carousel */
+/* .carousel.wrapper, #carousel{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;  
+} */
+
+.slide-item {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+.slide-item img {
+  /* flex-shrink: 0.35; */
+  margin: auto;
+  /* take up 80% of the container's width (so 80% of half)*/
+  width: 80%;
+  /* max-width: 550px; */
+  max-width: 35vw;
+}
+
+.carousel p {
+  flex-shrink: 0.65;
+}
+
+
+/* Positions the arrows so they are equidistant from the image's center */
+#img-prev {
+  left: 0;
+  padding-left: 0.25rem;
+  /* border-radius: 0 1.2rem 1.2rem 0; */
+}
+
+#img-next {
+  right: 0;
+  padding-right: 0.75rem;
+  /* border-radius: 1.2rem 0 0 1.2rem 0; */
+}
+
+
+/* Styles the arrow buttons by photos, making sure that they don't 
+stray too far from the carousel or image */
+.arrowButton {
+  background-color: white;
+  border: none;
+  color: #DCB239;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  position: relative;
+  font-size: 35px;
+  /* margin: 4px 2px; */
+  margin: auto;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 100ms; /* slow the transition to make it appealing */
+}
+
+/* make the button change color on hover or focus*/
+.arrowButton:hover, .arrowButton:focus {
+  opacity: 1;
+}
+
+
+/* ===================== [ MEDIA QUERIES ] ========================*/
+@media all and (max-width: 796px) {
+  /* carousel */
+  .carousel.wrapper img, #carousel img {
+    width: 80%;
+  }
+
+  /* Keep images with carousel as row */
+  .carousel-wrapper {
+    width: 100%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    align-content: center;
+  }
+}
+
+/* Medium screens (Tablets) */
+@media all and (min-width: 796px) {
+
+  .carousel-container > img {
+    /* take up 80% of the container's width (so 80% of half)*/
+    width: 80%;
+    max-width: 550px;
+  }
+
+}
