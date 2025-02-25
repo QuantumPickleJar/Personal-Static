@@ -193,6 +193,14 @@ export function renderProjectsGallery(projects) {
       card.appendChild(imageCountIcon);
     }
 
+    // Add Mermaid diagram badge if project has mermaid content
+    if (project.mermaid && project.mermaid.trim()) {
+      const mermaidIcon = document.createElement('div');
+      mermaidIcon.classList.add('mermaid-icon');
+      mermaidIcon.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
+      card.appendChild(mermaidIcon);
+    }
+
     // Title
     const titleDiv = document.createElement('div');
     titleDiv.classList.add('project-title');
@@ -404,14 +412,15 @@ function setupModalToggleFABs(project) {
   const mermaidFab = document.createElement('button');
   mermaidFab.className = 'fab toggle-mermaid';
   mermaidFab.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />';
+  // Ensure absolute positioning for tooltip is relative to mermaidFab
+  mermaidFab.style.position = 'relative';
   
-  // Check for mermaid content immediately and set disabled state
   if (!project.mermaid || !project.mermaid.trim()) {
     mermaidFab.setAttribute('disabled', 'true');
     mermaidFab.classList.add('disabled');
   }
 
-  // Attach tooltip on mouseover for the mermaid FAB.
+  // Attach tooltip on click for the mermaid FAB.
   mermaidFab.addEventListener('click', () => {
     // Only show tooltip if project has mermaid content
     let tooltip = mermaidFab.querySelector('.fab-tooltip');
@@ -430,6 +439,16 @@ function setupModalToggleFABs(project) {
           tooltip.remove();
         }, 500);
       }, 3000);
+    }
+  });
+  
+  // Remove tooltip if mouse leaves mermaidFab
+  mermaidFab.addEventListener('mouseleave', () => {
+    const tooltip = mermaidFab.querySelector('.fab-tooltip');
+    if (tooltip) {
+      setTimeout(() => {
+        tooltip.remove();
+      }, 500);
     }
   });
 
