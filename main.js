@@ -1,9 +1,9 @@
-import { projectsPerPage } from './perPageSettings.js';
-import { closeModal, loadProjects } from './projects.js';
-import { initPagination, updateItemsPerPage } from './pagination.js';
-import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
-import { filterProjectsBySearchTerm } from '/Personal-Static/rsc/js/search.js';
-import { initCarousel } from '/Personal-Static/rsc/js/carousel.js';
+import { projectsPerPage } from './rsc/js/perPageSettings.js';
+import { closeModal, loadProjects } from './rsc/js/projects.js';
+import { initPagination, updateItemsPerPage } from './rsc/js/pagination.js';
+import { filterProjByTitle, filterByDate } from './rsc/js/gallery-sorting.js';
+import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+import { initCarousel } from './rsc/js/carousel.js';
 
 /**
  * Load partial files into the main page
