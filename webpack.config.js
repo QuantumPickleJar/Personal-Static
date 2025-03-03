@@ -19,6 +19,8 @@ module.exports = {
     clean: true
   },
 
+  devtool: 'source-map', // or 'eval-source-map' for development
+
   // 3) Plugins
   plugins: [
     // Turn index.html into dist/index.html, injecting the script
