@@ -46,7 +46,7 @@ async function loadCarouselProjects() {
           border-radius: 8px;
           background-color: #fff;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          height: 300px;
+          height: 260px;
           margin: 10px auto;
           max-width: 300px;
           display: flex;
