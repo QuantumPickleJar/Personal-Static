@@ -76,8 +76,17 @@ If **two or more** images, it's possible that I'd need an additional `<div>` ele
 ## Functionality
 - search function by the stack
 
+Expected files:
+
+- imageLoader.js
+- stackStylesheet.css
+
 ## Roadmap
+- academic color needs to be different than personal
 - Layout
+  - Default sort by project date
+  - Render icons (if bandwidth)
+  - Gallery view uses shortForm
   - Collapsible sections for About Me
 - Projects
   - Confirm steering wheel & 3D Printer
