@@ -24,7 +24,8 @@
 /* Loading overlay styles */
 @import '/./css/loading.css';
 
+@import '/./css/resources-page.css';
+
 /* Mobile-specific styles */
 @import '/./css/mobile.css';
 
-@import '/./css/resources-page.css';
