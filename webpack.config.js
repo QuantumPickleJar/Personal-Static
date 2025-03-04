@@ -3,10 +3,14 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const isProduction = process.env.NODE_ENV === 'production';
+const publicPath = isProduction ? '/Personal-Static/' : '/';
+
+
 module.exports = {
-  mode: 'development',
+  mode: isProduction ? 'production' : 'development',
   target: 'web',
-  // 1) The main entry for your JS
+  // 1) The main entry for JS
   entry: {
     main: './main.js'
   },
@@ -19,7 +23,7 @@ module.exports = {
     clean: true
   },
 
-  devtool: 'source-map', // or 'eval-source-map' for development
+  devtool: 'source-map',
 
   // 3) Plugins
   plugins: [
