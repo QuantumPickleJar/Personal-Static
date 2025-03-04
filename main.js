@@ -1,7 +1,7 @@
-import { projectsPerPage } from './perPageSettings.js';
-import { closeModal, loadProjects } from './projects.js';
-import { initPagination, updateItemsPerPage } from './pagination.js';
-import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
+import { projectsPerPage } from './rsc/js/perPageSettings.js';
+import { closeModal, loadProjects } from './rsc/js/projects.js';
+import { initPagination, updateItemsPerPage } from './rsc/js/pagination.js';
+import { filterProjByTitle, filterByDate } from './rsc/js/gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
 
@@ -17,24 +17,6 @@ async function loadPartial(containerId, partialPath) {
     console.error(`Error loading ${partialPath}:`, error);
   }
 }
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('htmlModules/img-carousel.html')
-    .then(response => response.text())
-    .then(html => {
-      const temp = document.createElement('div');
-      temp.innerHTML = html;
-      const carousel = temp.querySelector('.carousel-wrapper');
-      if (carousel) {
-        document.querySelector('#carouselContainer').appendChild(carousel);
-        // Now that the carousel is appended, initialize it.
-        initCarousel();
-      }
-    })
-    .catch(err => console.error('Failed to load carousel:', err));
-});
-
 
 
 
@@ -88,23 +70,7 @@ card.innerHTML = `
   return card;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) Insert or fetch your snippet
-  fetch('modules/img-carousel.html')
-    .then((response) => response.text())
-    .then((html) => {
-      const temp = document.createElement('div');
-      temp.innerHTML = html;
-      const carousel = temp.querySelector('.carousel-wrapper');
-      if (carousel) {
-        document.querySelector('#carouselContainer').appendChild(carousel);
-        // 2) Now we can safely init
-        initCarousel();
-      }
-    })
-    .catch((err) => console.error('Failed to load carousel:', err));
-});
-
+// 
 
 // Helper to generate options for projects per page based on screen width
 function generatePerPageOptions() {
@@ -225,9 +191,62 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (contactForm) {
     contactForm.addEventListener('submit', handleContactSubmit);
   }
+  // Check if current page is index.html
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) {
+      console.log('Creating carousel on index page');
+      
+      // Make sure Bootstrap is available globally
+      if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap not loaded! The carousel requires Bootstrap.');
+      }
+      
+      const carouselContainer = document.createElement('div');
+      carouselContainer.id = 'carouselContainer';
+      carouselContainer.classList.add('carousel', 'slide');
+      carouselContainer.setAttribute('data-bs-ride', 'carousel');
 
+      // Create inner structure for the carousel
+      carouselContainer.innerHTML = `
+        <div class="carousel-inner"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselContainer" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselContainer" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      `;
+
+      // Insert carousel at the appropriate position in mainContent
+      // Find the position where you want to insert the carousel
+      const paragraphs = mainContent.querySelectorAll('p');
+      if (paragraphs.length > 0) {
+        const lastParagraph = paragraphs[paragraphs.length - 1];
+        lastParagraph.after(carouselContainer);
+      } else {
+        mainContent.appendChild(carouselContainer);
+      }
+
+      debugger; // This will pause execution when DevTools are open
+
+      // Import and execute the carousel code
+      import('./rsc/js/front_page_carousel.js')
+        .then(module => {
+          console.log('Front page carousel module loaded');
+          if (module.initCarousel) {
+            module.initCarousel();
+          }
+        })
+        .catch(err => console.error('Failed to load carousel module:', err));
+    }
+  }
   // Check if the current page is projects.html
   if (window.location.pathname.endsWith('projects.html')) {
+    console.log("Detected projects.html, initializing project gallery.");
+    
     // Load projects.json
     const projects = init();
     initPagination(projects, projectsPerPage);
@@ -263,19 +282,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     }
-  }
-
-  // Instead of creating a container in mainContent, we assume perPageContainer exists in the howToRow.
-  if (window.location.pathname.endsWith('projects.html')) {
+    
     renderPerPageDropdown();
     window.addEventListener('resize', () => {
       renderPerPageDropdown();
       updateItemsPerPage(projectsPerPage);
     });
   }
-
-  // start the pagination with the imported default
-  // initPagination(allProjects, projectsPerPage);
 });
 
 // Contact form handler

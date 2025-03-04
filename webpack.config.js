@@ -8,16 +8,18 @@ module.exports = {
   target: 'web',
   // 1) The main entry for your JS
   entry: {
-    main: './main.js' // Make sure this file is at project root or adjust path
+    main: './main.js'
   },
 
   // 2) Where Webpack puts the bundle
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    publicPath: '/', // This is fine if you serve from root locally.
+    publicPath: '/Personal-Static/',
     clean: true
   },
+
+  devtool: 'source-map', // or 'eval-source-map' for development
 
   // 3) Plugins
   plugins: [
