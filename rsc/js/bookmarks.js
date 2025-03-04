@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
   
 async function fetchBookmarks() {
-    console.log('Fetching bookmarks from /Personal-Static/rsc/json/bookmarks.json');
+    console.log('Fetching bookmarks from /./rsc/json/bookmarks.json');
     try {
-      const response = await fetch('/Personal-Static/rsc/json/bookmarks.json');
+      const response = await fetch('/./rsc/json/bookmarks.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

@@ -74,6 +74,7 @@
   }
   #sidebarContainer {
     flex: 1 1 100%;
+    max-width: 100%;
   }
 }
 
@@ -98,12 +99,6 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
-
-/* Adjust book cover sizing */
-/* .book-cover, .book-cover > img { 
-  max-width: calc(25vw - 10px) !important;
-  height: auto !important;
-} */
 
 .book-cover {
   width: 100%;

@@ -1,7 +1,15 @@
 /* mobile.css - Styles for mobile devices */
 
+/* sidebar.css - Desktop/default sidebar. */
+#sidebar {
+  width: 300px;
+  max-width: 300px;
+  background-color: #0000a0;
+  /* ...other styles */
+}
+
 /* Mobile Styles */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .project-card {
     /* Full width cards on mobile */
     flex: 1 1 100%;
@@ -97,13 +105,6 @@
   }
 }
 
-/* sidebar.css - Desktop/default sidebar. */
-#sidebar {
-  width: 300px;
-  max-width: 300px;
-  background-color: #0000a0;
-  /* ...other styles */
-}
 
 /* The profile photo can be 200x200 for wider screens */
 .profile-photo {
