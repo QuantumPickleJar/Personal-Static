@@ -41,29 +41,34 @@ async function loadCarouselProjects() {
       const style = document.createElement('style');
       style.textContent = `
         .carousel-card {
-          padding: 10px;
+          padding: 15px;
           border: 1px solid #ddd;
           border-radius: 8px;
           background-color: #fff;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          height: 260px;
+          height: 200px;  /* Reduced height */
           margin: 10px auto;
-          max-width: 300px;
+          width: 95%;     /* Take up most of the container width */
+          max-width: 900px; /* Maximum width */
           display: flex;
           flex-direction: column;
         }
+        
         .carousel-card-header {
           background-color: #f0f0f0;
           padding: 10px;
           text-align: center;
           font-weight: bold;
-          height: 20%;
+          height: 15%;   /* Adjusted for better proportions */
         }
+        
         .carousel-card-body {
           padding: 10px;
-          height: 60%;
+          height: 65%;    /* Increased to give more space to content */
           overflow: hidden;
+          line-height: 1.4;
         }
+        
         .carousel-card-footer {
           background-color: #f0f0f0;
           padding: 10px;
@@ -71,11 +76,27 @@ async function loadCarouselProjects() {
           font-size: 0.8em;
           height: 20%;
         }
+        
         .carousel-img {
           width: 100%;
           height: auto;
           max-height: 150px;
           object-fit: contain;
+        }
+        
+        /* Make the carousel container wider */
+        #carouselContainer {
+          width: 90%;
+          margin: 20px auto;
+        }
+        
+        /* Adjust arrow positions for wider carousel */
+        .carousel-control-prev {
+          left: -30px;
+        }
+        
+        .carousel-control-next {
+          right: -30px;
         }
       `;
       document.head.appendChild(style);
