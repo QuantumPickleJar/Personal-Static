@@ -1,10 +1,10 @@
 /* style.css - Main CSS file that imports all other CSS modules */
 
 /* Base resets and global styles */
-@import '/Personal-Static/css/base.css';
+@import '/./css/base.css';
 
 /* Header and footer specific styles */
-@import '/Personal-Static/css/header-footer.css';
+@import '/./css/header-footer.css';
 
 /* Sidebar styles */
 @import '/Personal-Static/css/sidebar.css';

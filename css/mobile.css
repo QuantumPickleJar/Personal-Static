@@ -1,7 +1,15 @@
 /* mobile.css - Styles for mobile devices */
 
+/* sidebar.css - Desktop/default sidebar. */
+#sidebar {
+  width: 300px;
+  max-width: 300px;
+  background-color: #0000a0;
+  /* ...other styles */
+}
+
 /* Mobile Styles */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .project-card {
     /* Full width cards on mobile */
     flex: 1 1 100%;
@@ -95,4 +103,25 @@
     flex: 1; /* Ensure mainContent takes remaining space */
     width: 100%; /* Ensure mainContent takes full width */
   }
+}
+
+
+/* The profile photo can be 200x200 for wider screens */
+.profile-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;       /* ensures block-level element for centering */
+  margin: 0 auto;       /* horizontally center on desktop as well */
+}
+
+/* center the links under the photo */
+.profile-links {
+  text-align: center;
+}
+
+/* anchors in pink, etc. */
+.profile-links a {
+  color: pink;
 }
