@@ -96,3 +96,31 @@
     width: 100%; /* Ensure mainContent takes full width */
   }
 }
+
+/* sidebar.css - Desktop/default sidebar. */
+#sidebar {
+  width: 300px;
+  max-width: 300px;
+  background-color: #0000a0;
+  /* ...other styles */
+}
+
+/* The profile photo can be 200x200 for wider screens */
+.profile-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;       /* ensures block-level element for centering */
+  margin: 0 auto;       /* horizontally center on desktop as well */
+}
+
+/* center the links under the photo */
+.profile-links {
+  text-align: center;
+}
+
+/* anchors in pink, etc. */
+.profile-links a {
+  color: pink;
+}
