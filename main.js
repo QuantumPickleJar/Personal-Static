@@ -212,11 +212,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="carousel-inner"></div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselContainer" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
+          <span class="visually-hidden">>></span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#carouselContainer" data-bs-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
+          <span class="visually-hidden"><<</span>
         </button>
       `;
 
@@ -273,6 +273,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             break;
           case 'date':
             filterByDate();
+            break;
+          case 'default': // Assuming 'default' is the value for "Sort Projects"
+            filterByContentType(); // Connect this to content filter
             break;
           case 'status':
             console.log('Filter by status not implemented.');
