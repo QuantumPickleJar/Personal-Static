@@ -95,24 +95,19 @@ Expected files:
 - Appearance
   - Reusable image partials for single/multiple/no image
   - Vertically vs. horizontally stacked images
-  - Default or generated placeholders when no images
 - Functionality
   - Search function by stack
-  - Date parsing from JSON
-  - “status” fix
-  - Validate shortForm usage
-  - Basic mermaid integration
   - Responsive stackBox (modal & gallery)
-- Pending
   - Implement imageLoader.js & stackStylesheet.css
 
-
 ----
+
 - search bar on projects page
-- center the text 
+- center the text
 
 > So my advanced search bar does not update when the windows is resized. Secondarily, the "projects per page" needs be attached to the main content container, right now it attaches to the sidebar. When I tried targeting mainContent or mainContainer, it failed saying it was null. #codebase
 
 - circle is too large on some projects without images (based on their description size, thus how much space is alotted to the `bottomContainer`)
 - booksPage
 - placeholder only renders SVGs, needs to render PNGS too
+- carousel needs to loop around

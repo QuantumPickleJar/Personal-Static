@@ -1,11 +1,11 @@
 import * as bootstrap from 'bootstrap'; // Added to import Bootstrap module
 import { initPagination } from './pagination.js';
-import { getPlaceholderForStack,  } from './rsc/js/placeholderBuilder.js';
+import { getPlaceholderForStack,  } from './placeholderBuilder.js';
 import { filterProjByTitle, filterByDate, createTruncatedSpan } from './gallery-sorting.js';
-import { getIcon, renderOneStackIcon } from './rsc/js/stackIconLoader.js';
-import { filterProjectsBySearchTerm } from './rsc/js/search.js';
+import { getIcon, renderOneStackIcon } from './stackIconLoader.js';
+import { filterProjectsBySearchTerm } from './search.js';
 import { projectsPerPage } from './perPageSettings.js';
-import { parseMermaidCode } from './rsc/js/json-parser.js';
+import { parseMermaidCode } from './json-parser.js';
 import panzoom from 'panzoom';
 import mermaid from 'mermaid';
 window.mermaid = mermaid;
@@ -167,7 +167,7 @@ export function renderProjectsGallery(projects) {
     if (project.mermaid && project.mermaid.trim()) {
       const mermaidIcon = document.createElement('div');
       mermaidIcon.classList.add('mermaid-icon');
-      mermaidIcon.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
+      mermaidIcon.innerHTML = '<img src="/Personal-Static/rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
       card.appendChild(mermaidIcon);
     }
 
@@ -222,7 +222,7 @@ export function renderProjectsGallery(projects) {
       if (project.mermaid && project.mermaid.trim()) {
         const mermaidIcon = document.createElement('div');
         mermaidIcon.classList.add('mermaid-icon');
-        mermaidIcon.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
+        mermaidIcon.innerHTML = '<img src="/Personal-Static/rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
         badgeContainer.appendChild(mermaidIcon);
       }
       
@@ -429,7 +429,7 @@ function setupModalToggleFABs(project) {
   // Create Mermaid FAB with initial disabled state
   const mermaidFab = document.createElement('button');
   mermaidFab.className = 'fab toggle-mermaid';
-  mermaidFab.innerHTML = '<img src="/rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />';
+  mermaidFab.innerHTML = '<img src="rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />';
   // Ensure absolute positioning for tooltip is relative to mermaidFab
   mermaidFab.style.position = 'relative';
   

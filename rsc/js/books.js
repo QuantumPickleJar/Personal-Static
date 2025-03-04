@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
   
 async function fetchBooks() {
-    console.log('Fetching books from ./rsc/json/books.json');
+    console.log('Fetching books from /Personal-Static/rsc/json/books.json');
     try {
-      const response = await fetch('./rsc/json/books.json');
+      const response = await fetch('/Personal-Static/rsc/json/books.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
