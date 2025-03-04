@@ -1,30 +1,31 @@
 /* style.css - Main CSS file that imports all other CSS modules */
 
 /* Base resets and global styles */
-@import '/Personal-Static/css/base.css';
+@import '/./css/base.css';
 
 /* Header and footer specific styles */
-@import '/Personal-Static/css/header-footer.css';
+@import '/./css/header-footer.css';
 
 /* Sidebar styles */
-@import 'Personal-Static/css/sidebar.css';
+@import '/./css/sidebar.css';
 
 /* Main content styles */
-@import 'Personal-Static/css/main-content.css';
+@import '/./css/main-content.css';
 
 /* Project gallery and card styles */
-@import 'Personal-Static/css/projects.css';
+@import '/./css/projects.css';
 
 /* Modal styles */
-@import 'Personal-Static/css/modal.css';
+@import '/./css/modal.css';
 
 /* Pagination styles */
-@import 'Personal-Static/css/pagination.css';
+@import '/./css/pagination.css';
 
 /* Loading overlay styles */
-@import 'Personal-Static/css/loading.css';
+@import '/./css/loading.css';
+
+@import '/./css/resources-page.css';
 
 /* Mobile-specific styles */
-@import 'Personal-Static/css/mobile.css';
+@import '/./css/mobile.css';
 
-@import 'Personal-Static/css/resources-page.css';
