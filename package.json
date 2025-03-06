@@ -3,6 +3,7 @@
     "@barba/core": "^2.10.3",
     "bootstrap": "^5.3.3",
     "express": "^4.21.2",
+    "lodash": "^4.17.21",
     "mermaid": "^11.4.1",
     "node": "^23.7.0",
     "nodemon": "^3.1.9",

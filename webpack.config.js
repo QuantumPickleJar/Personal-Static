@@ -2,10 +2,10 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const publicPath = process.env.CUSTOM_DOMAIN ? '/' : (isProduction ? '/Personal-Static/' : '/');
-
 
 module.exports = {
   mode: isProduction ? 'production' : 'development',
@@ -39,6 +39,9 @@ module.exports = {
 
   // 3) Plugins
   plugins: [
+    new webpack.ProvidePlugin({
+      _: 'lodash'
+    }),
     // Turn index.html into dist/index.html, injecting the script
     new HtmlWebpackPlugin({
       template: './views/index.ejs',
