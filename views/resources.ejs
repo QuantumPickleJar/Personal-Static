@@ -14,11 +14,13 @@
 <body>
   <!-- Header partial -->
   <div id="headerContainer"></div>
+  <%- include('./partials/header') %>
 
   <!-- Main sandwich container -->
   <div class="contentContainer">
     <!-- Sidebar partial (on larger viewports, the sidebar stays on the left) -->
     <div id="sidebarContainer"></div>
+    <%- include('./partials/sidebar') %>
 
     <!-- Main Container -->
     <div id="mainContainer">
@@ -51,11 +53,11 @@
   </div>
 
   <!-- Footer partial -->
-  <div id="footerContainer"></div>
+  <%- include('./partials/footer') %>
 
   <!-- Main JavaScript entry -->
   <!-- <script type="module" src="/./main.js"></script> -->
-  <script type="module" src="/./rsc/js/books.js"></script>
-  <script type="module" src="/./rsc/js/bookmarks.js"></script>
+  <script type="module" src="rsc/js/books.js"></script>
+  <script type="module" src="rsc/js/bookmarks.js"></script>
 </body>
 </html>

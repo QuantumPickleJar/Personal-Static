@@ -30,12 +30,12 @@
   <div id="barba-wrapper" data-barba="wrapper">
     <div data-barba="container" data-barba-namespace="projects">
       <!-- Header partial -->
-      <div id="headerContainer"></div>
+      <%- include('./partials/header') %>
 
       <!-- Main sandwich container -->
       <div class="contentContainer">
         <!-- Sidebar partial -->
-        <div id="sidebarContainer"></div>
+        <%- include('./partials/sidebar') %>
 
         <!-- Main Container -->
         <div id="mainContainer">
@@ -78,7 +78,7 @@
       </div>
 
       <!-- Footer partial -->
-      <div id="footerContainer"></div>
+      <%- include('./partials/footer') %>
 
       <!-- Modal for expanded project details -->
       <div id="projectModal" class="modal">

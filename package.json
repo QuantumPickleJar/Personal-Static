@@ -14,8 +14,10 @@
   "main": "main.js",
   "scripts": {
     "build": "webpack --mode production",
+    "build:custom": "cross-env NODE_ENV=production CUSTOM_DOMAIN=true webpack",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
+    "deploy:custom": "npm run build:custom",
     "start": "webpack serve --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

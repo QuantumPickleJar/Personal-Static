@@ -41,19 +41,19 @@ module.exports = {
   plugins: [
     // Turn index.html into dist/index.html, injecting the script
     new HtmlWebpackPlugin({
-      template: './views/index.html',
+      template: './views/index.ejs',
       filename: 'index.html',
       chunks: ['main']
     }),
     // Turn projects.html into dist/projects.html
     new HtmlWebpackPlugin({
-      template: './views/projects.html',
+      template: './views/projects.ejs',
       filename: 'projects.html',
       chunks: ['main']
     }),
     // Turn resources.html into dist/resources.html
     new HtmlWebpackPlugin({
-      template: './views/resources.html',
+      template: './views/resources.ejs',
       filename: 'resources.html',
       chunks: ['main']
     }),
