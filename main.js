@@ -10,11 +10,36 @@ import { initCarousel } from './rsc/js/carousel.js';
  */
 async function loadPartial(containerId, partialPath) {
   try {
-    const response = await fetch(`partials/${partialPath}`);
+    // Get the base URL from the <base> tag or use a default
+    const baseElement = document.querySelector('base');
+    const basePath = baseElement ? baseElement.getAttribute('href') : '/';
+    
+    // Construct the full URL with explicit protocol and hostname to avoid redirects
+    const partialUrl = new URL(`${basePath}partials/${partialPath}`, window.location.origin);
+    
+    console.log(`Fetching partial from: ${partialUrl.toString()}`);
+    
+    const response = await fetch(partialUrl.toString());
+    
+    if (!response.ok) {
+      throw new Error(`Failed to load partial: ${response.status} ${response.statusText}`);
+    }
+    
     const html = await response.text();
+    
+    // Check if we accidentally got the index.html page (by checking for distinctive patterns)
+    if (html.includes('<base href="/Personal-Static/">') || 
+        html.includes('<div id="barba-wrapper"')) {
+      throw new Error('Received index.html instead of the partial');
+    }
+    
     document.getElementById(containerId).innerHTML = html;
   } catch (error) {
     console.error(`Error loading ${partialPath}:`, error);
+    // Provide a fallback content rather than leaving it empty
+    document.getElementById(containerId).innerHTML = `<div class="error-partial">
+      Failed to load ${partialPath}. Please check the console for details.
+    </div>`;
   }
 }
 
