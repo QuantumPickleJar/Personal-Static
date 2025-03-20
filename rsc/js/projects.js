@@ -15,6 +15,11 @@ const MAX_STACK_CHARS = 20; // Adjust this value to your needs
 
 mermaid.initialize({ startOnLoad: false });
 
+document.addEventListener('DOMContentLoaded', function() {
+  initializeProjects();
+});
+
+
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
   console.log('Loading projects...');
@@ -594,6 +599,40 @@ function getVisibleStackItems(stackArray) {
     items: visibleItems,
     remaining: stackArray.length - visibleItems.length
   };
+}
+
+function initializeProjects() {
+  // Existing code...
+  
+  // Add event listener for modal close button
+  const closeModalButton = document.getElementById('closeModal');
+  if (closeModalButton) {
+    closeModalButton.addEventListener('click', closeModal);
+  }
+  
+  // Add event listener to close when clicking outside modal content
+  const modal = document.getElementById('projectModal');
+  if (modal) {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  }
+
+  // Optional: Add ESC key listener
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+  // Rest of your initialization code...
+  loadProjects()
+    .then(renderProjectsGallery)
+    .then(() => {
+      console.log('Projects loaded and rendered');
+    });
 }
 
 
