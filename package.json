@@ -1,9 +1,10 @@
 {
   "dependencies": {
     "@barba/core": "^2.10.3",
+    "@iconify/utils": "^2.1.5",
     "bootstrap": "^5.3.3",
     "express": "^4.21.2",
-    "mermaid": "^11.4.1",
+    "mermaid": "^11.5.0",
     "node": "^23.7.0",
     "nodemon": "^3.1.9",
     "panzoom": "^9.4.3",
