@@ -3,8 +3,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+// Simplify the publicPath logic
 const isProduction = process.env.NODE_ENV === 'production';
-const publicPath = isProduction ? '/Personal-Static/' : '/';
+const publicPath = ''; // Use empty string for relative paths in all environments
 
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    publicPath: isProduction,
+    publicPath: publicPath,
     clean: true
   },
 
@@ -49,11 +50,18 @@ module.exports = {
     // Copy static assets/folders into dist
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'partials/', to: 'partials/' },
+        // Make sure this path is correct and partials are being copied
+        { 
+          from: './partials', 
+          to: 'partials',
+          globOptions: {
+            ignore: ['**/.DS_Store']
+          }
+        },
+        // Other patterns remain the same
         { from: 'rsc/', to: 'rsc/' },
         { from: 'style.css', to: 'style.css' },
         { from: 'css/', to: 'css/' },
-        // Important: copy modules folder so we can fetch('modules/img-carousel.html')
         { from: 'htmlModules/', to: 'htmlModules/' }
       ],
     }),

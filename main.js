@@ -6,40 +6,74 @@ import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
 
 /**
- * Load partial files into the main page
+ * Load partial files into the main page with improved path resolution
  */
 async function loadPartial(containerId, partialPath) {
   try {
-    // Get the base URL from the <base> tag or use a default
-    const baseElement = document.querySelector('base');
-    const basePath = baseElement ? baseElement.getAttribute('href') : '/';
+    // Extract the base name without extension
+    const baseName = partialPath.replace('.html', '');
     
-    // Construct the full URL with explicit protocol and hostname to avoid redirects
-    const partialUrl = new URL(`${basePath}partials/${partialPath}`, window.location.origin);
+    // Try multiple path formats with and without .html extension
+    const pathsToTry = [
+      `partials/${baseName}`,           // Without extension (important!)
+      `./partials/${baseName}`,         // Without extension, relative
+      `partials/${partialPath}`,        // With extension
+      `./partials/${partialPath}`       // With extension, relative
+    ];
     
-    console.log(`Fetching partial from: ${partialUrl.toString()}`);
-    
-    const response = await fetch(partialUrl.toString());
-    
-    if (!response.ok) {
-      throw new Error(`Failed to load partial: ${response.status} ${response.statusText}`);
+    // If we're in GitHub Pages environment, add the repo path
+    if (window.location.hostname.includes('github.io')) {
+      pathsToTry.unshift(`/Personal-Static/partials/${baseName}`);
+      pathsToTry.unshift(`/Personal-Static/partials/${partialPath}`);
     }
     
-    const html = await response.text();
+    let response = null;
+    let html = null;
+    let successPath = null;
     
-    // Check if we accidentally got the index.html page (by checking for distinctive patterns)
-    if (html.includes('<base href="/Personal-Static/">') || 
-        html.includes('<div id="barba-wrapper"')) {
-      throw new Error('Received index.html instead of the partial');
+    // Try each path until one works
+    for (const path of pathsToTry) {
+      try {
+        console.log(`Trying to fetch partial from: ${path}`);
+        const fetchResponse = await fetch(path, { 
+          cache: 'no-store',
+          headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+        });
+        
+        if (fetchResponse.ok) {
+          response = fetchResponse;
+          html = await response.text();
+          
+          // Skip if we got the index.html page instead of the partial
+          if (html.includes('<title>Vincent') || 
+              html.includes('barba-wrapper') ||
+              html.includes('headerContainer')) {
+            console.log(`Path ${path} returned index.html instead of the partial`);
+            continue;
+          }
+          
+          successPath = path;
+          console.log(`Success! Loaded partial from: ${path}`);
+          break;
+        }
+      } catch (e) {
+        console.log(`Failed attempt with path: ${path}`);
+      }
+    }
+    
+    if (!successPath) {
+      throw new Error(`Could not load partial ${partialPath} from any path`);
     }
     
     document.getElementById(containerId).innerHTML = html;
   } catch (error) {
     console.error(`Error loading ${partialPath}:`, error);
-    // Provide a fallback content rather than leaving it empty
-    document.getElementById(containerId).innerHTML = `<div class="error-partial">
-      Failed to load ${partialPath}. Please check the console for details.
-    </div>`;
+    // Provide fallback content
+    document.getElementById(containerId).innerHTML = `
+      <div class="error-partial" style="padding: 10px; background: #ffeeee; border: 1px solid #ffaaaa;">
+        <p>Failed to load ${partialPath}.</p>
+        <p>This is fallback content.</p>
+      </div>`;
   }
 }
 
@@ -272,13 +306,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.location.pathname.endsWith('projects.html')) {
     console.log("Detected projects.html, initializing project gallery.");
     
-    // Load projects.json
-    const projects = init();
-    initPagination(projects, projectsPerPage);
-
-    // Close modal when user clicks the X button
+    // Use a self-executing async function to properly await
+    (async () => {
+      try {
+        const projects = await init();
+        initPagination(projects, projectsPerPage);
+        
+        // Rest of your projects.html initialization
+        // ...
+      } catch (error) {
+        console.error("Failed to initialize projects:", error);
+      }
+    })();
+    
+    // Code that doesn't depend on projects can remain outside
     document.getElementById('closeModal').addEventListener('click', closeModal);
-
     // Also close modal if user clicks outside the modal content
     const modal = document.getElementById('projectModal');
     modal.addEventListener('click', e => {
