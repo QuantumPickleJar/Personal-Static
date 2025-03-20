@@ -1,0 +1,58 @@
+/* header-footer.css - Styles for header and footer */
+
+/* Updated header styles */
+header {
+  background: linear-gradient(135deg, #4a90e2, #1456a0);
+  color: #fff;
+  padding: 1rem 2rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
+header nav {
+  margin-top: 0.5rem;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0.5rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+header nav a:hover,
+header nav a:focus {
+  text-decoration: underline;
+  color: #dbe9f4;
+}
+
+/* Disabled link in header navigation */
+header nav .disabled-link {
+  text-decoration: line-through;
+  color: #aaa;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+header nav .disabled-link:hover,
+header nav .disabled-link:focus {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+/* Existing Footer styles */
+footer {
+  /* background-color: #f0f0f0; */
+  padding: 1rem;
+  text-align: center;
+}

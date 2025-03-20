@@ -1,0 +1,70 @@
+<base href="/">
+<script>
+  // Dynamically set base href for GitHub Pages
+  if (window.location.hostname.includes('github.io') || 
+      window.location.pathname.includes('Personal-Static')) {
+    document.querySelector('base').href = '/Personal-Static/';
+  }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vincent's GitHub Page - Home</title>
+  <!-- Load Bootstrap first -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Load our main CSS file which imports all others -->
+  <link rel="stylesheet" href="/css/front-page-carousel.css" />
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- Add data attributes for Barba.js -->
+  <div id="barba-wrapper" data-barba="wrapper">
+    <div data-barba="container" data-barba-namespace="home">
+  <!-- Header partial will be dynamically inserted -->
+  <div id="headerContainer"></div>
+
+  <!-- Main "sandwich" container: Sidebar (left) + Main Content (right) -->
+  <div class="contentContainer">
+    <!-- Sidebar partial will be injected here -->
+    <div id="sidebarContainer"></div>
+
+    <!-- Main Container for Home content -->
+    <div id="mainContainer">
+      <main id="mainContent">
+        <h2>Welcome to Vincent's GitHub Page!</h2>
+        <p>This is the home page where you'll find my latest news, updates, and featured projects.</p>
+        <br/>
+        <!-- TODO: responsvely generate description (e.g. "check the sidebar" vs. "see the footer") -->
+        <p>I'm currently looking for a long-term position, check out the sidebar for more contact info.<br/>
+          For information about my current working status if you're an employer or talent scout, scroll down to the footer.</p>
+          Otherwise if you want to get to know what kinds of tech I like to dig into, head over to my <a href="resources.html">resources</a> page. 
+        <p>There are some fun goodies I've snuck into this portfolio, given that it's confined to a static Jekyll 
+          environment.  As you can see below, there is a carousel linked to some static images. <br></p> 
+        <p>Speaking of carousels, you'll find another over in my <a href="./projects.html">project gallery</a> (concealed within a modal) that appears
+            wherever a badge showing a picture of a camera with a number next to it representative of the images inside the carousel.  
+        </p>
+        <!-- Insert carousel container underneath all <p> tags -->
+        <div id="carouselContainer"></div>
+        
+        <!-- Inline script to load the carousel -->
+      </main>
+    </div>
+  </div>
+
+
+  <!-- Footer partial will be dynamically inserted -->
+  <div id="footerContainer"></div>
+  <!-- Include Bootstrap JavaScript bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Transition script must load before main.js -->
+  <script src="./transition.js"></script>
+  <!-- Main JavaScript file -->
+  <!-- <script type="module" src="main.js"></script>
+  <script type="module" src="/./rsc/js/carousel.js"></script> -->
+</body>
+</html>

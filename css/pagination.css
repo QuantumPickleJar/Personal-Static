@@ -1,0 +1,28 @@
+/* pagination.css - Styles for pagination */
+
+#paginationContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Basic pagination button styles */
+.pagination-wrapper button {
+  margin: 0 4px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.pagination-wrapper button.active-page {
+  background-color: #0000a0;
+  color: #fff;
+}
+
+.pagination-wrapper button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

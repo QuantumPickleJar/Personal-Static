@@ -1,0 +1,146 @@
+/* resources-page.css */
+
+/* Ensure the overall contentContainer uses flex to position sidebar and main content side by side */
+.contentContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  flex-direction: row;
+}
+
+/* Force the sidebar container to have a fixed width on larger screens */
+#sidebarContainer {
+  flex: 0 0 300px;
+}
+
+/* Let the main container expand to fill available space */
+#mainContainer {
+  flex: 1;
+}
+
+/* Section Titles for both Books and Bookmarks */
+.section-title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+/* Books & Bookmarks Sections */
+.section-books,
+.section-bookmarks {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 40px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Containers for injected content */
+.books-container,
+.bookmarks-container {
+  margin-top: 20px;
+}
+
+/* Controls for bookmarks filtering */
+.bookmark-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.bookmark-label,
+.bookmark-select {
+  font-size: 1rem;
+}
+
+/* Divider styling between sections */
+.section-divider {
+  border: 0;
+  border-top: 1px solid #e0e0e0;
+  margin: 40px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+  #sidebarContainer {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+/* Create a flex grid for book items */
+.books-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Your defined gap */
+  justify-content: flex-start; /* Changed from space-between for more consistent spacing */
+}
+
+/* Style for individual book items */
+.book-item {
+  flex: 0 0 calc(25% - 11.25px); /* (15px × 3) ÷ 4 = 11.25px per item */
+  max-width: calc(25% - 11.25px);
+}
+
+/* Control heading size */
+.book-item h3 {
+  font-size: 1.1rem;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.book-cover {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.book-cover > img { 
+  max-width: 100% !important; /* Slightly less than container width */
+  height: auto !important;
+  object-fit: contain;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .book-item {
+    flex: 0 0 calc(33.333% - 10px); /* (15px × 2) ÷ 3 = 10px per item */
+    max-width: calc(33.333% - 10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+  #sidebarContainer {
+    flex: 1 1 100%;
+  }
+  .book-item {
+    flex: 0 0 calc(50% - 7.5px); /* 15px ÷ 2 = 7.5px per item */
+    max-width: calc(50% - 7.5px);
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+  }
+  /* Limit image width on smaller screens */
+  .book-cover > img {
+    max-width: 60% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-item {
+    flex: 0 0 100%; /* 1 item per row */
+    max-width: 100%;
+  }
+}
