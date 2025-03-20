@@ -17,31 +17,43 @@ mermaid.initialize({ startOnLoad: false });
 
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
-  fetch('rsc/json/projects.json')
-    .then(response => response.json())
-    .then(data => {
-      allProjects = data;
-      console.log('Projects loaded:', allProjects);
-      initPagination(allProjects, projectsPerPage);
-      // Hide the loading overlay once projects are loaded
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      if (loadingOverlay) {
-        loadingOverlay.style.display = 'none';
+  console.log('Loading projects...');
+  return fetch('./rsc/json/projects.json')
+    .then(response => {
+      console.log('Projects fetch response:', response.status);
+      if (!response.ok) {
+        throw new Error(`Failed to load projects: ${response.status}`);
       }
-      
-      // Set up search input listener
-      const searchInput = document.querySelector('#searchBar');
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          const term = searchInput.value.trim();
-          // Filter
-          const filtered = filterProjectsBySearchTerm(allProjects, term);
-          // Reinitialize pagination with filtered projects to update pagination controls
-          initPagination(filtered, projectsPerPage);
-        });
-      }
+      return response.json();
     })
-    .catch(err => console.error('Failed to load projects:', err));
+    .then(data => {
+      console.log(`Projects data received: ${data.length} items`);
+      allProjects = data;
+      return data;
+    })
+    .catch(error => {
+      console.error('Project loading error:', error);
+      document.getElementById('projectsGallery').innerHTML = 
+        `<div class="error">Failed to load projects: ${error.message}</div>`;
+      return [];
+    });
+}
+
+// Helper function to try multiple paths
+async function tryFetchPaths(paths) {
+  for (const path of paths) {
+    try {
+      console.log(`Trying to fetch from: ${path}`);
+      const response = await fetch(path);
+      if (response.ok) {
+        console.log(`Successfully loaded from: ${path}`);
+        return response.json();
+      }
+    } catch (e) {
+      console.log(`Failed attempt with path: ${path}`);
+    }
+  }
+  throw new Error('All paths failed');
 }
 
 /** Render the gallery with a given array of projects */

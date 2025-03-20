@@ -146,8 +146,17 @@
   </script>
 <!-- Transition script -->
   <script src="transition.js"></script>
+  
   <!-- Include only the entry point as module -->
   <script type="module" src="main.js"></script>
+
+  <script>
+    console.log('projects.html page loaded');
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM fully loaded in projects.html');
+      window.debugProjectsPage = true;
+    });
+  </script>
 
 </body>
 

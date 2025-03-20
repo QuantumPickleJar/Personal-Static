@@ -7,6 +7,7 @@
     "node": "^23.7.0",
     "nodemon": "^3.1.9",
     "panzoom": "^9.4.3",
+    "serve": "^14.2.4",
     "tech-stack-icons": "^2.1.0"
   },
   "name": "personal-static",
@@ -15,9 +16,10 @@
   "scripts": {
     "build": "webpack --mode production",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "set NODE_ENV=production && npm run build && gh-pages -d dist",
     "start": "webpack serve --mode development",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "launch": "set NODE_ENV=production && npm run build && npx serve dist"
   },
   "keywords": [],
   "author": "",

@@ -62,7 +62,15 @@ module.exports = {
         { from: 'rsc/', to: 'rsc/' },
         { from: 'style.css', to: 'style.css' },
         { from: 'css/', to: 'css/' },
-        { from: 'htmlModules/', to: 'htmlModules/' }
+        { from: 'htmlModules/', to: 'htmlModules/' },
+        { from: 'transition.js', to: 'transition.js' },  // Add this line
+        { 
+          from: 'rsc/json', 
+          to: 'rsc/json',
+          globOptions: {
+            ignore: ['**/.DS_Store']
+          }
+        },
       ],
     }),
   ],

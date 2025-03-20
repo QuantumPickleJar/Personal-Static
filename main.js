@@ -238,12 +238,56 @@ document.querySelectorAll('.academic-label').forEach(label => {
   });
 });
 
+// In main.js, improve the projects page initialization
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('DOM content loaded, pathname:', window.location.pathname);
+  
   await Promise.all([
     loadPartial('headerContainer', 'header.html'),
     loadPartial('sidebarContainer', 'sidebar.html'),
     loadPartial('footerContainer', 'footer.html')
   ]);
+
+  // Check if we're on the projects page in multiple ways to be sure
+  const isProjectsPage = 
+    window.location.pathname.includes('projects.html') || 
+    window.location.href.includes('projects.html') ||
+    window.debugProjectsPage ||
+    document.getElementById('projectsGallery');
+  
+  console.log('Is projects page?', isProjectsPage);
+  
+  if (isProjectsPage) {
+    console.log('Projects page detected, initializing...');
+    
+    // Make sure the gallery element exists
+    const gallery = document.getElementById('projectsGallery');
+    if (!gallery) {
+      console.error('Projects gallery element not found!');
+      return;
+    }
+    
+    try {
+      // Add a manual loading indicator
+      gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+      
+      // Load projects
+      const projects = await loadProjects();
+      console.log(`Loaded ${projects.length} projects`);
+      
+      // If we have projects, render them
+      if (projects && projects.length > 0) {
+        console.log('Initializing pagination with projects');
+        initPagination(projects, projectsPerPage);
+      } else {
+        console.error('No projects found!');
+        gallery.innerHTML = '<div class="error">No projects found. Please try refreshing.</div>';
+      }
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      gallery.innerHTML = '<div class="error">Failed to load projects. Please try refreshing.</div>';
+    }
+  }
 
   // Handle contact form if it exists
   const contactForm = document.getElementById('contactForm');
