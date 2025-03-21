@@ -1,4 +1,3 @@
-<base href="/">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +7,15 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Base and global styles -->
-  <link rel="stylesheet" href="/./style.css">
-  <script defer src="/bundle.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <!-- <script defer src="/bundle.js"></script> -->
 </head>
 <body>
   <!-- Header partial -->
+  <div class="barba-wrapper" data-barba="wrapper">
+    <div data-barba="container" data-barba-namespace="resources">
+      <!-- Header will be dynamically inserted here -->
+    </div>
   <div id="headerContainer"></div>
 
   <!-- Main sandwich container -->
@@ -52,10 +55,18 @@
 
   <!-- Footer partial -->
   <div id="footerContainer"></div>
-
+  </div>
   <!-- Main JavaScript entry -->
   <!-- <script type="module" src="/./main.js"></script> -->
-  <script type="module" src="/./rsc/js/books.js"></script>
-  <script type="module" src="/./rsc/js/bookmarks.js"></script>
+  <!-- <script type="module" src="rsc/js/books.js"></script> -->
+  <!-- <script type="module" src="rsc/js/bookmarks.js"></script> -->
+   <script>
+    // Dynamically import the JavaScript modules for books and bookmarks
+    const basePath = window.location.hostname.includes('github.io') ? '/Personal-Static/' : '/';
+    const booksModule = import(`${basePath}rsc/js/books.js`)
+      .catch(err => console.error('Failed to load books module:', err));
+    const bookmarksModule = import(`${basePath}rsc/js/bookmarks.js`)
+      .catch(err => console.error('Failed to load bookmarks module:', err));
+  </script>
 </body>
 </html>
