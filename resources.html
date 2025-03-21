@@ -31,6 +31,7 @@
           <h1 class="section-title">Books I've Been Reading Recently</h1>
           <div id="booksContainer" class="books-container">
             <!-- Books will be injected here by books.js -->
+            <div class="loading">Loading books...</div>
           </div>
         </section>
 
@@ -60,129 +61,98 @@
   <!-- <script type="module" src="/./main.js"></script> -->
   <!-- <script type="module" src="rsc/js/books.js"></script> -->
   <!-- <script type="module" src="rsc/js/bookmarks.js"></script> -->
-   <script>
-    // Dynamically import the JavaScript modules for books and bookmarks
-    const basePath = window.location.hostname.includes('github.io') ? '/Personal-Static/' : '/';
-    const booksModule = import(`${basePath}rsc/js/books.js`)
-      .catch(err => console.error('Failed to load books module:', err));
-    const bookmarksModule = import(`${basePath}rsc/js/bookmarks.js`)
-      .catch(err => console.error('Failed to load bookmarks module:', err));
-  </script>
+   <!-- SINGLE unified initialization script -->
   <script>
-  // Barba hook override for resources.html
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      console.log('Resources page DOM loaded, initializing content');
+    // SINGLE DOMContentLoaded listener that handles everything
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('Resources page DOM loaded');
       
-      // Load partials first
+      // Force-load the partials directly
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Load all partials first
       const partials = [
         { id: 'headerContainer', path: 'header.html' },
         { id: 'sidebarContainer', path: 'sidebar.html' },
         { id: 'footerContainer', path: 'footer.html' }
       ];
       
+      // Load partials
       for (const partial of partials) {
-        if (window.loadPartial) {
-          await window.loadPartial(partial.id, partial.path);
-        } else {
-          console.warn('loadPartial function not available');
+        try {
+          // First try using window.loadPartial if available
+          if (typeof window.loadPartial === 'function') {
+            await window.loadPartial(partial.id, partial.path);
+          } else {
+            // Fallback to direct fetch
+            const url = basePath + 'partials/' + partial.path;
+            console.log('Fetching partial from:', url);
+            const response = await fetch(url, { cache: 'no-store' });
+            
+            if (response.ok) {
+              const html = await response.text();
+              document.getElementById(partial.id).innerHTML = html;
+            } else {
+              throw new Error(`HTTP error ${response.status}`);
+            }
+          }
+          console.log(`Successfully loaded partial: ${partial.path}`);
+        } catch (err) {
+          console.error(`Failed to load partial ${partial.path}:`, err);
+          document.getElementById(partial.id).innerHTML = 
+            `<div class="error-partial">Failed to load ${partial.path}. Error: ${err.message}</div>`;
         }
       }
       
-      // Then load books and bookmarks
-      const basePath = window.location.hostname.includes('github.io') ? 
-        '/Personal-Static/' : '/';
-      
-      // Load books.js
+      // Load books data
       try {
-        const booksModule = await import(`${basePath}rsc/js/books.js`);
-        console.log('Books module loaded successfully');
-      } catch (err) {
-        console.error('Failed to load books module:', err);
+        const bookResponse = await fetch(`${basePath}rsc/json/books.json`);
+        if (!bookResponse.ok) throw new Error(`Books JSON not found (${bookResponse.status})`);
+        
+        const books = await bookResponse.json();
+        console.log('Books loaded:', books.length);
+        
         const booksContainer = document.getElementById('booksContainer');
         if (booksContainer) {
-          booksContainer.innerHTML = `<div class="error">Failed to load books: ${err.message}</div>`;
+          if (books.length === 0) {
+            booksContainer.innerHTML = '<div class="no-data">No books available.</div>';
+          } else {
+            booksContainer.innerHTML = books.map(book => `
+              <div class="book-item">
+                <img src="${basePath}${book.cover ? book.cover.replace(/^\//, '') : 'rsc/images/placeholder-book.png'}" 
+                     alt="${book.title || 'Untitled Book'}" class="book-cover">
+                <div class="book-details">
+                  <h3 class="book-title">${book.title || 'Untitled'}</h3>
+                  <p class="book-author">${book.author || 'Unknown Author'}</p>
+                  <p class="book-description">${book.description || 'No description available.'}</p>
+                </div>
+              </div>
+            `).join('');
+          }
         }
-      }
-      
-      // Load bookmarks.js
-      try {
-        const bookmarksModule = await import(`${basePath}rsc/js/bookmarks.js`);
-        console.log('Bookmarks module loaded successfully');
       } catch (err) {
-        console.error('Failed to load bookmarks module:', err);
-        const bookmarksContainer = document.getElementById('bookmarksContainer');
-        if (bookmarksContainer) {
-          bookmarksContainer.innerHTML = `<div class="error">Failed to load bookmarks: ${err.message}</div>`;
-        }
+        console.error('Failed to load books:', err);
+        document.getElementById('booksContainer').innerHTML = 
+          `<div class="error">Failed to load books: ${err.message}</div>`;
       }
       
-    } catch (err) {
-      console.error('Error initializing resources page:', err);
-    }
-  });
-</script>
-<!-- Add this right after your DOMContentLoaded script -->
-<script>
-  // Force-load partials without relying on Barba.js
-  document.addEventListener('DOMContentLoaded', async function() {
-    console.log('Resources page DOM loaded');
-    
-    // Force-load the partials directly
-    const basePath = window.location.hostname.includes('github.io') ? 
-      '/Personal-Static/' : '/';
-    
-    // Load header
-    fetch(`${basePath}partials/header.html`)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('headerContainer').innerHTML = html;
-      })
-      .catch(err => console.error('Failed to load header:', err));
-    
-    // Load sidebar
-    fetch(`${basePath}partials/sidebar.html`)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('sidebarContainer').innerHTML = html;
-      })
-      .catch(err => console.error('Failed to load sidebar:', err));
-    
-    // Load footer
-    fetch(`${basePath}partials/footer.html`)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('footerContainer').innerHTML = html;
-      })
-      .catch(err => console.error('Failed to load footer:', err));
-    
-    // Load books
-    try {
-      const bookResponse = await fetch(`${basePath}rsc/json/books.json`);
-      if (!bookResponse.ok) throw new Error('Books JSON not found');
-      
-      const books = await bookResponse.json();
-      console.log('Books loaded:', books.length);
-      
-      const booksContainer = document.getElementById('booksContainer');
-      if (booksContainer) {
-        booksContainer.innerHTML = books.map(book => `
-          <div class="book-item">
-            <img src="${basePath}${book.cover.replace(/^\//, '')}" alt="${book.title}" class="book-cover">
-            <div class="book-details">
-              <h3 class="book-title">${book.title}</h3>
-              <p class="book-author">${book.author}</p>
-              <p class="book-description">${book.description}</p>
-            </div>
-          </div>
-        `).join('');
+      // Also load bookmarks if that feature is ready
+      try {
+        const bookmarksResponse = await fetch(`${basePath}rsc/json/bookmarks.json`);
+        if (!bookmarksResponse.ok) throw new Error(`Bookmarks JSON not found (${bookmarksResponse.status})`);
+        
+        const bookmarks = await bookmarksResponse.json();
+        console.log('Bookmarks loaded:', bookmarks.length);
+        
+        // Process and display bookmarks here
+        // ...
+      } catch (err) {
+        console.error('Failed to load bookmarks:', err);
+        document.getElementById('bookmarksContainer').innerHTML = 
+          `<div class="error">Failed to load bookmarks: ${err.message}</div>`;
       }
-    } catch (err) {
-      console.error('Failed to load books:', err);
-      document.getElementById('booksContainer').innerHTML = 
-        `<div class="error">Failed to load books: ${err.message}</div>`;
-    }
-  });
-</script>
+    });
+  </script>
 </body>
 </html>
