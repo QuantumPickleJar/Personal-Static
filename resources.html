@@ -1,1 +1,90 @@
-<base href="/Personal-Static/"><!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Resources & Reading</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="./style.css"><script defer="defer" src="/bundle.js"></script><script defer="defer" src="/main.bundle.js"></script></head><body><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><section id="booksSection" class="section-books"><h1 class="section-title">Books I've Been Reading Recently</h1><div id="booksContainer" class="books-container"></div></section><hr class="section-divider"/><section id="bookmarksSection" class="section-bookmarks"><h1 class="section-title">Bookmarks</h1><div class="bookmark-controls"><label for="bookmarkCategory" class="bookmark-label">Choose a category:</label> <select id="bookmarkCategory" class="bookmark-select"></select></div><div id="bookmarksContainer" class="bookmarks-container"></div></section></main></div></div><div id="footerContainer"></div><script type="module" src="./rsc/js/books.js"></script><script type="module" src="./rsc/js/bookmarks.js"></script></body></html>
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Resources & Reading</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="style.css"><script defer="defer" src="main.bundle.js"></script></head><body><div class="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="resources"></div><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><section id="booksSection" class="section-books"><h1 class="section-title">Books I've Been Reading Recently</h1><div id="booksContainer" class="books-container"><div class="loading">Loading books...</div></div></section><hr class="section-divider"/><section id="bookmarksSection" class="section-bookmarks"><h1 class="section-title">Bookmarks</h1><div class="bookmark-controls"><label for="bookmarkCategory" class="bookmark-label">Choose a category:</label> <select id="bookmarkCategory" class="bookmark-select"></select></div><div id="bookmarksContainer" class="bookmarks-container"></div></section></main></div></div><div id="footerContainer"></div></div><script>// SINGLE DOMContentLoaded listener that handles everything
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('Resources page DOM loaded');
+      
+      // Force-load the partials directly
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Load all partials first
+      const partials = [
+        { id: 'headerContainer', path: 'header.html' },
+        { id: 'sidebarContainer', path: 'sidebar.html' },
+        { id: 'footerContainer', path: 'footer.html' }
+      ];
+      
+      // Load partials
+      for (const partial of partials) {
+        try {
+          // First try using window.loadPartial if available
+          if (typeof window.loadPartial === 'function') {
+            await window.loadPartial(partial.id, partial.path);
+          } else {
+            // Fallback to direct fetch
+            const url = basePath + 'partials/' + partial.path;
+            console.log('Fetching partial from:', url);
+            const response = await fetch(url, { cache: 'no-store' });
+            
+            if (response.ok) {
+              const html = await response.text();
+              document.getElementById(partial.id).innerHTML = html;
+            } else {
+              throw new Error(`HTTP error ${response.status}`);
+            }
+          }
+          console.log(`Successfully loaded partial: ${partial.path}`);
+        } catch (err) {
+          console.error(`Failed to load partial ${partial.path}:`, err);
+          document.getElementById(partial.id).innerHTML = 
+            `<div class="error-partial">Failed to load ${partial.path}. Error: ${err.message}</div>`;
+        }
+      }
+      
+      // Load books data
+      try {
+        const bookResponse = await fetch(`${basePath}rsc/json/books.json`);
+        if (!bookResponse.ok) throw new Error(`Books JSON not found (${bookResponse.status})`);
+        
+        const books = await bookResponse.json();
+        console.log('Books loaded:', books.length);
+        
+        const booksContainer = document.getElementById('booksContainer');
+        if (booksContainer) {
+          if (books.length === 0) {
+            booksContainer.innerHTML = '<div class="no-data">No books available.</div>';
+          } else {
+            booksContainer.innerHTML = books.map(book => `
+              <div class="book-item">
+                <img src="${basePath}${book.cover ? book.cover.replace(/^\//, '') : 'rsc/images/placeholder-book.png'}" 
+                     alt="${book.title || 'Untitled Book'}" class="book-cover">
+                <div class="book-details">
+                  <h3 class="book-title">${book.title || 'Untitled'}</h3>
+                  <p class="book-author">${book.author || 'Unknown Author'}</p>
+                  <p class="book-description">${book.description || 'No description available.'}</p>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load books:', err);
+        document.getElementById('booksContainer').innerHTML = 
+          `<div class="error">Failed to load books: ${err.message}</div>`;
+      }
+      
+      // Also load bookmarks if that feature is ready
+      try {
+        const bookmarksResponse = await fetch(`${basePath}rsc/json/bookmarks.json`);
+        if (!bookmarksResponse.ok) throw new Error(`Bookmarks JSON not found (${bookmarksResponse.status})`);
+        
+        const bookmarks = await bookmarksResponse.json();
+        console.log('Bookmarks loaded:', bookmarks.length);
+        
+        // Process and display bookmarks here
+        // ...
+      } catch (err) {
+        console.error('Failed to load bookmarks:', err);
+        document.getElementById('bookmarksContainer').innerHTML = 
+          `<div class="error">Failed to load bookmarks: ${err.message}</div>`;
+      }
+    });</script></body></html>

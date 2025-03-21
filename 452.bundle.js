@@ -1,1 +1,1 @@
-"use strict";(self.webpackChunkpersonal_static=self.webpackChunkpersonal_static||[]).push([[452],{4071:(e,s,a)=>{a.d(s,{createPacketServices:()=>c.$});var c=a(1609);a(9369)}}]);
+"use strict";(self.webpackChunkpersonal_static=self.webpackChunkpersonal_static||[]).push([[452],{4071:(e,s,a)=>{a.d(s,{createPacketServices:()=>c.$});var c=a(1609);a(1750)}}]);

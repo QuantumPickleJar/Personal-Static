@@ -1,1 +1,90 @@
-<base href="/Personal-Static/"><!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vincent's GitHub Page - Home</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="/css/front-page-carousel.css"/><link rel="stylesheet" href="./style.css"><script defer="defer" src="/main.bundle.js"></script></head><body><div id="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="home"><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><h2>Welcome to Vincent's GitHub Page!</h2><p>This is the home page where you'll find my latest news, updates, and featured projects.</p><br/><p>I'm currently looking for a long-term position, check out the sidebar for more contact info.<br/>For information about my current working status if you're an employer or talent scout, scroll down to the footer.</p>Otherwise if you want to get to know what kinds of tech I like to dig into, head over to my <a href="resources.html">resources</a> page.<p>There are some fun goodies I've snuck into this portfolio, given that it's confined to a static Jekyll environment. As you can see below, there is a carousel linked to some static images.<br></p><p>Speaking of carousels, you'll find another over in my <a href="./projects.html">project gallery</a> (concealed within a modal) that appears wherever a badge showing a picture of a camera with a number next to it representative of the images inside the carousel.</p><div id="carouselContainer"></div></main></div></div><div id="footerContainer"></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script><script src="./transition.js"></script></div></div></body></html>
+<base href="/"><script>// Dynamically set base href for GitHub Pages
+  if (window.location.hostname.includes('github.io') || 
+      window.location.pathname.includes('Personal-Static')) {
+    document.querySelector('base').href = '/Personal-Static/';
+  }</script><!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vincent's GitHub Page - Home</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="css/front-page-carousel.css"><link rel="stylesheet" href="style.css"><script defer="defer" src="main.bundle.js"></script></head><body><div id="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="home"><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><h2>Welcome to Vincent's GitHub Page!</h2><p>This is the home page where you'll find my latest news, updates, and featured projects.</p><br/><p>I'm currently looking for a long-term position, check out the sidebar for more contact info.<br/>For information about my current working status if you're an employer or talent scout, scroll down to the footer.</p>Otherwise if you want to get to know what kinds of tech I like to dig into, head over to my <a href="resources.html">resources</a> page.<p>There are some fun goodies I've snuck into this portfolio, given that it's confined to a static Jekyll environment. As you can see below, there is a carousel linked to some static images.<br></p><p>Speaking of carousels, you'll find another over in my <a href="./projects.html">project gallery</a> (concealed within a modal) that appears wherever a badge showing a picture of a camera with a number next to it representative of the images inside the carousel.</p><div id="carouselContainer"></div></main></div></div><div id="footerContainer"></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script><script src="https://unpkg.com/@barba/core"></script><script src="./transition.js"></script><script type="module" src="main.js"></script><script type="module" src="rsc/js/carousel.js"></script><script type="module">document.addEventListener('DOMContentLoaded', async function() {
+      console.log('Index page loaded, initializing carousel');
+      
+      // Load the carousel module
+      try {
+        const basePath = window.location.hostname.includes('github.io') ? 
+          '/Personal-Static/' : '/';
+          
+        const carouselModule = await import(`${basePath}rsc/js/front_page_carousel.js`);
+        console.log('Carousel module loaded successfully');
+        
+        // Call the initialization function if present
+        if (typeof carouselModule.initCarousel === 'function') {
+          carouselModule.initCarousel();
+        } else {
+          console.warn('Carousel module loaded but initCarousel function not found');
+        }
+      } catch (err) {
+        console.error('Failed to load carousel module:', err);
+        const carouselContainer = document.getElementById('carouselContainer');
+        if (carouselContainer) {
+          carouselContainer.innerHTML = 
+            `<div class="alert alert-danger">Failed to load carousel: ${err.message}</div>`;
+        }
+      }
+    });</script><script>// Force carousel initialization on page load
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('Index page loaded, initializing carousel');
+      
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Try to load the carousel directly
+      try {
+        const response = await fetch(`${basePath}rsc/json/projects.json`);
+        if (!response.ok) throw new Error(`Failed to fetch projects: ${response.status}`);
+        
+        const projects = await response.json();
+        console.log('Projects loaded for carousel:', projects.length);
+        
+        // Filter projects with images & limit to 5
+        const projectsWithImages = projects
+          .filter(p => p.images && p.images.length > 0)
+          .slice(0, 5);
+        
+        const carouselInner = document.querySelector("#carouselContainer .carousel-inner");
+        if (!carouselInner) {
+          console.error("Carousel container not found");
+          return;
+        }
+        
+        // Clear and populate carousel
+        carouselInner.innerHTML = "";
+        
+        projectsWithImages.forEach((project, index) => {
+          const carouselItem = document.createElement("div");
+          carouselItem.classList.add("carousel-item");
+          if (index === 0) carouselItem.classList.add("active");
+          
+          // Create card structure (similar to your front_page_carousel.js)
+          carouselItem.innerHTML = `
+            <div class="carousel-card">
+              <div class="carousel-card-header">${project.title}</div>
+              <div class="carousel-card-body">
+                ${project.shortForm || project.description.substring(0, 100) + "..."}
+              </div>
+              <div class="carousel-card-footer">
+                ${project.stack ? project.stack.join(", ") : ""}
+              </div>
+            </div>
+          `;
+          
+          carouselInner.appendChild(carouselItem);
+        });
+        
+        // Initialize Bootstrap carousel
+        if (typeof bootstrap !== 'undefined') {
+          new bootstrap.Carousel(document.getElementById('carouselContainer'), {
+            interval: 5000,
+            wrap: true
+          });
+        }
+      } catch (error) {
+        console.error("Error loading carousel:", error);
+      }
+    });</script></div></div></body></html>
