@@ -74,12 +74,7 @@ If one project image:
 If **two or more** images, it's possible that I'd need an additional `<div>` element to act as a horizontal container
 
 ## Functionality
-- search function by the stack
-
-Expected files:
-
-- imageLoader.js
-- stackStylesheet.css
+- page sorting needs to be set before the 
 
 ## Roadmap
 - academic color needs to be different than personal
@@ -168,3 +163,9 @@ If you prefer to keep the `dist` directory structure and serve it as the root, y
    - Click "Save" to apply the changes.
 
 This should make the `index.html` file accessible from the root URL.
+
+
+
+## Mobile
+- project modal needs to be made wider, up to 80% max-width
+
