@@ -14,4 +14,41 @@
     document.addEventListener('DOMContentLoaded', () => {
       console.log('DOM fully loaded in projects.html');
       window.debugProjectsPage = true;
-    });</script></body></html>
+    });</script><script type="module">// Ensure projects are loaded correctly regardless of base path
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Dynamically import with absolute path
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Import and initialize projects module
+      const projectsModule = await import(`${basePath}rsc/js/projects.js`);
+      
+      console.log('Projects module loaded successfully');
+      
+      // Get the gallery element
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        // Add loading indicator
+        gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+        
+        // Load and render projects
+        const projects = await projectsModule.loadProjects();
+        console.log(`Loaded ${projects.length} projects`);
+        
+        if (projects && projects.length > 0) {
+          projectsModule.renderProjectsGallery(projects);
+        } else {
+          gallery.innerHTML = '<div class="error">No projects found.</div>';
+        }
+      } else {
+        console.error('Projects gallery element not found!');
+      }
+    } catch (err) {
+      console.error('Failed to load or initialize projects:', err);
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        gallery.innerHTML = `<div class="error">Failed to load projects: ${err.message}</div>`;
+      }
+    }
+  });</script></body></html>
