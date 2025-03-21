@@ -1,3 +1,6 @@
+const basePath = window.location.hostname.includes('github.io') ? 
+  '/Personal-Static/' : '/';
+
 // Ensure Barba is loaded before running initialization
 document.addEventListener('DOMContentLoaded', () => {
   // Check if Barba is available
@@ -29,6 +32,16 @@ function initBarba() {
 
   console.log('Initializing Barba.js transitions');
   
+  // Insert this near the top of your file
+  barba.hooks.before((data) => {
+    // Check if we're navigating to projects page
+    if (data.next.url.path.includes('projects.html')) {
+      console.log('Navigating to projects page - bypassing Barba transition');
+      window.location.href = data.next.url.href;
+      return false; // Cancel Barba transition
+    }
+  });
+
   // Initialize Barba with default transitions
   barba.init({
     debug: true,
@@ -72,67 +85,45 @@ function initBarba() {
             
             // Remove transition classes
             container.classList.remove('page-enter');
-            
-            // Check if we're on the projects page and initialize if needed
-            if (window.location.pathname.includes('projects.html')) {
-              console.log('Barba transition to projects page detected, checking if projects need initialization');
-              const projectsGallery = container.querySelector('#projectsGallery');
-              if (projectsGallery && (!projectsGallery.innerHTML || projectsGallery.innerHTML.trim() === '')) {
-                console.log('Projects gallery is empty, triggering initialization');
-                // Create and dispatch a custom event that projects.html script will listen for
-                const event = new CustomEvent('initializeProjects');
-                document.dispatchEvent(event);
-              }
-            }
-            
-            resolve();
           }, 300);
+          
+          resolve();
         });
       }
     }]
   });
 }
 
-// Expose loadPartial to window scope for Barba transitions
+// Replace your current loadPartial function with this straightforward version
 window.loadPartial = async function(containerId, partialPath) {
   try {
-    // Import the main.js module dynamically to access its loadPartial function
-    const mainModule = await import('./main.js');
+    // Use straightforward string concatenation instead of template literals
+    const basePath = window.location.hostname.includes('github.io') ? 
+      '/Personal-Static/' : '/';
     
-    // Check if the module exports loadPartial
-    if (mainModule && typeof mainModule.loadPartial === 'function') {
-      await mainModule.loadPartial(containerId, partialPath);
-    } else {
-      // Fallback implementation if we can't get the main loadPartial function
-      console.log(`Fallback: Loading partial ${partialPath} into ${containerId}`);
-      
-      // Basic implementation to avoid recursion
-      const response = await fetch(`partials/${partialPath}`, { 
-        cache: 'no-store'
-      });
-      
-      if (response.ok) {
-        const html = await response.text();
-        const container = document.getElementById(containerId);
-        if (container) {
-          container.innerHTML = html;
-          setTimeout(() => {
-            if (container.classList.contains('slide-left')) {
-              container.classList.remove('slide-left');
-            }
-            container.classList.add('loaded');
-          }, 100);
-        }
-      } else {
-        throw new Error(`Failed to load partial ${partialPath}`);
+    console.log('Loading partial:', containerId, partialPath, 'with base path:', basePath);
+    
+    // Use simple string concatenation to avoid template string issues
+    const url = basePath + 'partials/' + partialPath;
+    console.log('Final URL:', url);
+    
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (response.ok) {
+      const html = await response.text();
+      const container = document.getElementById(containerId);
+      if (container) {
+        container.innerHTML = html;
+        setTimeout(() => container.classList.add('loaded'), 100);
       }
+    } else {
+      console.error('Failed to load partial:', url, response.status);
+      document.getElementById(containerId).innerHTML = 
+        `<div class="error-partial">Failed to load ${partialPath}.</div>`;
     }
   } catch (error) {
-    console.error('Error in window.loadPartial:', error);
-    // Basic fallback content
-    const container = document.getElementById(containerId);
-    if (container) {
-      container.innerHTML = `<div class="error-partial">Failed to load ${partialPath}.</div>`;
-    }
+    console.error('Error in loadPartial:', error);
+    document.getElementById(containerId).innerHTML = 
+      `<div class="error-partial">Error: ${error.message}</div>`;
   }
 };
