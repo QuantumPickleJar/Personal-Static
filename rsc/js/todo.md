@@ -74,12 +74,7 @@ If one project image:
 If **two or more** images, it's possible that I'd need an additional `<div>` element to act as a horizontal container
 
 ## Functionality
-- search function by the stack
-
-Expected files:
-
-- imageLoader.js
-- stackStylesheet.css
+- page sorting needs to be set before the 
 
 ## Roadmap
 - academic color needs to be different than personal
@@ -110,4 +105,67 @@ Expected files:
 - circle is too large on some projects without images (based on their description size, thus how much space is alotted to the `bottomContainer`)
 - booksPage
 - placeholder only renders SVGs, needs to render PNGS too
-- carousel needs to loop around
+- carousel needs to loop around\
+
+
+
+----
+mOVE ROOT ON GH-PAGE
+If the `dist` folder is not available in the dropdown for GitHub Pages configuration, it's likely because the folder does not exist in the `gh-pages` branch or the branch itself is not correctly set up.
+
+To resolve this, you can manually move the contents of the `dist` folder to the root of the `gh-pages` branch using the CLI. Here are the steps:
+
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/QuantumPickleJar/Personal-Static.git
+   cd Personal-Static
+   git checkout gh-pages
+   ```
+
+2. **Move `dist` Contents to Root**:
+   ```sh
+   mv dist/* .
+   rm -rf dist
+   ```
+
+3. **Commit and Push Changes**:
+   ```sh
+   git add .
+   git commit -m "Move contents of dist to root"
+   git push origin gh-pages
+   ```
+
+If you prefer to keep the `dist` directory structure and serve it as the root, you can create a new branch and move the `dist` contents there:
+
+1. **Create a New Branch**:
+   ```sh
+   git checkout -b gh-pages
+   ```
+
+2. **Move `dist` Contents to Root**:
+   ```sh
+   mv dist/* .
+   rm -rf dist
+   ```
+
+3. **Commit and Push Changes**:
+   ```sh
+   git add .
+   git commit -m "Move contents of dist to root in gh-pages branch"
+   git push origin gh-pages
+   ```
+
+4. **Configure GitHub Pages**:
+   - Go to your repository on GitHub.
+   - Click on the "Settings" tab.
+   - Scroll down to the "Pages" section.
+   - In the "Source" dropdown, select the new `gh-pages` branch.
+   - Click "Save" to apply the changes.
+
+This should make the `index.html` file accessible from the root URL.
+
+
+
+## Mobile
+- project modal needs to be made wider, up to 80% max-width
+

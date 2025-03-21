@@ -32,11 +32,13 @@ function initBarba() {
 
   console.log('Initializing Barba.js transitions');
   
-  // Insert this near the top of your file
+  // Add this to your barba.init configuration before any other hooks
   barba.hooks.before((data) => {
-    // Check if we're navigating to projects page
-    if (data.next.url.path.includes('projects.html')) {
-      console.log('Navigating to projects page - bypassing Barba transition');
+    // Check if navigating to/from pages that need full refresh
+    const needsRefresh = ['projects.html', 'index.html', 'resources.html'];
+    
+    if (needsRefresh.some(page => data.next.url.path.includes(page))) {
+      console.log('Navigating to page that needs refresh - bypassing Barba');
       window.location.href = data.next.url.href;
       return false; // Cancel Barba transition
     }

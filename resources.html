@@ -68,5 +68,121 @@
     const bookmarksModule = import(`${basePath}rsc/js/bookmarks.js`)
       .catch(err => console.error('Failed to load bookmarks module:', err));
   </script>
+  <script>
+  // Barba hook override for resources.html
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      console.log('Resources page DOM loaded, initializing content');
+      
+      // Load partials first
+      const partials = [
+        { id: 'headerContainer', path: 'header.html' },
+        { id: 'sidebarContainer', path: 'sidebar.html' },
+        { id: 'footerContainer', path: 'footer.html' }
+      ];
+      
+      for (const partial of partials) {
+        if (window.loadPartial) {
+          await window.loadPartial(partial.id, partial.path);
+        } else {
+          console.warn('loadPartial function not available');
+        }
+      }
+      
+      // Then load books and bookmarks
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Load books.js
+      try {
+        const booksModule = await import(`${basePath}rsc/js/books.js`);
+        console.log('Books module loaded successfully');
+      } catch (err) {
+        console.error('Failed to load books module:', err);
+        const booksContainer = document.getElementById('booksContainer');
+        if (booksContainer) {
+          booksContainer.innerHTML = `<div class="error">Failed to load books: ${err.message}</div>`;
+        }
+      }
+      
+      // Load bookmarks.js
+      try {
+        const bookmarksModule = await import(`${basePath}rsc/js/bookmarks.js`);
+        console.log('Bookmarks module loaded successfully');
+      } catch (err) {
+        console.error('Failed to load bookmarks module:', err);
+        const bookmarksContainer = document.getElementById('bookmarksContainer');
+        if (bookmarksContainer) {
+          bookmarksContainer.innerHTML = `<div class="error">Failed to load bookmarks: ${err.message}</div>`;
+        }
+      }
+      
+    } catch (err) {
+      console.error('Error initializing resources page:', err);
+    }
+  });
+</script>
+<!-- Add this right after your DOMContentLoaded script -->
+<script>
+  // Force-load partials without relying on Barba.js
+  document.addEventListener('DOMContentLoaded', async function() {
+    console.log('Resources page DOM loaded');
+    
+    // Force-load the partials directly
+    const basePath = window.location.hostname.includes('github.io') ? 
+      '/Personal-Static/' : '/';
+    
+    // Load header
+    fetch(`${basePath}partials/header.html`)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('headerContainer').innerHTML = html;
+      })
+      .catch(err => console.error('Failed to load header:', err));
+    
+    // Load sidebar
+    fetch(`${basePath}partials/sidebar.html`)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('sidebarContainer').innerHTML = html;
+      })
+      .catch(err => console.error('Failed to load sidebar:', err));
+    
+    // Load footer
+    fetch(`${basePath}partials/footer.html`)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('footerContainer').innerHTML = html;
+      })
+      .catch(err => console.error('Failed to load footer:', err));
+    
+    // Load books
+    try {
+      const bookResponse = await fetch(`${basePath}rsc/json/books.json`);
+      if (!bookResponse.ok) throw new Error('Books JSON not found');
+      
+      const books = await bookResponse.json();
+      console.log('Books loaded:', books.length);
+      
+      const booksContainer = document.getElementById('booksContainer');
+      if (booksContainer) {
+        booksContainer.innerHTML = books.map(book => `
+          <div class="book-item">
+            <img src="${basePath}${book.cover.replace(/^\//, '')}" alt="${book.title}" class="book-cover">
+            <div class="book-details">
+              <h3 class="book-title">${book.title}</h3>
+              <p class="book-author">${book.author}</p>
+              <p class="book-description">${book.description}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    } catch (err) {
+      console.error('Failed to load books:', err);
+      document.getElementById('booksContainer').innerHTML = 
+        `<div class="error">Failed to load books: ${err.message}</div>`;
+    }
+  });
+</script>
 </body>
 </html>
