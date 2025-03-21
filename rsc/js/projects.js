@@ -184,7 +184,7 @@ export function renderProjectsGallery(projects) {
     if (project.mermaid && project.mermaid.trim()) {
       const mermaidIcon = document.createElement('div');
       mermaidIcon.classList.add('mermaid-icon');
-      mermaidIcon.innerHTML = '<img src="/./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
+      mermaidIcon.innerHTML = '<img src="rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
       card.appendChild(mermaidIcon);
     }
 
@@ -194,6 +194,7 @@ export function renderProjectsGallery(projects) {
     titleDiv.textContent = project.title;
     card.appendChild(titleDiv);
 
+    // TODO: move to html
     // Use createTruncatedSpan to show shortForm (or fallback to description) in a tooltip if > 100 chars
     const shortOrDesc = project.shortForm || project.description || '';
     const truncatedSpan = createTruncatedSpan(shortOrDesc, 100);

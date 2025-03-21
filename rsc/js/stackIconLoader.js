@@ -39,6 +39,10 @@ export function getIcon(techName) {
 
 export function renderOneStackIcon(tech) {
   const normalizedTech = tech.trim();
+  // Add path prefix handling for GitHub Pages
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
   // Attempt to load an inline SVG
   let iconUrl = getIcon(normalizedTech);
   if (iconUrl) {
@@ -49,8 +53,8 @@ export function renderOneStackIcon(tech) {
     imgEl.classList.add('stack-image');
     return imgEl;
   } else {
-    // If not found, fallback to local PNG in the "rsc/images/stack" directory
-    let pngPath = `rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
+    // If not found, fallback to local PNG with correct base path
+    let pngPath = `${basePath}rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
     console.log(`Fallback triggered for ${normalizedTech}. Attempting to load PNG from: ${pngPath}`);
     const fallback = document.createElement('img');
     fallback.src = pngPath;
@@ -59,11 +63,11 @@ export function renderOneStackIcon(tech) {
     fallback.onerror = () => {
       console.error(`Failed to load image: ${fallback.src}`);
       // Attempt to load the image with the original casing
-      pngPath = `rsc/images/stack/${tech}.png`;
+      pngPath = `${basePath}rsc/images/stack/${tech}.png`;
       fallback.src = pngPath;
       fallback.onerror = () => {
         console.error(`Failed to load image with original casing: ${fallback.src}`);
-        fallback.src = 'rsc/images/placeholder-generic.png'; // Use a generic placeholder on error
+        fallback.src = `${basePath}rsc/images/placeholder-generic.png`; // Use a generic placeholder
       };
     };
     return fallback;

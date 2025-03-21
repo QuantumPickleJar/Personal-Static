@@ -34,8 +34,16 @@
   <link rel="stylesheet" href="css/mobile.css">
   <link rel="stylesheet" href="css/modal.css">
   <link rel="stylesheet" href="style.css">
-  <script type="module" src="rsc/js/projects.js"></script>
+  <script type="module">
+  // Dynamically import with absolute path
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
+  import(`${basePath}rsc/js/projects.js`)
+    .catch(err => console.error('Failed to load projects module:', err));
+</script>
   <!-- Add Barba.js CDN -->
+  <meta http-equiv="Content-Type" content="text/javascript; charset=utf-8">
   <script src="https://unpkg.com/@barba/core"></script>
 </head>
 

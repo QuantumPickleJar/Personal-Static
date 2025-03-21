@@ -10,15 +10,19 @@ import { getIcon } from './stackIconLoader.js';
  * @returns {string} A URL (or data URI) representing the placeholder image.
  */
 export function getPlaceholderForStack(project) {
-  // If the project already has images defined, use the first one.
+  // Add path prefix handling for GitHub Pages
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+    
+  // If the project already has images defined, use the first one
   if (Array.isArray(project.images) && project.images.length > 0) {
-    return project.images[0];
+    return `${basePath}rsc/images/${project.images[0]}`;
   }
 
   const stack = project.stack;
   if (!stack || stack.length === 0) {
     console.error('Project has no stack!');
-    return 'rsc/images/placeholder-generic.png';
+    return `${basePath}rsc/images/placeholder-generic.png`;
   }
 
   return createCircularPlaceholder(stack);
