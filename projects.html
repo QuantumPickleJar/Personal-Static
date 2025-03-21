@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/base.css">
+  <!-- <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/header-footer.css">
   <link rel="stylesheet" href="css/sidebar.css">
   <link rel="stylesheet" href="css/main-content.css">
@@ -32,7 +32,7 @@
   <link rel="stylesheet" href="css/pagination.css">
   <link rel="stylesheet" href="css/loading.css">
   <link rel="stylesheet" href="css/mobile.css">
-  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/modal.css"> -->
   <link rel="stylesheet" href="style.css">
   <script type="module">
   // Dynamically import with absolute path
@@ -179,6 +179,47 @@
       window.debugProjectsPage = true;
     });
   </script>
+
+  <script type="module">
+  // Ensure projects are loaded correctly regardless of base path
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Dynamically import with absolute path
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Import and initialize projects module
+      const projectsModule = await import(`${basePath}rsc/js/projects.js`);
+      
+      console.log('Projects module loaded successfully');
+      
+      // Get the gallery element
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        // Add loading indicator
+        gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+        
+        // Load and render projects
+        const projects = await projectsModule.loadProjects();
+        console.log(`Loaded ${projects.length} projects`);
+        
+        if (projects && projects.length > 0) {
+          projectsModule.renderProjectsGallery(projects);
+        } else {
+          gallery.innerHTML = '<div class="error">No projects found.</div>';
+        }
+      } else {
+        console.error('Projects gallery element not found!');
+      }
+    } catch (err) {
+      console.error('Failed to load or initialize projects:', err);
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        gallery.innerHTML = `<div class="error">Failed to load projects: ${err.message}</div>`;
+      }
+    }
+  });
+</script>
 
 </body>
 

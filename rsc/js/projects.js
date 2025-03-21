@@ -23,14 +23,20 @@ document.addEventListener('DOMContentLoaded', function() {
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
   console.log('Loading projects...');
-  return fetch('./rsc/json/projects.json')
-    .then(response => {
-      console.log('Projects fetch response:', response.status);
-      if (!response.ok) {
-        throw new Error(`Failed to load projects: ${response.status}`);
-      }
-      return response.json();
-    })
+  
+  // Add path resolution for GitHub Pages
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
+  // Try multiple paths to ensure correct loading
+  const pathsToTry = [
+    `${basePath}rsc/json/projects.json`,
+    './rsc/json/projects.json',
+    '/rsc/json/projects.json',
+    'rsc/json/projects.json'
+  ];
+  
+  return tryFetchPaths(pathsToTry)
     .then(data => {
       console.log(`Projects data received: ${data.length} items`);
       allProjects = data;
@@ -38,8 +44,11 @@ export function loadProjects() {
     })
     .catch(error => {
       console.error('Project loading error:', error);
-      document.getElementById('projectsGallery').innerHTML = 
-        `<div class="error">Failed to load projects: ${error.message}</div>`;
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        gallery.innerHTML = 
+          `<div class="error">Failed to load projects: ${error.message}</div>`;
+      }
       return [];
     });
 }

@@ -65,7 +65,20 @@ async function loadPartial(containerId, partialPath) {
       throw new Error(`Could not load partial ${partialPath} from any path`);
     }
     
-    document.getElementById(containerId).innerHTML = html;
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = html;
+      
+      // Ensure elements slide into view properly after loading
+      setTimeout(() => {
+        if (container.classList.contains('slide-left')) {
+          container.classList.remove('slide-left');
+        }
+        
+        // Apply any animation classes defined in your CSS
+        container.classList.add('loaded');
+      }, 100);
+    }
   } catch (error) {
     console.error(`Error loading ${partialPath}:`, error);
     // Provide fallback content
