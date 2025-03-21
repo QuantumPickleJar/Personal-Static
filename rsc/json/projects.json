@@ -69,10 +69,9 @@
     "dates": "9-1-23 to 9-4-23",
     "status": "Complete",
     "shortForm": "Wrote a 3-page guide on how teammates could modify their environment to enhance debugging capabilities.",
-    "description": "The pages were first drafted in Obsidian and then ported into Confluence pending formatting changes.  Conversion was handled through Obsidian's Convert to PDF feature, and several other teammates were then able to debug individual containers with ease instead of ",
+    "description": "The pages were first drafted in Obsidian and then ported into Confluence pending formatting changes.  Conversion was handled through Obsidian's Convert to PDF feature, and several other teammates were then enabled to ",
     "stack": [
       "Obsidian",
-      "Docker",
       "Confluence",
       "GitLab"
     ],

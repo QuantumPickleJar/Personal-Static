@@ -1,1 +1,1 @@
-"use strict";(self.webpackChunkpersonal_static=self.webpackChunkpersonal_static||[]).push([[723],{7723:(e,s,a)=>{a.d(s,{createPieServices:()=>c.f});var c=a(8685);a(1750)}}]);
+"use strict";(self.webpackChunkpersonal_static=self.webpackChunkpersonal_static||[]).push([[723],{7723:(e,s,a)=>{a.d(s,{createPieServices:()=>c.f});var c=a(8685);a(9369)}}]);
