@@ -2,7 +2,7 @@
   <div class="profile">
     <!-- Top region: image + name/title -->
     <div class="profile-top">
-      <img src="/rsc/images/vincent.jpg" alt="Vincent" class="profile-photo" />
+      <img src="rsc/images/vincent.jpg" alt="Vincent" class="profile-photo" />
       <div class="profile-heading">
         <h2>Vincent Morrill</h2>
         <p>Software Developer</p>
@@ -32,3 +32,14 @@
     </div>
   </div>
 </aside>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const imgElement = document.querySelector('.profile-photo');
+    if (imgElement) {
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      imgElement.src = `${basePath}rsc/images/vincent.jpg`;
+    }
+  });
+</script>
