@@ -19,7 +19,7 @@ async function loadCarouselProjects() {
   try {
       console.log('Fetching projects.json for carousel');
       // Add explicit path with leading slash to ensure correct resolution
-      const response = await fetch("/rsc/json/projects.json");
+      const response = await fetch("rsc/json/projects.json");
       if (!response.ok) {
           console.error(`Failed to fetch projects.json: ${response.status} ${response.statusText}`);
           throw new Error("Failed to fetch projects.json");

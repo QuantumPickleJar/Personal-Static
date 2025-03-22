@@ -15,40 +15,78 @@ const MAX_STACK_CHARS = 20; // Adjust this value to your needs
 
 mermaid.initialize({ startOnLoad: false });
 
+document.addEventListener('DOMContentLoaded', function() {
+  // Only initialize projects if we're on the projects page
+  if (document.getElementById('projectsGallery')) {
+    console.log('Projects gallery found, initializing projects');
+    initializeProjects();
+  } else {
+    console.log('No projects gallery found, skipping initialization');
+  }
+});
+
+
 /** Fetch projects.json and render gallery */
 export function loadProjects() {
-  fetch('rsc/json/projects.json')
-    .then(response => response.json())
+  console.log('Loading projects...');
+  
+  // Add path resolution for GitHub Pages
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
+  // Try multiple paths to ensure correct loading
+  const pathsToTry = [
+    `${basePath}rsc/json/projects.json`,
+    './rsc/json/projects.json',
+    '/rsc/json/projects.json',
+    'rsc/json/projects.json'
+  ];
+  
+  return tryFetchPaths(pathsToTry)
     .then(data => {
+      console.log(`Projects data received: ${data.length} items`);
       allProjects = data;
-      console.log('Projects loaded:', allProjects);
-      initPagination(allProjects, projectsPerPage);
-      // Hide the loading overlay once projects are loaded
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      if (loadingOverlay) {
-        loadingOverlay.style.display = 'none';
-      }
-      
-      // Set up search input listener
-      const searchInput = document.querySelector('#searchBar');
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          const term = searchInput.value.trim();
-          // Filter
-          const filtered = filterProjectsBySearchTerm(allProjects, term);
-          // Reinitialize pagination with filtered projects to update pagination controls
-          initPagination(filtered, projectsPerPage);
-        });
-      }
+      return data;
     })
-    .catch(err => console.error('Failed to load projects:', err));
+    .catch(error => {
+      console.error('Project loading error:', error);
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        gallery.innerHTML = 
+          `<div class="error">Failed to load projects: ${error.message}</div>`;
+      }
+      return [];
+    });
+}
+
+// Helper function to try multiple paths
+async function tryFetchPaths(paths) {
+  for (const path of paths) {
+    try {
+      console.log(`Trying to fetch from: ${path}`);
+      const response = await fetch(path);
+      if (response.ok) {
+        console.log(`Successfully loaded from: ${path}`);
+        return response.json();
+      }
+    } catch (e) {
+      console.log(`Failed attempt with path: ${path}`);
+    }
+  }
+  throw new Error('All paths failed');
 }
 
 /** Render the gallery with a given array of projects */
 export function renderProjectsGallery(projects) {
-  console.log('Rendering projects:', projects);
+  // Add this check at the beginning of the function
   const gallery = document.getElementById('projectsGallery');
-  gallery.innerHTML = ''; // Clear content
+  if (!gallery) {
+    console.log('No projects gallery found on this page - skipping render');
+    return;
+  }
+  
+  // Rest of your existing code...
+  gallery.innerHTML = ''; // Clear existing content
 
   projects.forEach(project => {
     const card = document.createElement('div');
@@ -167,7 +205,7 @@ export function renderProjectsGallery(projects) {
     if (project.mermaid && project.mermaid.trim()) {
       const mermaidIcon = document.createElement('div');
       mermaidIcon.classList.add('mermaid-icon');
-      mermaidIcon.innerHTML = '<img src="./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
+      mermaidIcon.innerHTML = '<img src=" rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />';
       card.appendChild(mermaidIcon);
     }
 
@@ -177,6 +215,7 @@ export function renderProjectsGallery(projects) {
     titleDiv.textContent = project.title;
     card.appendChild(titleDiv);
 
+    // TODO: move to html
     // Use createTruncatedSpan to show shortForm (or fallback to description) in a tooltip if > 100 chars
     const shortOrDesc = project.shortForm || project.description || '';
     const truncatedSpan = createTruncatedSpan(shortOrDesc, 100);
@@ -429,7 +468,11 @@ function setupModalToggleFABs(project) {
   // Create Mermaid FAB with initial disabled state
   const mermaidFab = document.createElement('button');
   mermaidFab.className = 'fab toggle-mermaid';
-  mermaidFab.innerHTML = '<img src="rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />';
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
+  // Update the img src with proper path
+  mermaidFab.innerHTML = `<img src="${basePath}rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />`;
   // Ensure absolute positioning for tooltip is relative to mermaidFab
   mermaidFab.style.position = 'relative';
   
@@ -582,6 +625,40 @@ function getVisibleStackItems(stackArray) {
     items: visibleItems,
     remaining: stackArray.length - visibleItems.length
   };
+}
+
+function initializeProjects() {
+  // Existing code...
+  
+  // Add event listener for modal close button
+  const closeModalButton = document.getElementById('closeModal');
+  if (closeModalButton) {
+    closeModalButton.addEventListener('click', closeModal);
+  }
+  
+  // Add event listener to close when clicking outside modal content
+  const modal = document.getElementById('projectModal');
+  if (modal) {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  }
+
+  // Optional: Add ESC key listener
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+  // Rest of your initialization code...
+  loadProjects()
+    .then(renderProjectsGallery)
+    .then(() => {
+      console.log('Projects loaded and rendered');
+    });
 }
 
 

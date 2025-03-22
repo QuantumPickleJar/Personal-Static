@@ -59,6 +59,21 @@
             "request": "launch",
             "program": "${workspaceFolder}/buildImageDir.js",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Serve Dist (simulate GitHub Pages)",
+            "type": "node",
+            "request": "launch",
+            "program": "npx",
+            "args": [
+                "serve",
+                "dist",
+                "-s",
+                "-p",
+                "8080"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
         }
     ]
 }

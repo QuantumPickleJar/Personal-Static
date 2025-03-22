@@ -6,15 +6,87 @@ import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
 
 /**
- * Load partial files into the main page
+ * Load partial files into the main page with improved path resolution
  */
 async function loadPartial(containerId, partialPath) {
   try {
-    const response = await fetch(`partials/${partialPath}`);
-    const html = await response.text();
-    document.getElementById(containerId).innerHTML = html;
+    // Extract the base name without extension
+    const baseName = partialPath.replace('.html', '');
+    
+    // Try multiple path formats with and without .html extension
+    const pathsToTry = [
+      `partials/${baseName}`,           // Without extension (important!)
+      `./partials/${baseName}`,         // Without extension, relative
+      `partials/${partialPath}`,        // With extension
+      `./partials/${partialPath}`       // With extension, relative
+    ];
+    
+    // If we're in GitHub Pages environment, add the repo path
+    if (window.location.hostname.includes('github.io')) {
+      pathsToTry.unshift(`/Personal-Static/partials/${baseName}`);
+      pathsToTry.unshift(`/Personal-Static/partials/${partialPath}`);
+    }
+    
+    let response = null;
+    let html = null;
+    let successPath = null;
+    
+    // Try each path until one works
+    for (const path of pathsToTry) {
+      try {
+        console.log(`Trying to fetch partial from: ${path}`);
+        const fetchResponse = await fetch(path, { 
+          cache: 'no-store',
+          headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+        });
+        
+        if (fetchResponse.ok) {
+          response = fetchResponse;
+          html = await response.text();
+          
+          // Skip if we got the index.html page instead of the partial
+          if (html.includes('<title>Vincent') || 
+              html.includes('barba-wrapper') ||
+              html.includes('headerContainer')) {
+            console.log(`Path ${path} returned index.html instead of the partial`);
+            continue;
+          }
+          
+          successPath = path;
+          console.log(`Success! Loaded partial from: ${path}`);
+          break;
+        }
+      } catch (e) {
+        console.log(`Failed attempt with path: ${path}`);
+      }
+    }
+    
+    if (!successPath) {
+      throw new Error(`Could not load partial ${partialPath} from any path`);
+    }
+    
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = html;
+      
+      // Ensure elements slide into view properly after loading
+      setTimeout(() => {
+        if (container.classList.contains('slide-left')) {
+          container.classList.remove('slide-left');
+        }
+        
+        // Apply any animation classes defined in your CSS
+        container.classList.add('loaded');
+      }, 100);
+    }
   } catch (error) {
     console.error(`Error loading ${partialPath}:`, error);
+    // Provide fallback content
+    document.getElementById(containerId).innerHTML = `
+      <div class="error-partial" style="padding: 10px; background: #ffeeee; border: 1px solid #ffaaaa;">
+        <p>Failed to load ${partialPath}.</p>
+        <p>This is fallback content.</p>
+      </div>`;
   }
 }
 
@@ -179,12 +251,56 @@ document.querySelectorAll('.academic-label').forEach(label => {
   });
 });
 
+// In main.js, improve the projects page initialization
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('DOM content loaded, pathname:', window.location.pathname);
+  
   await Promise.all([
     loadPartial('headerContainer', 'header.html'),
     loadPartial('sidebarContainer', 'sidebar.html'),
     loadPartial('footerContainer', 'footer.html')
   ]);
+
+  // Check if we're on the projects page in multiple ways to be sure
+  const isProjectsPage = 
+    window.location.pathname.includes('projects.html') || 
+    window.location.href.includes('projects.html') ||
+    window.debugProjectsPage ||
+    document.getElementById('projectsGallery');
+  
+  console.log('Is projects page?', isProjectsPage);
+  
+  if (isProjectsPage) {
+    console.log('Projects page detected, initializing...');
+    
+    // Make sure the gallery element exists
+    const gallery = document.getElementById('projectsGallery');
+    if (!gallery) {
+      console.error('Projects gallery element not found!');
+      return;
+    }
+    
+    try {
+      // Add a manual loading indicator
+      gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+      
+      // Load projects
+      const projects = await loadProjects();
+      console.log(`Loaded ${projects.length} projects`);
+      
+      // If we have projects, render them
+      if (projects && projects.length > 0) {
+        console.log('Initializing pagination with projects');
+        initPagination(projects, projectsPerPage);
+      } else {
+        console.error('No projects found!');
+        gallery.innerHTML = '<div class="error">No projects found. Please try refreshing.</div>';
+      }
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      gallery.innerHTML = '<div class="error">Failed to load projects. Please try refreshing.</div>';
+    }
+  }
 
   // Handle contact form if it exists
   const contactForm = document.getElementById('contactForm');
@@ -247,13 +363,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (window.location.pathname.endsWith('projects.html')) {
     console.log("Detected projects.html, initializing project gallery.");
     
-    // Load projects.json
-    const projects = init();
-    initPagination(projects, projectsPerPage);
-
-    // Close modal when user clicks the X button
+    // Use a self-executing async function to properly await
+    (async () => {
+      try {
+        const projects = await init();
+        initPagination(projects, projectsPerPage);
+        
+        // Rest of your projects.html initialization
+        // ...
+      } catch (error) {
+        console.error("Failed to initialize projects:", error);
+      }
+    })();
+    
+    // Code that doesn't depend on projects can remain outside
     document.getElementById('closeModal').addEventListener('click', closeModal);
-
     // Also close modal if user clicks outside the modal content
     const modal = document.getElementById('projectModal');
     modal.addEventListener('click', e => {

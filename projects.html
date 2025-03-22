@@ -1,4 +1,3 @@
-<base href="/Personal-Static/">
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,13 +5,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Add this script to dynamically set the correct base -->
+  <script>
+    // Detect if we're on GitHub Pages and set the correct base path
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    if (isGitHubPages) {
+      const basePath = '/Personal-Static/';
+      document.write(`<base href="${basePath}">`);
+    } else {
+      document.write('<base href="/">');
+    }
+  </script>
+
   <title>Vincent's Portfolio</title>
   <!-- Updated CSS path -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/./css/style.css">
+  <!-- <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header-footer.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/main-content.css">
+  <link rel="stylesheet" href="css/projects.css">
+  <link rel="stylesheet" href="css/pagination.css">
+  <link rel="stylesheet" href="css/loading.css">
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="stylesheet" href="css/modal.css"> -->
+  <link rel="stylesheet" href="style.css">
+  <script type="module">
+  // Dynamically import with absolute path
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
+  import(`${basePath}rsc/js/projects.js`)
+    .catch(err => console.error('Failed to load projects module:', err));
+</script>
   <!-- Add Barba.js CDN -->
+  <meta http-equiv="Content-Type" content="text/javascript; charset=utf-8">
   <script src="https://unpkg.com/@barba/core"></script>
 </head>
 
@@ -136,9 +165,59 @@
     mermaid.initialize({ startOnLoad: false });
   </script>
 <!-- Transition script -->
-  <script src="/./transition.js"></script>
+  <script src="transition.js"></script>
+  
   <!-- Include only the entry point as module -->
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="main.js"></script>
+
+  <script>
+    console.log('projects.html page loaded');
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM fully loaded in projects.html');
+      window.debugProjectsPage = true;
+    });
+  </script>
+
+  <script type="module">
+  // Ensure projects are loaded correctly regardless of base path
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      // Dynamically import with absolute path
+      const basePath = window.location.hostname.includes('github.io') ? 
+        '/Personal-Static/' : '/';
+      
+      // Import and initialize projects module
+      const projectsModule = await import(`${basePath}rsc/js/projects.js`);
+      
+      console.log('Projects module loaded successfully');
+      
+      // Get the gallery element
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        // Add loading indicator
+        gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+        
+        // Load and render projects
+        const projects = await projectsModule.loadProjects();
+        console.log(`Loaded ${projects.length} projects`);
+        
+        if (projects && projects.length > 0) {
+          projectsModule.renderProjectsGallery(projects);
+        } else {
+          gallery.innerHTML = '<div class="error">No projects found.</div>';
+        }
+      } else {
+        console.error('Projects gallery element not found!');
+      }
+    } catch (err) {
+      console.error('Failed to load or initialize projects:', err);
+      const gallery = document.getElementById('projectsGallery');
+      if (gallery) {
+        gallery.innerHTML = `<div class="error">Failed to load projects: ${err.message}</div>`;
+      }
+    }
+  });
+</script>
 
 </body>
 
