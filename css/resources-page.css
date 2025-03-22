@@ -16,11 +16,6 @@
   flex: 0 0 300px;
 }
 
-/* Let the main container expand to fill available space */
-#mainContainer {
-  flex: 1;
-}
-
 /* Section Titles for both Books and Bookmarks */
 .section-title {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
