@@ -311,6 +311,21 @@ function expandStack(container, stackArray, max, linkElement) {
     techSpan.textContent = tech;
     container.appendChild(techSpan);
   });
+
+  // Find the parent project card
+  const projectCard = container.closest('.project-card');
+  if (projectCard) {
+    // Find the academic label within this card
+    const academicLabel = projectCard.querySelector('.academic-label');
+    if (academicLabel) {
+      // Toggle visibility
+      if (academicLabel.style.display === 'none') {
+        academicLabel.style.display = '';
+      } else {
+        academicLabel.style.display = 'none';
+      }
+    }
+  }
 }
 
 

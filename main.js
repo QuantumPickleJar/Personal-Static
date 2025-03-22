@@ -309,55 +309,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   // Check if current page is index.html
   if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-    const mainContent = document.getElementById('mainContent');
-    if (mainContent) {
-      console.log('Creating carousel on index page');
-      
-      // Make sure Bootstrap is available globally
-      if (typeof bootstrap === 'undefined') {
-        console.error('Bootstrap not loaded! The carousel requires Bootstrap.');
-      }
-      
-      const carouselContainer = document.createElement('div');
-      carouselContainer.id = 'carouselContainer';
-      carouselContainer.classList.add('carousel', 'slide');
-      carouselContainer.setAttribute('data-bs-ride', 'carousel');
-
-      // Create inner structure for the carousel
-      carouselContainer.innerHTML = `
-        <div class="carousel-inner"></div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselContainer" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselContainer" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      `;
-
-      // Insert carousel at the appropriate position in mainContent
-      // Find the position where you want to insert the carousel
-      const paragraphs = mainContent.querySelectorAll('p');
-      if (paragraphs.length > 0) {
-        const lastParagraph = paragraphs[paragraphs.length - 1];
-        lastParagraph.after(carouselContainer);
-      } else {
-        mainContent.appendChild(carouselContainer);
-      }
-
-      debugger; // This will pause execution when DevTools are open
-
-      // Import and execute the carousel code
-      import('./rsc/js/front_page_carousel.js')
-        .then(module => {
-          console.log('Front page carousel module loaded');
-          if (module.initCarousel) {
-            module.initCarousel();
-          }
-        })
-        .catch(err => console.error('Failed to load carousel module:', err));
-    }
+    // No need to create the carousel element, just load the data
+    console.log('Loading carousel data on index page');
+    
+    // Import and execute the carousel code
+    import('./rsc/js/front_page_carousel.js')
+      .then(module => {
+        console.log('Front page carousel module loaded');
+        if (module.initCarousel) {
+          module.initCarousel();
+        }
+      })
+      .catch(err => console.error('Failed to load carousel module:', err));
   }
   // Check if the current page is projects.html
   if (window.location.pathname.endsWith('projects.html')) {
@@ -412,6 +375,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderPerPageDropdown();
       updateItemsPerPage(projectsPerPage);
     });
+  }
+});
+
+// Add this to your main.js file
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure Bootstrap is available for carousels
+  if (typeof bootstrap === 'undefined' && document.getElementById('carouselContainer')) {
+    console.log('Loading Bootstrap JS dynamically');
+    const bootstrapScript = document.createElement('script');
+    bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+    bootstrapScript.onload = () => {
+      console.log('Bootstrap loaded, initializing carousel');
+      if (typeof initCarousel === 'function') {
+        initCarousel();
+      }
+    };
+    document.head.appendChild(bootstrapScript);
   }
 });
 

@@ -52,7 +52,19 @@
             wherever a badge showing a picture of a camera with a number next to it representative of the images inside the carousel.  
         </p>
         <!-- Insert carousel container underneath all <p> tags -->
-        <div id="carouselContainer"></div>
+        <div id="carouselContainer" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <!-- Carousel items will be inserted here -->
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselContainer" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselContainer" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
         
         <!-- Inline script to load the carousel -->
       </main>

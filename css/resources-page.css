@@ -79,6 +79,7 @@
   flex-wrap: wrap;
   gap: 15px; /* Your defined gap */
   justify-content: flex-start; /* Changed from space-between for more consistent spacing */
+  overflow: auto; /* add vertical scroll bar */
 }
 
 /* Style for individual book items */
