@@ -1,13 +1,3 @@
-/* mobile.css - Styles for mobile devices */
-
-/* sidebar.css - Desktop/default sidebar. */
-#sidebar {
-  width: 300px;
-  max-width: 300px;
-  background-color: #0000a0;
-  /* ...other styles */
-}
-
 /* Mobile Styles */
 @media (max-width: 768px) {
   .project-card {
@@ -58,6 +48,7 @@
     position: relative; /* Ensure it doesn't spin */
     display: flex;
     flex-wrap: wrap;
+    padding-bottom: 120px;
     gap: 16px;
   }
   .project-card {
@@ -70,10 +61,7 @@
     min-width: 320px;
     text-align: center;
   }
-}
 
-/* For medium and larger screens */
-@media (min-width: 768px) {
   #paginationContainer {
     display: none; /* Hide bottom pagination */
   }
