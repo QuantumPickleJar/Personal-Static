@@ -38,7 +38,49 @@ export function filterByDate() {
   initPagination(sortedProjects, projectsPerPage);
 }
 
-
+/**
+ * Sorts projects based on content type priority:
+ * 1. Projects with both mermaid diagrams AND photos
+ * 2. Projects with photos only
+ * 3. Projects with mermaid diagrams only
+ * 4. Projects with neither
+ */
+export function filterByContentType() {
+  const sortedProjects = [...allProjects].sort((a, b) => {
+    // Determine if projects have mermaid diagrams
+    const hasMermaidA = a.mermaid && a.mermaid.trim().length > 0;
+    const hasMermaidB = b.mermaid && b.mermaid.trim().length > 0;
+    
+    // Determine if projects have photos
+    const hasPhotosA = a.images && a.images.length > 0;
+    const hasPhotosB = b.images && b.images.length > 0;
+    
+    // Assign priority scores (higher = higher priority)
+    let scoreA = 0;
+    let scoreB = 0;
+    
+    // Priority 1: Both mermaid and photos
+    if (hasMermaidA && hasPhotosA) scoreA = 3;
+    if (hasMermaidB && hasPhotosB) scoreB = 3;
+    
+    // Priority 2: Photos only
+    else if (hasPhotosA) scoreA = 2;
+    else if (hasPhotosB) scoreB = 2;
+    
+    // Priority 3: Mermaid only
+    else if (hasMermaidA) scoreA = 1;
+    else if (hasMermaidB) scoreB = 1;
+    
+    // Priority 4: Neither (score remains 0)
+    
+    // Sort by score (descending) or by title if scores are equal
+    return scoreB - scoreA || a.title.localeCompare(b.title);
+  });
+  // Update pagination settings from localStorage before initializing pagination
+  applyPagination();
+  // Now initialize pagination, which internally handles rendering the correct page
+  initPagination(sortedProjects, projectsPerPage);
+}
 
 /**
  * Creates a <span> with truncated text (100 chars by default).

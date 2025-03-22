@@ -1,3 +1,27 @@
+/**
+ * @fileoverview Script that builds image directories for projects listed in a JSON file.
+ * @description This script reads project entries from a JSON file and creates a corresponding 
+ * directory structure for images. Each project gets its own directory named after the project's ID
+ * within the images folder. If a directory already exists for a project, it will be skipped.
+ * 
+ * @requires fs - Node.js file system module
+ * @requires path - Node.js path module
+ * 
+ * @example
+ * // Structure of projects.json file:
+ * // [
+ * //   { "id": "project1", "title": "Project One", ... },
+ * //   { "id": "project2", "title": "Project Two", ... }
+ * // ]
+ * 
+ * // To run the script:
+ * node buildImageDir.js
+ * // This will create:
+ * // - /rsc/images/project1/
+ * // - /rsc/images/project2/
+ * 
+ * @file buildImageDir.js - Directory builder for project images
+ */
 const fs = require('fs');
 const path = require('path');
 

@@ -36,6 +36,20 @@ header nav a:focus {
   color: #dbe9f4;
 }
 
+/* Disabled link in header navigation */
+header nav .disabled-link {
+  text-decoration: line-through;
+  color: #aaa;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+header nav .disabled-link:hover,
+header nav .disabled-link:focus {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
 /* Existing Footer styles */
 footer {
   /* background-color: #f0f0f0; */

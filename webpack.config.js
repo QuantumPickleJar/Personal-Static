@@ -3,21 +3,28 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+// Simplify the publicPath logic
+const isProduction = process.env.NODE_ENV === 'production';
+const publicPath = ''; // Use empty string for relative paths in all environments
+
+
 module.exports = {
-  mode: 'development',
+  mode: isProduction ? 'production' : 'development',
   target: 'web',
-  // 1) The main entry for your JS
+  // 1) The main entry for JS
   entry: {
-    main: './main.js' // Make sure this file is at project root or adjust path
+    main: './main.js'
   },
 
   // 2) Where Webpack puts the bundle
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    publicPath: '/', // This is fine if you serve from root locally.
+    publicPath: publicPath,
     clean: true
   },
+
+  devtool: 'source-map',
 
   // 3) Plugins
   plugins: [
@@ -43,12 +50,27 @@ module.exports = {
     // Copy static assets/folders into dist
     new CopyWebpackPlugin({
       patterns: [
-        { from: 'partials/', to: 'partials/' },
+        // Make sure this path is correct and partials are being copied
+        { 
+          from: './partials', 
+          to: 'partials',
+          globOptions: {
+            ignore: ['**/.DS_Store']
+          }
+        },
+        // Other patterns remain the same
         { from: 'rsc/', to: 'rsc/' },
         { from: 'style.css', to: 'style.css' },
         { from: 'css/', to: 'css/' },
-        // Important: copy modules folder so we can fetch('modules/img-carousel.html')
-        { from: 'htmlModules/', to: 'htmlModules/' }
+        { from: 'htmlModules/', to: 'htmlModules/' },
+        { from: 'transition.js', to: 'transition.js' },  // Add this line
+        { 
+          from: 'rsc/json', 
+          to: 'rsc/json',
+          globOptions: {
+            ignore: ['**/.DS_Store']
+          }
+        },
       ],
     }),
   ],

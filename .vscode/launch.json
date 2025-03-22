@@ -5,19 +5,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch index.html",
+            "name": "Launch with webpack (npm start)",
             "type": "firefox",
             "request": "launch",
             "reAttach": true,
-            "file": "${workspaceFolder}/index.html"
+            "url": "http://localhost:9000/",
+            "webRoot": "${workspaceFolder}",
+            "sourceMapPathOverrides": {
+            "webpack:///src/*": "${webRoot}/src/*",
+            "webpack:///./~/*": "${webRoot}/node_modules/*",
+            "webpack:///./*": "${webRoot}/*",
+            "webpack:///*": "*"
+            },
+            "preLaunchTask": "npm: start"
         },
         {
-            "name": "Launch localhost",
-            "type": "firefox",
+            "name": "Launch Chrome with webpack",
+            "type": "chrome",
             "request": "launch",
-            "reAttach": true,
-            "url": "http://localhost/index.html",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://localhost:9000/",
+            "webRoot": "${workspaceFolder}",
+            "sourceMapPathOverrides": {
+                "webpack:///./~/*": "${webRoot}/node_modules/*",
+                "webpack:///./*": "${webRoot}/*",
+                "webpack:///*": "*"
+            },
+            "preLaunchTask": "npm: start",
+            "smartStep": true,
+            "sourceMaps": true
         },
         {
             "name": "Attach",
@@ -44,6 +59,21 @@
             "request": "launch",
             "program": "${workspaceFolder}/buildImageDir.js",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Serve Dist (simulate GitHub Pages)",
+            "type": "node",
+            "request": "launch",
+            "program": "npx",
+            "args": [
+                "serve",
+                "dist",
+                "-s",
+                "-p",
+                "8080"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
         }
     ]
 }

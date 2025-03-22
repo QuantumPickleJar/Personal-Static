@@ -1,40 +1,94 @@
-import { projectsPerPage } from './perPageSettings.js';
-import { closeModal, loadProjects } from './projects.js';
-import { initPagination, updateItemsPerPage } from './pagination.js';
-import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
+import { projectsPerPage } from './rsc/js/perPageSettings.js';
+import { closeModal, loadProjects } from './rsc/js/projects.js';
+import { initPagination, updateItemsPerPage } from './rsc/js/pagination.js';
+import { filterProjByTitle, filterByDate } from './rsc/js/gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
 
 /**
- * Load partial files into the main page
+ * Load partial files into the main page with improved path resolution
  */
 async function loadPartial(containerId, partialPath) {
   try {
-    const response = await fetch(`partials/${partialPath}`);
-    const html = await response.text();
-    document.getElementById(containerId).innerHTML = html;
+    // Extract the base name without extension
+    const baseName = partialPath.replace('.html', '');
+    
+    // Try multiple path formats with and without .html extension
+    const pathsToTry = [
+      `partials/${baseName}`,           // Without extension (important!)
+      `./partials/${baseName}`,         // Without extension, relative
+      `partials/${partialPath}`,        // With extension
+      `./partials/${partialPath}`       // With extension, relative
+    ];
+    
+    // If we're in GitHub Pages environment, add the repo path
+    if (window.location.hostname.includes('github.io')) {
+      pathsToTry.unshift(`/Personal-Static/partials/${baseName}`);
+      pathsToTry.unshift(`/Personal-Static/partials/${partialPath}`);
+    }
+    
+    let response = null;
+    let html = null;
+    let successPath = null;
+    
+    // Try each path until one works
+    for (const path of pathsToTry) {
+      try {
+        console.log(`Trying to fetch partial from: ${path}`);
+        const fetchResponse = await fetch(path, { 
+          cache: 'no-store',
+          headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+        });
+        
+        if (fetchResponse.ok) {
+          response = fetchResponse;
+          html = await response.text();
+          
+          // Skip if we got the index.html page instead of the partial
+          if (html.includes('<title>Vincent') || 
+              html.includes('barba-wrapper') ||
+              html.includes('headerContainer')) {
+            console.log(`Path ${path} returned index.html instead of the partial`);
+            continue;
+          }
+          
+          successPath = path;
+          console.log(`Success! Loaded partial from: ${path}`);
+          break;
+        }
+      } catch (e) {
+        console.log(`Failed attempt with path: ${path}`);
+      }
+    }
+    
+    if (!successPath) {
+      throw new Error(`Could not load partial ${partialPath} from any path`);
+    }
+    
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = html;
+      
+      // Ensure elements slide into view properly after loading
+      setTimeout(() => {
+        if (container.classList.contains('slide-left')) {
+          container.classList.remove('slide-left');
+        }
+        
+        // Apply any animation classes defined in your CSS
+        container.classList.add('loaded');
+      }, 100);
+    }
   } catch (error) {
     console.error(`Error loading ${partialPath}:`, error);
+    // Provide fallback content
+    document.getElementById(containerId).innerHTML = `
+      <div class="error-partial" style="padding: 10px; background: #ffeeee; border: 1px solid #ffaaaa;">
+        <p>Failed to load ${partialPath}.</p>
+        <p>This is fallback content.</p>
+      </div>`;
   }
 }
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('htmlModules/img-carousel.html')
-    .then(response => response.text())
-    .then(html => {
-      const temp = document.createElement('div');
-      temp.innerHTML = html;
-      const carousel = temp.querySelector('.carousel-wrapper');
-      if (carousel) {
-        document.querySelector('#carouselContainer').appendChild(carousel);
-        // Now that the carousel is appended, initialize it.
-        initCarousel();
-      }
-    })
-    .catch(err => console.error('Failed to load carousel:', err));
-});
-
 
 
 
@@ -88,23 +142,7 @@ card.innerHTML = `
   return card;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) Insert or fetch your snippet
-  fetch('modules/img-carousel.html')
-    .then((response) => response.text())
-    .then((html) => {
-      const temp = document.createElement('div');
-      temp.innerHTML = html;
-      const carousel = temp.querySelector('.carousel-wrapper');
-      if (carousel) {
-        document.querySelector('#carouselContainer').appendChild(carousel);
-        // 2) Now we can safely init
-        initCarousel();
-      }
-    })
-    .catch((err) => console.error('Failed to load carousel:', err));
-});
-
+// 
 
 // Helper to generate options for projects per page based on screen width
 function generatePerPageOptions() {
@@ -213,28 +251,133 @@ document.querySelectorAll('.academic-label').forEach(label => {
   });
 });
 
+// In main.js, improve the projects page initialization
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('DOM content loaded, pathname:', window.location.pathname);
+  
   await Promise.all([
     loadPartial('headerContainer', 'header.html'),
     loadPartial('sidebarContainer', 'sidebar.html'),
     loadPartial('footerContainer', 'footer.html')
   ]);
 
+  // Check if we're on the projects page in multiple ways to be sure
+  const isProjectsPage = 
+    window.location.pathname.includes('projects.html') || 
+    window.location.href.includes('projects.html') ||
+    window.debugProjectsPage ||
+    document.getElementById('projectsGallery');
+  
+  console.log('Is projects page?', isProjectsPage);
+  
+  if (isProjectsPage) {
+    console.log('Projects page detected, initializing...');
+    
+    // Make sure the gallery element exists
+    const gallery = document.getElementById('projectsGallery');
+    if (!gallery) {
+      console.error('Projects gallery element not found!');
+      return;
+    }
+    
+    try {
+      // Add a manual loading indicator
+      gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+      
+      // Load projects
+      const projects = await loadProjects();
+      console.log(`Loaded ${projects.length} projects`);
+      
+      // If we have projects, render them
+      if (projects && projects.length > 0) {
+        console.log('Initializing pagination with projects');
+        initPagination(projects, projectsPerPage);
+      } else {
+        console.error('No projects found!');
+        gallery.innerHTML = '<div class="error">No projects found. Please try refreshing.</div>';
+      }
+    } catch (error) {
+      console.error('Error loading projects:', error);
+      gallery.innerHTML = '<div class="error">Failed to load projects. Please try refreshing.</div>';
+    }
+  }
+
   // Handle contact form if it exists
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.addEventListener('submit', handleContactSubmit);
   }
+  // Check if current page is index.html
+  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+    const mainContent = document.getElementById('mainContent');
+    if (mainContent) {
+      console.log('Creating carousel on index page');
+      
+      // Make sure Bootstrap is available globally
+      if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap not loaded! The carousel requires Bootstrap.');
+      }
+      
+      const carouselContainer = document.createElement('div');
+      carouselContainer.id = 'carouselContainer';
+      carouselContainer.classList.add('carousel', 'slide');
+      carouselContainer.setAttribute('data-bs-ride', 'carousel');
 
+      // Create inner structure for the carousel
+      carouselContainer.innerHTML = `
+        <div class="carousel-inner"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselContainer" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselContainer" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      `;
+
+      // Insert carousel at the appropriate position in mainContent
+      // Find the position where you want to insert the carousel
+      const paragraphs = mainContent.querySelectorAll('p');
+      if (paragraphs.length > 0) {
+        const lastParagraph = paragraphs[paragraphs.length - 1];
+        lastParagraph.after(carouselContainer);
+      } else {
+        mainContent.appendChild(carouselContainer);
+      }
+
+      debugger; // This will pause execution when DevTools are open
+
+      // Import and execute the carousel code
+      import('./rsc/js/front_page_carousel.js')
+        .then(module => {
+          console.log('Front page carousel module loaded');
+          if (module.initCarousel) {
+            module.initCarousel();
+          }
+        })
+        .catch(err => console.error('Failed to load carousel module:', err));
+    }
+  }
   // Check if the current page is projects.html
   if (window.location.pathname.endsWith('projects.html')) {
-    // Load projects.json
-    const projects = init();
-    initPagination(projects, projectsPerPage);
-
-    // Close modal when user clicks the X button
+    console.log("Detected projects.html, initializing project gallery.");
+    
+    // Use a self-executing async function to properly await
+    (async () => {
+      try {
+        const projects = await init();
+        initPagination(projects, projectsPerPage);
+        
+        // Rest of your projects.html initialization
+        // ...
+      } catch (error) {
+        console.error("Failed to initialize projects:", error);
+      }
+    })();
+    
+    // Code that doesn't depend on projects can remain outside
     document.getElementById('closeModal').addEventListener('click', closeModal);
-
     // Also close modal if user clicks outside the modal content
     const modal = document.getElementById('projectModal');
     modal.addEventListener('click', e => {
@@ -263,19 +406,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     }
-  }
-
-  // Instead of creating a container in mainContent, we assume perPageContainer exists in the howToRow.
-  if (window.location.pathname.endsWith('projects.html')) {
+    
     renderPerPageDropdown();
     window.addEventListener('resize', () => {
       renderPerPageDropdown();
       updateItemsPerPage(projectsPerPage);
     });
   }
-
-  // start the pagination with the imported default
-  // initPagination(allProjects, projectsPerPage);
 });
 
 // Contact form handler
