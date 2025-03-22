@@ -10,6 +10,7 @@
   /* margin: 0.75rem; */
 }
 
+
 .project-card {
   /* 50% width minus gap */
   flex: 1 1 calc(50% - 16px);
