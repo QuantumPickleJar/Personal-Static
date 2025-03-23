@@ -8,7 +8,6 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  flex-direction: row;
 }
 
 /* Force the sidebar container to have a fixed width on larger screens */
@@ -103,19 +102,11 @@
 }
 
 .book-cover > img { 
-  max-width: 100% !important; /* Slightly less than container width */
+  max-width: 100%; /* Slightly less than container width */
   height: auto !important;
-  object-fit: contain;
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {
-  .book-item {
-    flex: 0 0 calc(33.333% - 10px); /* (15px × 2) ÷ 3 = 10px per item */
-    max-width: calc(33.333% - 10px);
-  }
-}
-
 @media (max-width: 768px) {
   .contentContainer {
     flex-direction: column;
@@ -129,8 +120,12 @@
     box-sizing: border-box; /* Ensure padding doesn't affect width */
   }
   /* Limit image width on smaller screens */
-  .book-cover > img {
-    max-width: 60% !important;
+  .book-cover {
+    /* max-width: 60% !important; */
+    max-width: 130px;
+    float: left;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 }
 

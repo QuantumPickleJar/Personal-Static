@@ -15,19 +15,13 @@
       "title": "Debugging Teams",
       "author": "Brian Fitzpatrick & Ben Collins-Sussman",
       "cover": "/rsc/images/books/debugging-teams.jpg",
-      "description": "This book offers practical insights into building and managing effective teams that excel in debugging complex software issues.  Focusing heavily on collaboration, communication, and proven strategies to transform the challenges of bug hunting into opportunities for team growth."
+      "description": "Offers practical insights into building and managing effective teams that excel in debugging complex software issues.  Focusing heavily on collaboration, communication, and proven strategies to transform the challenges of bug hunting into opportunities for team growth."
     },
     {
       "title": "High-Performance Browser Networking",
-      "author": "",
-      "cover": "/rsc/images/",
-      "description": ""
-    },
-    {
-      "title": "",
-      "author": "",
-      "cover": "/rsc/images/",
-      "description": ""
+      "author": "Ilya Grigorik",
+      "cover": "/rsc/images/books/high-performance-networking.jpg",
+      "description": "<a href=\"https://hpbn.co/\">This book<a/> provides a hands-on overview of what every web developer needs to know about the various types of networks (WiFi, 3G/4G), transport protocols (UDP, TCP, and TLS), application protocols (HTTP/1.1, HTTP/2), and APIs available in the browser (XHR, WebSocket, WebRTC, and more) to deliver the best—fast, reliable, and resilient—user experience."
     }
   ]
   
