@@ -52,7 +52,18 @@ header nav .disabled-link:focus {
 
 /* Existing Footer styles */
 footer {
-  /* background-color: #f0f0f0; */
+  background-color: #343a40; /* Same as your current footer */
   padding: 1rem;
   text-align: center;
+  width: 100%;
+  margin-top: auto; /* This pushes the footer down when content is short */
+}
+
+/* Only use this if you want a truly fixed footer */
+footer.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }

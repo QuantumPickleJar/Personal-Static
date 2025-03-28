@@ -1,14 +1,59 @@
 /* resources-page.css */
 
-/* Ensure the overall contentContainer uses flex to position sidebar and main content side by side */
+/* Ensure the html and body take up full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Make the page container a flex column container */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure it takes at least full viewport height */
+}
+
+/* Apply flex to the barba wrapper and container */
+.barba-wrapper,
+[data-barba="container"] {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Header stays at top */
+#headerContainer {
+    flex-shrink: 0;
+}
+
+/* Ensure the overall contentContainer uses flex and has proper spacing */
 .contentContainer {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  flex-direction: row;
+    flex: 1 0 auto; /* This makes content area expand */
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Add this to ensure the main content has proper spacing before the footer */
+#mainContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0; /* Allow content to determine height */
+    flex: 1; /* Important: Allow main container to grow */
+}
+
+/* Main content area - ensure it fills available space */
+#mainContent {
+    flex: 1;
+    padding-bottom: 80px; /* Add significant space before footer */
 }
 
 /* Force the sidebar container to have a fixed width on larger screens */
@@ -36,10 +81,21 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Specifically increase margin for the last content section */
+.section-bookmarks {
+    margin-bottom: 80px; /* Increased from 40px */
+}
+
 /* Containers for injected content */
 .books-container,
 .bookmarks-container {
   margin-top: 20px;
+}
+
+/* Ensure the bookmarks container has proper spacing at the bottom */
+.bookmarks-container {
+  margin-top: 20px;
+  margin-bottom: 80px; /* Increased space before footer */
 }
 
 /* Controls for bookmarks filtering */
@@ -103,19 +159,11 @@
 }
 
 .book-cover > img { 
-  max-width: 100% !important; /* Slightly less than container width */
+  max-width: 100%; /* Slightly less than container width */
   height: auto !important;
-  object-fit: contain;
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {
-  .book-item {
-    flex: 0 0 calc(33.333% - 10px); /* (15px × 2) ÷ 3 = 10px per item */
-    max-width: calc(33.333% - 10px);
-  }
-}
-
 @media (max-width: 768px) {
   .contentContainer {
     flex-direction: column;
@@ -129,8 +177,12 @@
     box-sizing: border-box; /* Ensure padding doesn't affect width */
   }
   /* Limit image width on smaller screens */
-  .book-cover > img {
-    max-width: 60% !important;
+  .book-cover {
+    /* max-width: 60% !important; */
+    max-width: 130px;
+    float: left;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -139,4 +191,19 @@
     flex: 0 0 100%; /* 1 item per row */
     max-width: 100%;
   }
+}
+
+/* Keep footer at the bottom but not fixed */
+#footerContainer {
+    flex-shrink: 0; /* Prevent shrinking */
+    width: 100%;
+    margin-top: auto; /* This pushes it to the bottom */
+}
+
+footer {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    background-color: #343a40;
+    color: white;
 }
