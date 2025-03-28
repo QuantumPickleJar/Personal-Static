@@ -1,26 +1,27 @@
 /* resources-page.css */
 
-/* Ensure the html and body take up full height */
+/* Ensure the overall page structure is correct */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-/* Make the page container a flex column container */
+/* Body sets up the main flex container */
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure it takes at least full viewport height */
+    min-height: 100vh;
 }
 
-/* Apply flex to the barba wrapper and container */
+/* Ensure barba wrapper and container also follow the flex pattern */
 .barba-wrapper,
 [data-barba="container"] {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
+    flex: 1; /* Take up all available space */
 }
 
 /* Header stays at top */
@@ -28,7 +29,7 @@ body {
     flex-shrink: 0;
 }
 
-/* Ensure the overall contentContainer uses flex and has proper spacing */
+/* Content container takes available space but allows for footer */
 .contentContainer {
     flex: 1 0 auto; /* This makes content area expand */
     display: flex;
@@ -41,18 +42,19 @@ body {
     box-sizing: border-box;
 }
 
-/* Add this to ensure the main content has proper spacing before the footer */
+/* Improve main container to properly expand */
 #mainContainer {
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-height: 0; /* Allow content to determine height */
-    flex: 1; /* Important: Allow main container to grow */
+    flex: 1;
 }
 
-/* Main content area - ensure it fills available space */
+/* Main content needs to expand properly */
 #mainContent {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding-bottom: 80px; /* Add significant space before footer */
 }
 
@@ -81,9 +83,9 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Specifically increase margin for the last content section */
+/* Ensure the last section has enough margin to prevent footer overlap */
 .section-bookmarks {
-    margin-bottom: 80px; /* Increased from 40px */
+    margin-bottom: 100px; /* Increase this value if needed */
 }
 
 /* Containers for injected content */
@@ -193,11 +195,13 @@ body {
   }
 }
 
-/* Keep footer at the bottom but not fixed */
+/* Key fix: Ensure footer stays at bottom with clear positioning */
 #footerContainer {
     flex-shrink: 0; /* Prevent shrinking */
     width: 100%;
     margin-top: auto; /* This pushes it to the bottom */
+    position: relative; /* Helps with z-index stacking */
+    z-index: 10; /* Ensure it's above other content */
 }
 
 footer {

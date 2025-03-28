@@ -10,8 +10,6 @@
 }
 
 #mainContent {
-  /* width: 75%; */
-  /* padding: 20px; */
   flex: 1; /* Changed from 9 to 1 */
   width: 100%; /* Added to ensure it takes full width */
 }
@@ -23,5 +21,6 @@
   flex-direction: column;
   margin: 0.75rem;
   width: 100%; /* Ensure mainContainer takes full width */
-  max-height: 600px; /* constrain to avoid pushing footer and keeping scrollable */
+  /* REMOVE THIS LINE - it's causing the footer positioning issue */
+  /* max-height: 600px; */ 
 }
