@@ -27,6 +27,7 @@ body {
 /* Header stays at top */
 #headerContainer {
     flex-shrink: 0;
+    z-index: 10; /* Ensure header stays above content */
 }
 
 /* Content container takes available space but allows for footer */
@@ -40,6 +41,8 @@ body {
     padding: 20px;
     width: 100%;
     box-sizing: border-box;
+    position: relative; /* Establish positioning context */
+    z-index: 1; /* Lower than footer */
 }
 
 /* Improve main container to properly expand */
@@ -48,6 +51,7 @@ body {
     flex-direction: column;
     width: 100%;
     flex: 1;
+    z-index: 1; /* Ensure proper stacking */
 }
 
 /* Main content needs to expand properly */
@@ -55,12 +59,14 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-bottom: 80px; /* Add significant space before footer */
+    padding-bottom: 120px; /* Increased space before footer */
+    z-index: 1; /* Ensure proper stacking */
 }
 
 /* Force the sidebar container to have a fixed width on larger screens */
 #sidebarContainer {
-  flex: 0 0 300px;
+    flex: 0 0 300px;
+    z-index: 1;
 }
 
 /* Section Titles for both Books and Bookmarks */
@@ -81,11 +87,13 @@ body {
   padding: 20px;
   margin-bottom: 40px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: relative; /* For stacking context */
+  z-index: 2; /* Above main container but below footer */
 }
 
 /* Ensure the last section has enough margin to prevent footer overlap */
 .section-bookmarks {
-    margin-bottom: 100px; /* Increase this value if needed */
+    margin-bottom: 150px; /* Significantly increased to prevent footer overlap */
 }
 
 /* Containers for injected content */
@@ -97,7 +105,9 @@ body {
 /* Ensure the bookmarks container has proper spacing at the bottom */
 .bookmarks-container {
   margin-top: 20px;
-  margin-bottom: 80px; /* Increased space before footer */
+  margin-bottom: 100px; /* Increased space before footer */
+  position: relative;
+  z-index: 2;
 }
 
 /* Controls for bookmarks filtering */
@@ -197,11 +207,10 @@ body {
 
 /* Key fix: Ensure footer stays at bottom with clear positioning */
 #footerContainer {
-    flex-shrink: 0; /* Prevent shrinking */
     width: 100%;
-    margin-top: auto; /* This pushes it to the bottom */
-    position: relative; /* Helps with z-index stacking */
-    z-index: 10; /* Ensure it's above other content */
+    margin-top: auto; /* Push to bottom when content is short */
+    position: relative; /* Not fixed or absolute */
+    z-index: 5; /* Higher than content but not as high as modal elements */
 }
 
 footer {
@@ -210,4 +219,5 @@ footer {
     text-align: center;
     background-color: #343a40;
     color: white;
+    position: relative;
 }
