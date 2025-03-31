@@ -601,7 +601,7 @@ export function openProjectModal(projectId) {
   const projectDates = document.getElementById('projectDates');
   projectDates.textContent = `Dates: ${project.dates || 'Unknown'}`;
   const modalDesc = document.getElementById('modalDescription');
-  modalDesc.textContent = project.description || 'No description available';
+  modalDesc.innerHTML = project.description || 'No description available';
 }
 
 
