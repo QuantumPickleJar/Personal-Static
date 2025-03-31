@@ -8,54 +8,57 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Base and global styles -->
   <link rel="stylesheet" href="style.css">
+  <!-- Make sure the resources-page.css is loaded -->
+  <link rel="stylesheet" href="css/resources-page.css">
 </head>
 <body>
   <!-- Header partial -->
   <div class="barba-wrapper" data-barba="wrapper">
     <div data-barba="container" data-barba-namespace="resources">
       <!-- Header will be dynamically inserted here -->
-    </div>
-  <div id="headerContainer"></div>
+      <div id="headerContainer"></div>
 
-  <!-- Main sandwich container -->
-  <div class="contentContainer">
-    <!-- Sidebar partial (on larger viewports, the sidebar stays on the left) -->
-    <div id="sidebarContainer"></div>
+      <!-- Main sandwich container -->
+      <div class="contentContainer">
+        <!-- Sidebar partial (on larger viewports, the sidebar stays on the left) -->
+        <div id="sidebarContainer"></div>
 
-    <!-- Main Container -->
-    <div id="mainContainer">
-      <main id="mainContent">
-        <!-- Books Section -->
-        <section id="booksSection" class="section-books">
-          <h1 class="section-title">Books I've Been Reading Recently</h1>
-          <div id="booksContainer" class="books-container">
-            <!-- Books will be injected here by books.js -->
-            <div class="loading">Loading books...</div>
-          </div>
-        </section>
+        <!-- Main Container -->
+        <div id="mainContainer">
+          <main id="mainContent">
+            <!-- Books Section -->
+            <section id="booksSection" class="section-books">
+              <h1 class="section-title">Books I've Been Reading Recently</h1>
+              <div id="booksContainer" class="books-container">
+                <!-- Books will be injected here by books.js -->
+                <div class="loading">Loading books...</div>
+              </div>
+            </section>
 
-        <hr class="section-divider" />
+            <hr class="section-divider" />
 
-        <!-- Bookmarks Section -->
-        <section id="bookmarksSection" class="section-bookmarks">
-          <h1 class="section-title">Bookmarks</h1>
-          <div class="bookmark-controls">
-            <label for="bookmarkCategory" class="bookmark-label">Choose a category:</label>
-            <select id="bookmarkCategory" class="bookmark-select">
-              <!-- Options will be added dynamically -->
-            </select>
-          </div>
-          <div id="bookmarksContainer" class="bookmarks-container">
-            <!-- Bookmarks will be injected here by bookmarks.js -->
-          </div>
-        </section>
-      </main>
+            <!-- Bookmarks Section -->
+            <section id="bookmarksSection" class="section-bookmarks">
+              <h1 class="section-title">Bookmarks</h1>
+              <div class="bookmark-controls">
+                <label for="bookmarkCategory" class="bookmark-label">Choose a category:</label>
+                <select id="bookmarkCategory" class="bookmark-select">
+                  <!-- Options will be added dynamically -->
+                </select>
+              </div>
+              <div id="bookmarksContainer" class="bookmarks-container">
+                <!-- Bookmarks will be injected here by bookmarks.js -->
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+
+      <!-- Footer partial -->
+      <div id="footerContainer"></div>
     </div>
   </div>
 
-  <!-- Footer partial -->
-  <div id="footerContainer"></div>
-  </div>
   <!-- Main JavaScript entry -->
   <!-- unified initialization script -->
   <script>
@@ -135,20 +138,67 @@
       
       // Also load bookmarks if that feature is ready
       try {
-        const bookmarksResponse = await fetch(`${basePath}rsc/json/bookmarks.json`);
-        if (!bookmarksResponse.ok) throw new Error(`Bookmarks JSON not found (${bookmarksResponse.status})`);
-        
-        const bookmarks = await bookmarksResponse.json();
-        console.log('Bookmarks loaded:', bookmarks.length);
-        
-        // Process and display bookmarks here
-        // ...
+        // Instead of loading bookmarks directly here, we'll just make sure the container exists
+        // The actual loading will be handled by bookmarks.js
+        if (!document.getElementById('bookmarksContainer')) {
+          console.error('Bookmarks container not found');
+        } else {
+          console.log('Bookmarks container found, loading will be handled by bookmarks.js');
+          // We'll add a small helper for bookmarks.js to use the correct base path
+          window.bookmarksBasePath = basePath;
+        }
       } catch (err) {
-        console.error('Failed to load bookmarks:', err);
+        console.error('Error setting up bookmarks:', err);
         document.getElementById('bookmarksContainer').innerHTML = 
-          `<div class="error">Failed to load bookmarks: ${err.message}</div>`;
+          `<div class="error">Failed to set up bookmarks: ${err.message}</div>`;
       }
     });
   </script>
+  <script>
+  // Improved footer positioning function
+  function adjustFooterPosition() {
+    const footerContainer = document.getElementById('footerContainer');
+    const contentContainer = document.querySelector('.contentContainer');
+    const mainContent = document.getElementById('mainContent');
+    const viewportHeight = window.innerHeight;
+    
+    // Reset any previously set margin
+    footerContainer.style.marginTop = '';
+    
+    // Get heights after resetting margin
+    const contentHeight = contentContainer.offsetHeight;
+    const mainContentHeight = mainContent.offsetHeight;
+    const headerHeight = document.getElementById('headerContainer').offsetHeight;
+    const footerHeight = footerContainer.offsetHeight;
+    
+    // Calculate space available
+    const availableSpace = viewportHeight - headerHeight;
+    const contentWithoutFooter = mainContentHeight + 40; // Add some buffer
+    
+    // Only adjust if content is shorter than available space
+    if (contentWithoutFooter < availableSpace - footerHeight) {
+      // Calculate margin needed to push footer to bottom
+      const marginNeeded = availableSpace - contentWithoutFooter - footerHeight;
+      footerContainer.style.marginTop = Math.max(20, marginNeeded) + 'px';
+    }
+  }
+
+  // Call on load and resize
+  window.addEventListener('load', adjustFooterPosition);
+  window.addEventListener('resize', adjustFooterPosition);
+  
+  // Also check after content loads with images
+  window.addEventListener('DOMContentLoaded', function() {
+    // Add initial timeout for partial loading
+    setTimeout(adjustFooterPosition, 300);
+    
+    // Check again after all images load
+    window.addEventListener('load', function() {
+      // Wait a bit for any dynamic content to settle
+      setTimeout(adjustFooterPosition, 500);
+    });
+  });
+</script>
+<script src="rsc/js/bookmarks.js"></script>
 </body>
 </html>
