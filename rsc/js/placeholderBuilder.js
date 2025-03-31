@@ -29,6 +29,23 @@ export function getPlaceholderForStack(project) {
 }
 
 /**
+ * Create a text-based SVG icon from technology name
+ * @param {string} tech - Technology name 
+ * @param {number} x - X position in SVG
+ * @param {number} y - Y position in SVG
+ * @returns {string} SVG markup for icon
+ */
+function createTextIcon(tech, x, y) {
+  const letters = tech.substring(0, 2).toUpperCase();
+  return `
+    <circle cx="${x + 10}" cy="${y + 10}" r="10" fill="#f0f0f0" stroke="#ccc" />
+    <text x="${x + 10}" y="${y + 14}" text-anchor="middle" font-size="10px" fill="#333">
+      ${letters}
+    </text>
+  `;
+}
+
+/**
  * Builds a circular SVG image of icons arranged around a circle.
  * Each technology in the stack is mapped to its icon using getIcon from stackIconLoader.
  * Returns the SVG as a Base64-encoded data URI.
@@ -37,45 +54,44 @@ export function getPlaceholderForStack(project) {
  */
 function createCircularPlaceholder(stack) {
   // Set up an SVG viewbox of 100x100 pixels with a circle background.
-  const centerX = 50;
+  const centerX = 50;  
   const centerY = 50;
   const radius = 45;
   let iconsSVG = '';
-
   const total = stack.length;
-  // Arrange all tech icons in a circular layout.
+  
+  // Add path prefix handling for GitHub Pages
+  const basePath = window.location.hostname.includes('github.io') ? 
+    '/Personal-Static/' : '/';
+  
   stack.forEach((tech, index) => {
-    let iconDataUri = getIcon(tech);
-    let isSvg = true;
-
-    if (!iconDataUri) {
-      let pngPath = `rsc/images/stack/${tech.toLowerCase()}.png`;
-      iconDataUri = pngPath;
-      isSvg = false;
-    }
-
-    const img = document.createElement('img');
-    img.src = iconDataUri;
-    img.onerror = () => {
-      console.error(`Failed to load image: ${img.src}`);
-      // Attempt to load the image with the original casing
-      let pngPath = `rsc/images/stack/${tech}.png`;
-      img.src = pngPath;
-      img.onerror = () => {
-        console.error(`Failed to load image with original casing: ${img.src}`);
-        img.src = 'rsc/images/placeholder-generic.png'; // Use a generic placeholder on error
-      };
-    };
-
     const angle = (2 * Math.PI / total) * index;
-    const iconRadius = 30;
+    const iconRadius = 30;  // Arrange all tech icons in a circular layout.
     const iconX = centerX + iconRadius * Math.cos(angle) - 10;
     const iconY = centerY + iconRadius * Math.sin(angle) - 10;
-
-    if (isSvg) {
+    
+    // First try - SVG from getIcon
+    let iconDataUri = getIcon(tech);
+    
+    if (iconDataUri) {
+      // SVG found, use it directly
       iconsSVG += `<image href="${iconDataUri}" x="${iconX}" y="${iconY}" width="20" height="20" />`;
-    } else {
-      iconsSVG += `<image href="${iconDataUri}" x="${iconX}" y="${iconY}" width="20" height="20" />`;
+    } 
+    else {
+      // Try multiple path variations for better compatibility with stackIconLoader.js
+      const normalizedTech = tech.trim().toLowerCase();
+      
+      // Create a group that will contain both the image attempt and fallback text
+      iconsSVG += `
+        <g>
+          <!-- Fallback text will be visible if the image fails to load -->
+          ${createTextIcon(tech, iconX, iconY)}
+          
+          <!-- Try both lowercase and original casing for the image -->
+          <image href="${basePath}rsc/images/stack/${normalizedTech}.png" x="${iconX}" y="${iconY}" width="20" height="20" />
+          <image href="${basePath}rsc/images/stack/${tech}.png" x="${iconX}" y="${iconY}" width="20" height="20" />
+        </g>
+      `;
     }
   });
 

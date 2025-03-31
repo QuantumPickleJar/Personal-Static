@@ -60,16 +60,37 @@ export function renderOneStackIcon(tech) {
     fallback.src = pngPath;
     fallback.alt = normalizedTech;
     fallback.classList.add('stack-image');
+    
+    // Track if we've already tried fallbacks to avoid infinite retries
+    let fallbackAttempted = false;
+    
     fallback.onerror = () => {
+      if (fallbackAttempted) {
+        console.warn(`Unable to load icon for ${tech}, using text label instead`);
+        // Create a text fallback instead of trying another image
+        const textFallback = document.createElement('span');
+        textFallback.textContent = tech;
+        textFallback.classList.add('stack-text-fallback');
+        textFallback.style.padding = '3px 5px';
+        textFallback.style.backgroundColor = '#f0f0f0';
+        textFallback.style.borderRadius = '3px';
+        textFallback.style.fontSize = '0.8em';
+        
+        // Replace the img with this span
+        if (fallback.parentNode) {
+          fallback.parentNode.replaceChild(textFallback, fallback);
+        }
+        return;
+      }
+      
+      fallbackAttempted = true;
       console.error(`Failed to load image: ${fallback.src}`);
-      // Attempt to load the image with the original casing
+      
+      // Try with original casing one time only
       pngPath = `${basePath}rsc/images/stack/${tech}.png`;
       fallback.src = pngPath;
-      fallback.onerror = () => {
-        console.error(`Failed to load image with original casing: ${fallback.src}`);
-        fallback.src = `${basePath}rsc/images/placeholder-generic.png`; // Use a generic placeholder
-      };
     };
+    
     return fallback;
   }
 }
