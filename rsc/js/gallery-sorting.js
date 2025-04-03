@@ -92,17 +92,17 @@ export function filterByContentType() {
 export function createTruncatedSpan(text, limit = 100) {
   const span = document.createElement('span');
   if (!text) {
-    span.textContent = ''; // or "N/A"
+    span.innerHTML = ''; // or "N/A"
     return span;
   }
 
   if (text.length > limit) {
     const truncated = text.slice(0, limit - 3) + '...';
-    span.textContent = truncated;
+    span.innerHTML = truncated;
     // The title attribute shows a native tooltip with the full text
     span.title = text; 
   } else {
-    span.textContent = text;
+    span.innerHTML = text;
   }
   return span;
 }
