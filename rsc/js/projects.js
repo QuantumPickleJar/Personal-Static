@@ -277,45 +277,68 @@ function showImagesInModal(project) {
   const mermaidContainer = document.getElementById('mermaidContainer');
   const noMermaidMsg = modalImages.querySelector('.no-mermaid');
   
-  // Hide all elements
-  carousel.style.display = 'none';
-  fallbackPlaceholder.style.display = 'none';
-  mermaidContainer.style.display = 'none';
-  noMermaidMsg.style.display = 'none';
+  // Hide all elements (with null checks)
+  if (carousel) carousel.style.display = 'none';
+  if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
+  if (mermaidContainer) mermaidContainer.style.display = 'none';
+  if (noMermaidMsg) noMermaidMsg.style.display = 'none';
   
   // Handle project with images
-  if (project.images && project.images.length > 0) {
+  if (project.images && project.images.length > 0 && carousel) {
     const carouselInner = carousel.querySelector('.carousel-inner');
-    carouselInner.innerHTML = '';
-    
-    const template = document.getElementById('carouselItemTemplate');
-    
-    project.images.forEach((imgSrc, index) => {
-      const carouselItem = template.content.cloneNode(true).querySelector('.carousel-item');
-      if (index === 0) carouselItem.classList.add('active');
+    if (carouselInner) {
+      carouselInner.innerHTML = '';
       
-      const img = carouselItem.querySelector('img');
-      const anchor = carouselItem.querySelector('a');
+      const template = document.getElementById('carouselItemTemplate');
       
-      const finalSrc = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
-        ? imgSrc
-        : imgSrc.includes('/')
-          ? `rsc/images/${imgSrc}`
-          : `rsc/images/recipes/${imgSrc}`;
-          
-      anchor.href = finalSrc;
-      img.src = finalSrc;
-      img.alt = `Project image ${index + 1}`;
+      project.images.forEach((imgSrc, index) => {
+        const carouselItem = template.content.cloneNode(true).querySelector('.carousel-item');
+        if (index === 0) carouselItem.classList.add('active');
+        
+        const img = carouselItem.querySelector('img');
+        const anchor = carouselItem.querySelector('a');
+        
+        const finalSrc = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
+          ? imgSrc
+          : imgSrc.includes('/')
+            ? `rsc/images/${imgSrc}`
+            : `rsc/images/recipes/${imgSrc}`;
+            
+        anchor.href = finalSrc;
+        img.src = finalSrc;
+        img.alt = `Project image ${index + 1}`;
+        
+        // Ensure the image has proper styling
+        img.style.maxHeight = '350px'; // Set max height
+        img.style.width = 'auto';      // Allow width to adjust proportionally
+        img.style.margin = '0 auto';   // Center the image
+        img.style.objectFit = 'contain'; // Ensure the image is fully visible
+        
+        carouselInner.appendChild(carouselItem);
+      });
       
-      carouselInner.appendChild(carouselItem);
-    });
-    
-    carousel.style.display = 'block';
-    carousel.style.maxHeight = '375px';
-    new bootstrap.Carousel(carousel, { interval: false, wrap: true });
+      carousel.style.display = 'block';
+      carousel.style.maxHeight = '375px'; // Maintain outer container height
+      modalImages.style.display = 'block'; // Ensure modalImages is displayed as block
+      
+      // Properly initialize the carousel
+      try {
+        // Ensure any existing carousel is disposed first
+        bootstrap.Carousel.getInstance(carousel)?.dispose();
+        new bootstrap.Carousel(carousel, { interval: false, wrap: true });
+      } catch (e) {
+        console.warn('Could not reinitialize carousel:', e);
+        new bootstrap.Carousel(carousel, { interval: false, wrap: true });
+      }
+    }
   } else {
     // Show fallback placeholder
-    fallbackPlaceholder.querySelector('img').src = getPlaceholderForStack(project);
+    const placeholderImg = fallbackPlaceholder.querySelector('img');
+    if (placeholderImg) {
+      placeholderImg.src = getPlaceholderForStack(project);
+      placeholderImg.style.maxHeight = '350px';
+      placeholderImg.style.width = 'auto';
+    }
     fallbackPlaceholder.style.display = 'block';
     modalImages.style.display = 'flex';
     modalImages.style.justifyContent = 'center';
@@ -611,7 +634,8 @@ export function openProjectModal(projectId) {
   });
 
   // Set up FABs and initialize their functionality
-  initializeFABs(project);
+  setupModalToggleFABs(project); // Set up FAB buttons first
+  initializeFABs(project);      // Then initialize their behavior
 
   // Update project details
   document.getElementById('projectStatus').textContent = `Status: ${project.status || 'N/A'}`;
@@ -619,7 +643,7 @@ export function openProjectModal(projectId) {
   document.getElementById('modalDescription').innerHTML = project.description || 'No description available';
 }
 
-/** Close the modal and "reset" it*/
+/** Close the modal and "reset" it without destroying the structure */
 export function closeModal() {
   const modal = document.getElementById('projectModal');
   modal.style.display = 'none';
@@ -629,11 +653,34 @@ export function closeModal() {
     fabContainer.remove();
   }
   
-  // Optionally clear fields so it’s fresh next time
+  // Clear content but preserve structure
   document.getElementById('modalTitle').innerText = '';
   document.getElementById('modalDescription').innerText = '';
   document.getElementById('modalStack').innerHTML = '';
-  document.getElementById('modalImages').innerHTML = '';
+  
+  // Reset the modal images without destroying structure
+  const carousel = document.getElementById('projectImageCarousel');
+  if (carousel) {
+    const carouselInner = carousel.querySelector('.carousel-inner');
+    if (carouselInner) carouselInner.innerHTML = '';
+    carousel.style.display = 'none';
+  }
+  
+  // Reset other containers
+  const modalImages = document.getElementById('modalImages');
+  if (modalImages) {
+    const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
+    if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
+    
+    const mermaidContainer = document.getElementById('mermaidContainer');
+    if (mermaidContainer) {
+      mermaidContainer.style.display = 'none';
+      mermaidContainer.innerHTML = '';
+    }
+    
+    const noMermaidMsg = modalImages.querySelector('.no-mermaid');
+    if (noMermaidMsg) noMermaidMsg.style.display = 'none';
+  }
 }
 
 
