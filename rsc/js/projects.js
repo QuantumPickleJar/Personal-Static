@@ -391,51 +391,89 @@ function showMermaidDiagramInModal(project) {
   const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
   const noMermaidMsg = modalImages.querySelector('.no-mermaid');
   
-  // Hide other elements
-  carousel.style.display = 'none';
-  fallbackPlaceholder.style.display = 'none';
+  // Hide other elements with null checks
+  if (carousel) carousel.style.display = 'none';
+  if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
   
   // Update view classes
   modalImages.classList.remove('images-view');
   modalImages.classList.add('mermaid-view');
   modalImages.style.display = 'block';
   
+  // Get and validate mermaid code
   const mermaidCode = parseMermaidCode(project);
-  if (!mermaidCode.trim()) {
-    mermaidContainer.style.display = 'none';
-    noMermaidMsg.style.display = 'block';
+  if (!mermaidCode || !mermaidCode.trim()) {
+    if (mermaidContainer) mermaidContainer.style.display = 'none';
+    if (noMermaidMsg) noMermaidMsg.style.display = 'block';
     return;
   }
   
-  mermaidContainer.style.display = 'block';
-  mermaidContainer.textContent = mermaidCode;
-  
-  // Use the same rendering logic with setTimeout
-  setTimeout(() => {
-    try {
-      window.mermaid.init(undefined, [mermaidContainer]).then(() => {
-        // Same panzoom logic as before
-        setTimeout(() => {
-          try {
-            const svgElement = mermaidContainer.querySelector('svg');
-            if (svgElement) {
-              panzoom(svgElement, {
-                smoothScroll: false,
-                maxZoom: 5,
-                minZoom: 0.5
-              });
-            }
-          } catch (pzError) {
-            console.error("Panzoom error:", pzError);
-          }
-        }, 200);
-      }).catch(error => {
-        console.error("Mermaid initialization error:", error);
-      });
-    } catch (err) {
-      console.error('Error initializing Mermaid:', err);
-    }
-  }, 500);
+  // Clear and prepare the mermaid container
+  if (mermaidContainer) {
+    // Important: Create a new div for mermaid to avoid issues with reinitialization
+    mermaidContainer.innerHTML = '';
+    const innerMermaid = document.createElement('div');
+    innerMermaid.className = 'mermaid';
+    innerMermaid.textContent = mermaidCode;
+    mermaidContainer.appendChild(innerMermaid);
+    mermaidContainer.style.display = 'block';
+    
+    // Use a timeout to ensure the DOM is updated before mermaid processes it
+    setTimeout(() => {
+      try {
+        // Reset mermaid to avoid issues with previous renders
+        if (window.mermaid) {
+          window.mermaid.initialize({ 
+            startOnLoad: false,
+            securityLevel: 'loose' // This helps with SVG rendering
+          });
+          
+          window.mermaid.init(undefined, innerMermaid).then(() => {
+            console.log("Mermaid diagram rendered successfully");
+            
+            // Apply panzoom with a delay to ensure the SVG is fully rendered
+            setTimeout(() => {
+              try {
+                const svgElement = innerMermaid.querySelector('svg');
+                if (svgElement) {
+                  // Add a border to make the diagram more visible
+                  svgElement.style.border = '1px solid #ddd';
+                  svgElement.style.borderRadius = '4px';
+                  svgElement.style.padding = '10px';
+                  
+                  // Make sure SVG takes available space
+                  svgElement.style.width = '100%';
+                  svgElement.style.height = 'auto';
+                  
+                  // Apply panzoom
+                  panzoom(svgElement, {
+                    smoothScroll: false,
+                    maxZoom: 5,
+                    minZoom: 0.5,
+                    boundsPadding: 0.1
+                  });
+                }
+              } catch (pzError) {
+                console.error("Panzoom error:", pzError);
+              }
+            }, 300);
+          }).catch(error => {
+            console.error("Mermaid initialization error:", error);
+            innerMermaid.textContent = "Error rendering diagram. Check your mermaid syntax.";
+            innerMermaid.style.color = "red";
+          });
+        } else {
+          console.error("Mermaid library not available");
+          innerMermaid.textContent = "Mermaid library failed to load.";
+          innerMermaid.style.color = "red";
+        }
+      } catch (err) {
+        console.error('Error initializing Mermaid:', err);
+        innerMermaid.textContent = "Error rendering diagram: " + err.message;
+        innerMermaid.style.color = "red";
+      }
+    }, 200);
+  }
 }
 
 function setupModalToggleFABs(project) {
