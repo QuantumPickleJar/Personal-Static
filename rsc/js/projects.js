@@ -305,6 +305,13 @@ function showImagesInModal(project) {
             : `rsc/images/recipes/${imgSrc}`;
             
         anchor.href = finalSrc;
+        // Add these attributes for simple link behavior
+        anchor.target = '_blank';
+        anchor.rel = 'noopener';
+        
+        // Remove data-lightbox attribute if not using a lightbox library
+        anchor.removeAttribute('data-lightbox');
+        
         img.src = finalSrc;
         img.alt = `Project image ${index + 1}`;
         
@@ -326,9 +333,40 @@ function showImagesInModal(project) {
         // Ensure any existing carousel is disposed first
         bootstrap.Carousel.getInstance(carousel)?.dispose();
         new bootstrap.Carousel(carousel, { interval: false, wrap: true });
+        
+        // Add this block to initialize lightbox after carousel is set up
+        setTimeout(() => {
+          // If you're using lightbox2
+          if (window.lightbox) {
+            window.lightbox.option({
+              'resizeDuration': 200,
+              'wrapAround': true,
+              'alwaysShowNavOnTouchDevices': true,
+              'disableScrolling': true
+            });
+          }
+          
+          // If you're using another lightbox library like SimpleLightbox
+          // Adjust based on the actual library you're using
+          const lightboxLinks = carousel.querySelectorAll('a[data-lightbox]');
+          lightboxLinks.forEach(link => {
+            // Pre-fetch the image to prevent loading delay when clicking
+            const img = new Image();
+            img.src = link.href;
+            
+            // Make sure the link opens properly
+            link.addEventListener('click', (e) => {
+              e.preventDefault();
+              // If you're not using lightbox2, you may need to initialize your
+              // specific lightbox library here
+              if (!window.lightbox) {
+                window.open(link.href, '_blank');
+              }
+            });
+          });
+        }, 200);
       } catch (e) {
-        console.warn('Could not reinitialize carousel:', e);
-        new bootstrap.Carousel(carousel, { interval: false, wrap: true });
+        console.warn('Error initializing carousel or lightbox:', e);
       }
     }
   } else {
