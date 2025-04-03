@@ -1,9 +1,10 @@
 /* modal.css - Styles for the modal */
 
+/* Basic modal structure */
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
-  z-index: 9999; /* Ensure it's on top of everything */
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100%;
@@ -12,54 +13,59 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-
-/* The actual white content box */
 .modal-content {
   background-color: #fff;
   margin: 2% auto;
-  width: 60%;           /* Adjust as needed */
-  max-width: 1000px;     /* Example max width */
-  max-height: 90vh;     /* Use max-height instead of fixed height */
+  width: 60%;
+  max-width: 1000px;
+  max-height: 90vh;
   border-radius: 6px;
   position: relative;
-  display: flex;        /* We'll do vertical flex layout in the content */
+  display: flex;
   flex-direction: column;
 }
 
-/* Top container */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+/* Modal layout sections */
 .modal-top {
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
   padding: 10px;
   border-bottom: 1px solid #ddd;
   display: flex;
   max-height: 375px;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Left 2/3 column inside top */
 .modal-top-left {
-  flex: 2;             /* 2/3 ratio */
+  flex: 2;
   display: flex;
   flex-direction: column;
   max-height: 375px;
   overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  background-color: white;
+  z-index: 100;
 }
 
-/* Ensure the carousel container fills its parent (which is already limited to 40% height) */
-.modal-top-left .modal-images {
-  height: 100%;
-  overflow: hidden;
-}
-
-/* Right 1/3 column inside top */
 .modal-top-right {
-  flex: 1;             /* 1/3 ratio */
+  flex: 1;
   display: flex;
   flex-direction: column;
   border-left: 1px solid #ddd;
   padding-left: 10px;
-  overflow-y: auto;     /* If stack is tall, it scrolls */
+  overflow-y: auto;
   max-height: 375px;
   height: 100%;
+  transition: all 0.3s ease-in-out;
 }
 
 .modal-top-right-upper {
@@ -75,11 +81,37 @@
   text-align: center;
 }
 
-/* Bottom container */
 .modal-bottom {
-  flex: 1;            /* Remaining space (60%) */
+  flex: 1;
   padding: 15px;
-  overflow-y: auto;   
+  overflow-y: auto;
+}
+
+/* Modal title and headings */
+#modalTitle, h4 {
+  z-index: 1000;
+  background-color: white;
+}
+
+/* Tech Stack heading with sticky opaque background */
+.modal-section-heading {
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+}
+
+/* Images area */
+.modal-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1;
+  overflow: hidden;
 }
 
 .modal-image {
@@ -88,32 +120,26 @@
   margin-bottom: 8px;
 }
 
-/* For the images area (carousel or just a row) */
-.modal-images {
+/* Modal content views */
+.modal-images.images-view {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  flex: 1;           /* Fill remaining vertical space */
-  overflow: hidden;  /* Prevent overflow */
+  justify-content: center;
 }
 
-/* Limit the carousel and its items to the container height */
-.modal-images .carousel {
-  width: 100%;
-  max-height: 300px;
-}
-.modal-images .carousel-item {
-  height: 400px;
+.modal-images.mermaid-view {
+  max-width: 100%;
+  max-height: 375px;
+  overflow: visible;
 }
 
-/* Carousel must stay inside its bounds */
+/* Carousel styling */
 #projectImageCarousel {
-  position: relative; 
+  position: relative;
   width: 100%;
   height: 375px;
 }
-
-
 
 .carousel-item img {
   object-fit: contain;
@@ -124,96 +150,38 @@
 
 .carousel-control-prev,
 .carousel-control-next {
-  top: 50%; /* 50% of 375px = 187.5px from the top */
+  top: 50%;
   transform: translateY(-50%);
 }
 
-
-/* Override Bootstrap’s default carousel arrow icons to use black arrows */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   width: 30px;
   height: 30px;
-  background-color: rgba(0, 0, 0, 0.6); /* Make arrows visible */
+  background-color: rgba(0, 0, 0, 0.6);
   background-size: 100%;
   background-repeat: no-repeat;
   opacity: 0.8;
   border-radius: 50%;
 }
 
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-  opacity: 1;
-}
-
-
-.modal-images .carousel {
-  width: 100%;
-  max-height: 300px; 
-}
-
-.modal-images .carousel-item {
-  height: 300px; /* Should match max-height above */
-}
-
-.modal-images .carousel-item img {
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-}
-
-.stack-image {
-  width: 32px;
-  height: 32px;
-  margin: 4px;
-  object-fit: contain;
-}
-
-/* For vertical stack icons */
-.vertical-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-#modalStack {
-  max-height: 200px;
-  padding-top: 20px;
-  overflow-y: auto;
-}
-
-/* Example stack-icon style */
-.vertical-stack .stack-icon,
-.vertical-stack .modal-image {
-  max-width: 36px;
-  max-height: 36px;
-  object-fit: contain;
-}
-
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-/* Center the fallback container and its image */
+/* Fallback placeholder */
 .fallback-placeholder {
-  width: 250px;           /* Adjust as needed */
+  width: 250px;
   height: 250px;
-  margin: 0 auto;         /* Center it */
+  margin: 0 auto;
   overflow: hidden;
-  border-radius: 50%;     /* Makes it circular */
-} 
+  border-radius: 50%;
+}
+
 .fallback-placeholder img {
   width: 100%;
   height: 100%;
-  object-fit: cover;      /* Ensure the image fills the container without distortion */
+  object-fit: cover;
 }
 
 .no-mermaid {
-  min-height: 300px; /* ensure enough height for the overlay */
+  min-height: 300px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -224,6 +192,7 @@
   position: relative;
   filter: grayscale(100%);
 }
+
 .no-mermaid::after {
   content: "";
   position: absolute;
@@ -235,42 +204,55 @@
   transform: rotate(45deg);
 }
 
-
-.modal-top-left.mermaid-mode,
-.modal-images.mermaid-view {
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-/* For the images/carousel view */
-.modal-images.images-view {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center; /* Center fallback if needed */
-}
-
-/* For the Mermaid view */
-.modal-images.mermaid-view {
-  max-width: 100%;
-  max-height: 375px;
-  overflow: visible; /* Allow scrolling if diagram is large */
-}
-
-
-/* FAB container positioned in the modal */
-.fab-container {
-  position: absolute;
-  top: 50px;
-  right: 30px;
-  z-index: 10000; /* or higher if needed */
+/* Tech Stack styling */
+.vertical-stack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  overflow: visible;
+  gap: 8px;
+  max-height: 100%;
+  overflow-y: auto;
 }
 
-/* Common FAB styles */
+#modalStack {
+  max-height: 200px;
+  padding-top: 5px;
+  overflow-y: auto;
+}
+
+/* Stack item styling */
+.stack-item-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.stack-image {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
+.stack-label {
+  font-size: 0.9rem;
+  color: #333;
+  white-space: nowrap;
+  line-height: 32px;
+}
+
+/* FAB styling & positioning */
+.fab-container {
+  position: absolute;
+  top: 55px;
+  right: 60px;
+  z-index: 10001;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
 .fab {
   width: 48px;
   height: 48px;
@@ -283,8 +265,8 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  font-size: 0.8rem; /* If you want smaller text inside the circle */
-  overflow: visible; /* So tooltip can appear outside the button */
+  font-size: 0.8rem;
+  overflow: visible;
 }
 
 .fab img {
@@ -293,11 +275,11 @@
   object-fit: contain;
 }
 
-/* Hover and selected state for FABs */
 .fab:hover {
   background-color: #e1e1e1;
   transform: scale(1.05);
 }
+
 .fab.selected {
   background-color: #007bff;
   color: #fff;
@@ -310,10 +292,9 @@
   cursor: not-allowed;
 }
 
-/* Tooltip bubble styling */
 .fab-tooltip {
   position: absolute;
-  bottom: 100%; /* This positions it above its containing button (mermaidFab) */
+  bottom: 100%;
   left: 50%;
   transform: translate(-50%, -10px);
   margin-bottom: 8px;
@@ -328,65 +309,113 @@
   pointer-events: none;
   z-index: 19999;
 }
+
 .fab-tooltip.show {
   opacity: 1;
 }
 
-.modal-top-left {
-  z-index:999999;
-  position:relative;
-  background-color: white
-}
-
-h4, #modalTitle {
-  z-index:1000000;
-  background-color: white
-}
-
-/* fix the Tech Stack label */
-h5 { 
-  position: fixed;
-  background-color: white;
-}
-
-/* The Mermaid container */
+/* Mermaid container styling */
 #mermaidContainer {
-  position: absolute;  /* or fixed, or whatever you need for dragging */
-  z-index: 5;          /* smaller than 10, so it appears behind the text */
-  /* If you have a transform, see notes below. */
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  overflow: visible !important;
+  transition: all 0.3s ease-in-out;
+  z-index: 5;
 }
 
-@media (max-width: 600px) {
-  .modal-content {
-    width: 90%;
-    margin: 5% auto;
-    /* Additional mobile-specific styles can be added here */
+#mermaidContainer svg {
+  width: 100%;
+  height: auto;
+}
+
+.modal-top-left.mermaid-mode,
+.modal-images.mermaid-view {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Responsive styles */
+@media (min-width: 769px) {
+  .stack-label {
+    display: inline;
+  }
+  
+  /* Mermaid expanded layout - desktop only */
+  .mermaid-expanded .modal-top-left {
+    flex: 4; /* 80% of the space */
+  }
+
+  .mermaid-expanded .modal-top-right {
+    flex: 1; /* 20% of the space */
+    padding-left: 5px; /* Reduce left padding in expanded mode */
+  }
+  
+  /* Hide labels when in mermaid expanded view on any screen size */
+  .mermaid-expanded .stack-label {
+    display: none;
+  }
+  
+  /* Make the Tech Stack heading more compact in expanded mode */
+  .mermaid-expanded .modal-section-heading {
+    font-size: 0.8rem;
+    padding: 2px 0; 
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  
+  /* Move stack icons closer to the right edge in expanded mode */
+  .mermaid-expanded .vertical-stack {
+    padding-right: 2px;
+  }
+  
+  /* Make stack icons slightly smaller in expanded mode */
+  .mermaid-expanded .stack-image {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Tech Stack container padding adjustments */
+  .mermaid-expanded #modalStack {
+    padding-right: 2px; 
+    padding-left: 0;
+    max-height: none; /* Allow full height */
+  }
+  
+  /* Hide the Tech Stack heading completely in expanded mode */
+  .mermaid-expanded .modal-section-heading {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
 }
 
-/* View toggle styles */
-.view-toggle-container {
-  max-width: 300px;
-  margin: 0 0 20px;
-}
-
-/* Make the form switch larger on mobile */
-.form-switch .form-check-input {
-  width: 3em;
-  height: 1.5em;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
-}
-
-/* Highlight active view */
-.content-view {
-  transition: opacity 0.3s ease;
-}
-
-.content-view[style*="display: none"] {
-  opacity: 0;
-}
-
-.content-view:not([style*="display: none"]) {
-  opacity: 1;
+@media (max-width: 768px) {
+  .stack-label {
+    display: none;
+  }
+  
+  /* Add hover tooltip for small screens */
+  .stack-item-container:hover::after {
+    content: attr(data-tech);
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 1000;
+  }
+  
+  /* Smaller modal on mobile */
+  .modal-content {
+    width: 90%;
+    margin: 5% auto;
+  }
 }
