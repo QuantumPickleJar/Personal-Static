@@ -430,33 +430,51 @@ function showMermaidDiagramInModal(project) {
   const mermaidContainer = document.createElement('div');
   mermaidContainer.id = 'mermaidContainer';
   mermaidContainer.className = 'mermaid';
-  // Remove any inline overflow that might clip the fallback
-  mermaidContainer.style.overflow = '';
+  mermaidContainer.style.overflow = 'visible'; // Important for panzoom
   modalImages.appendChild(mermaidContainer);
 
   const mermaidCode = parseMermaidCode(project);
   if (!mermaidCode.trim()) {
-    // Render fallback with a red slash overlay
-    // Set inline style to force a min-height if needed:
     mermaidContainer.style.minHeight = '300px';
     mermaidContainer.innerHTML = '<div class="no-mermaid">No Mermaid Diagram Available</div>';
     return;
   }
 
-  // Otherwise, render the Mermaid diagram.
+  // Set the mermaid code and render after a delay
   mermaidContainer.textContent = mermaidCode;
+  
+  // Use a longer timeout to ensure DOM is ready
   setTimeout(() => {
     try {
-      mermaid.init(undefined, mermaidContainer);
-      panzoom(mermaidContainer, {
-        smoothScroll: false,
-        maxZoom: 5,
-        minZoom: 0.5
+      window.mermaid.init(undefined, [mermaidContainer]).then(() => {
+        console.log("Mermaid initialized successfully");
+        
+        // Apply panzoom only after mermaid is fully rendered
+        setTimeout(() => {
+          try {
+            const svgElement = mermaidContainer.querySelector('svg');
+            if (svgElement) {
+              // Apply panzoom to the SVG, not the container
+              panzoom(svgElement, {
+                smoothScroll: false,
+                maxZoom: 5,
+                minZoom: 0.5
+              });
+              console.log("Panzoom applied to SVG");
+            } else {
+              console.error("SVG element not found in mermaid container");
+            }
+          } catch (pzError) {
+            console.error("Panzoom error:", pzError);
+          }
+        }, 200);
+      }).catch(error => {
+        console.error("Mermaid initialization error:", error);
       });
     } catch (err) {
-      console.error('Error initializing Mermaid or panzoom:', err);
+      console.error('Error initializing Mermaid:', err);
     }
-  }, 100);
+  }, 500);
 }
 
 
@@ -564,6 +582,91 @@ function setupModalToggleFABs(project) {
   }
 }
 
+// Handles the FAB transitions between mermaid and image mode
+function initializeFABs(project) {
+  // Get references to elements
+  const modalTop = document.querySelector('.modal-top');
+  const mermaidFab = document.querySelector('.toggle-mermaid');
+  const imagesFab = document.querySelector('.toggle-images');
+  const modalImages = document.getElementById('modalImages');
+  
+  // Skip if no mermaid diagram
+  if (!project.mermaid || !project.mermaid.trim()) {
+    if (mermaidFab) mermaidFab.classList.add('disabled');
+    return;
+  }
+  
+  // Initially selected state is images
+  let currentView = 'images';
+  
+  // Handle mermaid FAB click
+  if (mermaidFab) {
+    mermaidFab.addEventListener('click', () => {
+      if (currentView === 'images' && !mermaidFab.classList.contains('disabled')) {
+        // First, add the expanded class to change the layout
+        modalTop.classList.add('mermaid-expanded');
+        
+        // Hide the tech stack heading instead of changing text
+        const stackHeading = document.querySelector('.modal-section-heading');
+        if (stackHeading) {
+          // Store original visibility state for later restoration
+          stackHeading.classList.add('heading-hidden');
+        }
+        
+        // Hide images container
+        const element = modalImages.querySelector('#projectImageCarousel, .fallback-placeholder');
+        if (element) {
+          element.style.display = 'none';
+        }
+                
+        // Update selected state
+        mermaidFab.classList.add('selected');
+        imagesFab.classList.remove('selected');
+        currentView = 'mermaid';
+        
+        // Wait for the animation to complete before showing mermaid
+        setTimeout(() => {
+          // Now show/initialize the mermaid diagram
+          showMermaidDiagramInModal(project);
+        }, 300); // Match transition duration
+      }
+    });
+  }
+  
+  // Handle images FAB click
+  if (imagesFab) {
+    imagesFab.addEventListener('click', () => {
+      if (currentView === 'mermaid') {
+        // First hide the mermaid container
+        const mermaidContainer = document.getElementById('mermaidContainer');
+        if (mermaidContainer) {
+          mermaidContainer.style.display = 'none';
+        }
+        
+        // Start the animation to revert layout
+        modalTop.classList.remove('mermaid-expanded');
+        
+        // Restore the tech stack heading visibility
+        const stackHeading = document.querySelector('.modal-section-heading');
+        if (stackHeading) {
+          stackHeading.classList.remove('heading-hidden');
+        }
+        
+        // Wait for animation to complete before showing images
+        setTimeout(() => {
+          // Show images after animation completes
+          showImagesInModal(project);
+          
+          // Update selected state
+          imagesFab.classList.add('selected');
+          mermaidFab.classList.remove('selected');
+          currentView = 'images';
+        }, 300); // Match transition duration
+      }
+    });
+  }
+}
+
 export function openProjectModal(projectId) {
   const project = allProjects.find(p => p.id === projectId);
   if (!project) {
@@ -580,6 +683,12 @@ export function openProjectModal(projectId) {
   // Render the images view (or fallback).
   showImagesInModal(project);
 
+  // Add opaque background to Tech Stack heading
+  const modalStackHeading = document.querySelector('.modal-top-right h3');
+  if (modalStackHeading) {
+    modalStackHeading.classList.add('modal-section-heading');
+  }
+
   // Render stack icons.
   const modalStack = document.getElementById('modalStack');
   modalStack.innerHTML = '';
@@ -588,12 +697,11 @@ export function openProjectModal(projectId) {
     modalStack.appendChild(iconEl);
   });
 
-  // Remove any existing FAB container.
-  const existingFAB = document.querySelector('.fab-container');
-  if (existingFAB) {
-    existingFAB.remove();
-  }
+  // Set up the FAB container
   setupModalToggleFABs(project);
+  
+  // Initialize FAB functionality for switching views
+  initializeFABs(project);
 
   // Render bottom container details.
   const projectStatus = document.getElementById('projectStatus');
