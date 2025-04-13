@@ -2,6 +2,7 @@
   "dependencies": {
     "@barba/core": "^2.10.3",
     "@iconify/utils": "^2.1.5",
+    "@material/web": "^2.3.0",
     "bootstrap": "^5.3.3",
     "express": "^4.21.2",
     "mermaid": "^11.5.0",

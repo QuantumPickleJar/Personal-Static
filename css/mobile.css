@@ -1,13 +1,13 @@
 /* Mobile Styles */
 @media (max-width: 768px) {
-  .project-card {
-    /* Full width cards on mobile */
+  /* Changed from .project-card to md-elevated-card.project-card */
+  md-elevated-card.project-card {
     flex: 1 1 100%;
     max-width: 100%;
-    /* Let content determine height or set a more appropriate mobile value */
     height: auto;
     margin-right: 8px;
   }
+  
   .contentContainer {
     flex-direction: column;
   }
@@ -27,7 +27,7 @@
 
 /* For very small screens (max-width: 400px) force single-column project cards */
 @media (max-width: 400px) {
-  .project-card {
+  md-elevated-card.project-card {
     flex: none;
     width: 100%;
     max-width: 100%;
@@ -51,11 +51,13 @@
     padding-bottom: 120px;
     gap: 16px;
   }
-  .project-card {
+  
+  md-elevated-card.project-card {
     flex: 1 1 300px;   /* Fixed basis for a consistent 300px width */
     max-width: 300px;
     height: auto; /* Set height to auto for content-driven height */
   }
+  
   /* Fix the width of the inline pagination container */
   #inlinePaginationContainer {
     min-width: 320px;

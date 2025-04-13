@@ -88,75 +88,152 @@ async function tryFetchPaths(paths) {
 
 /** Render the gallery with a given array of projects */
 export function renderProjectsGallery(projects) {
-  // Get gallery element and check if it exists
-  const gallery = document.getElementById('projectsGallery');
-  if (!gallery) {
-    console.log('No projects gallery found on this page - skipping render');
+  const gallery = document.getElementById("projectsGallery");
+  const template = document.getElementById("projectCardTemplate");
+
+  if (!gallery || !template) {
+    console.error('Gallery or template not found in DOM');
     return;
   }
-  
-  // Clear existing content
-  gallery.innerHTML = ''; 
-  
-  // Get the project card template
-  const template = document.getElementById('projectCardTemplate');
-  
+
+  gallery.innerHTML = ""; // clear
+
   projects.forEach(project => {
-    // Clone the template
-    const card = template.content.cloneNode(true).querySelector('.project-card');
+    const clone = template.content.cloneNode(true);
+    const card = clone.querySelector("md-elevated-card");
     
-    // Set project ID
-    card.dataset.projectId = project.id;
-    
-    // Set thumbnail
-    const thumb = card.querySelector('.project-thumbnail');
-    thumb.src = project.thumbnail || 'images/placeholder.jpg';
-    thumb.alt = project.title;
-    
-    // Set date label
-    const dateLabel = card.querySelector('.date-label');
-    const dateText = project.date || project.dates || 'No date';
-    dateLabel.textContent = dateText;
-    dateLabel.dataset.tooltip = dateText;
-    
-    // Setup tooltip events for date label
-    setupTooltipEvents(dateLabel);
-    
-    // Set academic label
-    const academicLabel = card.querySelector('.academic-label');
-    academicLabel.textContent = project.academic ? "Academic" : "Personal";
-    academicLabel.classList.add(project.academic ? 'academic' : 'personal');
-    
-    // Setup tooltip events for academic label
-    setupTooltipEvents(academicLabel, dateText);
-    
-    // Handle badges for images and mermaid diagrams
-    setupBadges(card, project);
-    
-    // Set title
-    card.querySelector('.project-title').textContent = project.title;
-    
-    // Set description
-    const shortOrDesc = project.shortForm || project.description || '';
-    const truncatedSpan = card.querySelector('.short-form-truncated');
-    if (shortOrDesc.length > 100) {
-      truncatedSpan.textContent = shortOrDesc.slice(0, 97) + '...';
-      truncatedSpan.title = shortOrDesc;
-    } else {
-      truncatedSpan.textContent = shortOrDesc;
+    // Ensure the project-card class is added
+    if (card && !card.classList.contains('project-card')) {
+      card.classList.add('project-card');
+    }
+
+    if (card) {
+      card.dataset.projectId = project.id;
+    }
+
+    const thumbnail = clone.querySelector(".project-thumbnail");
+    if (thumbnail) {
+      thumbnail.src = project.thumbnail || "rsc/images/placeholder.png";
+      thumbnail.alt = `Image for ${project.title}`;
+    }
+
+    // Set the project title
+    const titleElement = clone.querySelector(".project-title");
+    if (titleElement) {
+      titleElement.textContent = project.title;
     }
     
-    // Set stack icons
-    setupStackIcons(card.querySelector('.stack-icons'), project.stack);
+    // Set the short form description
+    const shortFormElement = clone.querySelector(".short-form-truncated");
+    if (shortFormElement) {
+      shortFormElement.textContent = project.shortForm || "";
+    }
+
+    // Handle date label if present
+    const dateLabel = clone.querySelector(".date-label");
+    if (dateLabel) {
+      // Set the date content
+      dateLabel.textContent = project.dates || "";
+      // Also set data-tooltip attribute for hover functionality
+      dateLabel.setAttribute('data-tooltip', project.dates || "");
+    }
+
+    // Handle academic label if present
+    const academicLabel = clone.querySelector(".academic-label");
+    if (academicLabel) {
+      if (project.academic) {
+        academicLabel.textContent = "Academic";
+        academicLabel.classList.add("academic");
+      } else {
+        academicLabel.textContent = "Personal";
+        academicLabel.classList.add("personal");
+      }
+      
+      // Make sure academic label is visible (might be hidden if toggled before)
+      academicLabel.style.display = '';
+      
+      // Set up hover effect for date label
+      academicLabel.addEventListener('mouseenter', () => {
+        if (dateLabel) {
+          dateLabel.style.opacity = '1';
+        }
+      });
+      
+      academicLabel.addEventListener('mouseleave', () => {
+        if (dateLabel) {
+          // Use a short delay to allow moving mouse to the date label
+          setTimeout(() => {
+            if (!dateLabel.matches(':hover')) {
+              dateLabel.style.opacity = '0';
+            }
+          }, 100);
+        }
+      });
+      
+      // Allow date label to keep itself visible when hovered directly
+      if (dateLabel) {
+        dateLabel.addEventListener('mouseenter', () => {
+          dateLabel.style.opacity = '1';
+        });
+        
+        dateLabel.addEventListener('mouseleave', () => {
+          dateLabel.style.opacity = '0';
+        });
+      }
+    }
+
+    // Stack icons
+    const stackIcons = clone.querySelector(".stack-icons");
+    if (stackIcons && Array.isArray(project.stack)) {
+      stackIcons.innerHTML = "";
+      project.stack.forEach(tech => {
+        const iconSpan = document.createElement("span");
+        iconSpan.classList.add("stack-icon");
+        iconSpan.textContent = tech;
+        stackIcons.appendChild(iconSpan);
+      });
+    }
+
+    // Images badge
+    const imageIcon = clone.querySelector(".image-count-icon");
+    if (project.images && project.images.length > 0 && imageIcon) {
+      imageIcon.style.display = "flex";
+      imageIcon.querySelector(".count").textContent = project.images.length;
+    }
     
-    // Add click event for modal
-    card.addEventListener('click', () => {
-      openProjectModal(project.id);
-    });
-    
-    gallery.appendChild(card);
+    // Mermaid badge
+    const mermaidIcon = clone.querySelector(".mermaid-icon");
+    if (mermaidIcon && project.mermaid && project.mermaid.trim()) {
+      mermaidIcon.style.display = "block";
+    }
+
+    // Make the entire card clickable to open the modal
+    if (card) {
+      card.addEventListener('click', (e) => {
+        // Check if the click was on the button (to avoid double event firing)
+        if (!e.target.closest('.open-modal-btn')) {
+          console.log('Card clicked for project:', project.id);
+          openProjectModal(project.id);
+        }
+      });
+    }
+
+    // Also add the modal handler to the button specifically
+    const modalButton = clone.querySelector(".open-modal-btn");
+    if (modalButton) {
+      modalButton.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevent the card click event from firing
+        console.log('Button clicked for project:', project.id);
+        openProjectModal(project.id);
+      });
+    }
+
+    gallery.appendChild(clone);
   });
+
+  console.log(`Rendered ${projects.length} projects in the gallery`);
 }
+
 
 // Helper function to setup tooltips
 function setupTooltipEvents(element, tooltipText = null) {
@@ -681,63 +758,142 @@ export function openProjectModal(projectId) {
     return;
   }
 
-  // Show the modal
   const modal = document.getElementById('projectModal');
   if (!modal) {
-    console.error('Project modal not found, redirecting to projects page');
-    window.location.href = 'projects.html';
+    console.warn('Modal not found in DOM. Loading modal and retrying...');
+    // Modal may not be loaded yet, try to load it and then retry
+    loadProjectModal().then(() => {
+      // After loading, retry opening with a small delay to ensure DOM updates
+      setTimeout(() => openProjectModal(projectId), 100);
+    });
     return;
   }
-  
+
+  console.log('Opening modal for project:', project.title);
   modal.style.display = 'block';
   
-  // Set the title
+  // Set modal title and description
   document.getElementById('modalTitle').textContent = project.title;
-
-  // Render images view first
-  showImagesInModal(project);
-
-  // Render stack icons
-  const modalStack = document.getElementById('modalStack');
-  modalStack.innerHTML = '';
+  document.getElementById('modalDescription').textContent = project.description || "No description available.";
   
-  const template = document.getElementById('stackIconContainerTemplate');
-  project.stack.forEach(tech => {
-    const iconContainer = template.content.cloneNode(true).querySelector('.stack-item-container');
-    iconContainer.dataset.tech = tech;
-    
-    // Try to get icon
-    const iconUrl = getIcon(tech);
-    const img = iconContainer.querySelector('.stack-image');
-    const label = iconContainer.querySelector('.stack-label');
-    
-    if (iconUrl) {
-      img.src = iconUrl;
+  // Set project status if available
+  const statusElement = document.getElementById('projectStatus');
+  if (statusElement) {
+    statusElement.textContent = project.status ? `Status: ${project.status}` : "";
+  }
+  
+  // Set project type (academic or not)
+  const typeElement = document.getElementById('projectType');
+  if (typeElement) {
+    typeElement.textContent = project.academic ? "Academic Project" : "Personal Project";
+  }
+  
+  // Set project dates if available
+  const datesElement = document.getElementById('projectDates');
+  if (datesElement && project.dates) {
+    datesElement.textContent = `Dates: ${project.dates}`;
+  }
+  
+  // Clear and populate tech stack
+  const stackContainer = document.getElementById('modalStack');
+  if (stackContainer) {
+    stackContainer.innerHTML = '';
+    if (project.stack && project.stack.length > 0) {
+      project.stack.forEach(tech => {
+        try {
+          const icon = renderOneStackIcon(tech);
+          if (icon) {
+            stackContainer.appendChild(icon);
+          }
+        } catch (e) {
+          console.warn(`Failed to render stack icon for ${tech}:`, e);
+          const fallback = document.createElement('div');
+          fallback.className = 'stack-item';
+          fallback.textContent = tech;
+          stackContainer.appendChild(fallback);
+        }
+      });
     } else {
-      const basePath = window.location.hostname.includes('github.io') ? 
-        '/Personal-Static/' : '/';
-      img.src = `${basePath}rsc/images/stack/${tech.toLowerCase()}.png`;
+      const noStack = document.createElement('p');
+      noStack.textContent = "No tech stack information available";
+      stackContainer.appendChild(noStack);
     }
+  }
+  
+  // Display images or mermaid diagram
+  showImagesInModal(project);
+  
+  // Setup FABs (Floating Action Buttons)
+  setupModalToggleFABs(project);
+  initializeFABs(project);
+}
+
+// Add a function to load the modal if it doesn't exist
+function loadProjectModal() {
+  return new Promise((resolve, reject) => {
+    const existingModal = document.getElementById('projectModal');
+    if (existingModal) {
+      resolve();
+      return;
+    }
+
+    console.log('Loading project modal HTML');
+    const modalContainer = document.getElementById('modalContainer');
+    if (!modalContainer) {
+      console.error('Modal container not found');
+      reject(new Error('Modal container not found'));
+      return;
+    }
+
+    // Dynamically load the modal HTML
+    const basePath = window.location.hostname.includes('github.io') ? 
+      '/Personal-Static/' : '/';
     
-    img.alt = tech;
-    label.textContent = tech;
-    
-    modalStack.appendChild(iconContainer);
+    fetch(`${basePath}htmlModules/project-modal.html`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to load modal HTML');
+        }
+        return response.text();
+      })
+      .then(html => {
+        modalContainer.innerHTML = html;
+        
+        // Set up modal close button
+        const closeButton = document.getElementById('closeModal');
+        if (closeButton) {
+          closeButton.addEventListener('click', () => {
+            document.getElementById('projectModal').style.display = 'none';
+          });
+        }
+        
+        // Set up click outside to close
+        const modal = document.getElementById('projectModal');
+        if (modal) {
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+              modal.style.display = 'none';
+            }
+          });
+        }
+        
+        resolve();
+      })
+      .catch(error => {
+        console.error('Error loading modal:', error);
+        reject(error);
+      });
   });
-
-  // Set up FABs and initialize their functionality
-  setupModalToggleFABs(project); // Set up FAB buttons first
-  initializeFABs(project);      // Then initialize their behavior
-
-  // Update project details
-  document.getElementById('projectStatus').textContent = `Status: ${project.status || 'N/A'}`;
-  document.getElementById('projectDates').textContent = `Dates: ${project.dates || 'Unknown'}`;
-  document.getElementById('modalDescription').innerHTML = project.description || 'No description available';
 }
 
 /** Close the modal and "reset" it without destroying the structure */
 export function closeModal() {
   const modal = document.getElementById('projectModal');
+  if (!modal) {
+    console.error('Modal not found in DOM yet.');
+    return;
+  }
+  
   modal.style.display = 'none';
   
   const fabContainer = document.querySelector('.fab-container');
@@ -746,9 +902,13 @@ export function closeModal() {
   }
   
   // Clear content but preserve structure
-  document.getElementById('modalTitle').innerText = '';
-  document.getElementById('modalDescription').innerText = '';
-  document.getElementById('modalStack').innerHTML = '';
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDescription = document.getElementById('modalDescription');
+  const modalStack = document.getElementById('modalStack');
+  
+  if (modalTitle) modalTitle.innerText = '';
+  if (modalDescription) modalDescription.innerText = '';
+  if (modalStack) modalStack.innerHTML = '';
   
   // Reset the modal images without destroying structure
   const carousel = document.getElementById('projectImageCarousel');
@@ -774,7 +934,6 @@ export function closeModal() {
     if (noMermaidMsg) noMermaidMsg.style.display = 'none';
   }
 }
-
 
 function getVisibleStackItems(stackArray) {
   let charCount = 0;

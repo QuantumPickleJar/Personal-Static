@@ -109,9 +109,47 @@
           .then(response => response.text())
           .then(html => {
             document.getElementById('modalContainer').innerHTML = html;
+
+            // Now that modal is injected, bind close button listener
+            const closeButton = document.getElementById('closeModal');
+            if (closeButton) {
+              closeButton.addEventListener('click', () => {
+                document.getElementById('projectModal').style.display = 'none';
+              });
+            }
           });
+
       </script>
+
+      
     </div>
+  
+
+    <template id="projectCardTemplate">
+      <md-elevated-card data-project-id="" class="project-card">
+        <img class="project-thumbnail" src="" alt="">
+        <div class="label-row">
+          <span class="date-label" data-tooltip=""></span>
+        </div>
+        <span class="academic-label"></span>
+        <div class="badge-container">
+          <div class="image-count-icon" style="display: none;">
+            <span class="icon">&#128247;</span>
+            <span class="count"></span>
+          </div>
+          <div class="mermaid-icon" style="display: none;">
+            <img src="./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram">
+          </div>
+        </div>
+        <div class="project-title"></div>
+        <span class="short-form-truncated"></span>
+        <div class="stack-icons"></div>
+        <div class="project-card-footer">
+          <md-filled-button class="open-modal-btn">View Project</md-filled-button>
+        </div>
+      </md-elevated-card>
+    </template>
+    
   </div>
 
 
@@ -174,6 +212,13 @@
     }
   });
 </script>
+
+  <script type="module">
+    // Use CDN imports instead of bare specifiers
+    import { LitElement } from 'https://esm.sh/lit@2.8.0';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/elevated-card/elevated-card.js';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/filled-button/filled-button.js';
+  </script>
 
 </body>
 
