@@ -1,5 +1,8 @@
 console.log('Front page carousel script executing');
 
+// Import the stack icon renderer
+import { renderOneStackIcon } from './stackIconLoader.js';
+
 // Export a function that can be called from main.js
 export function initCarousel() {
   console.log('Initializing carousel from exported function');
@@ -195,7 +198,38 @@ async function loadCarouselProjects() {
       
       const cardFooter = document.createElement("div");
       cardFooter.classList.add("carousel-card-footer");
-      cardFooter.textContent = project.stack ? project.stack.join(", ") : "";
+      
+      // Create a container for stack icons
+      const stackIconsContainer = document.createElement("div");
+      stackIconsContainer.classList.add("stack-icons-container");
+      
+      // Add tech stack icons (if available)
+      if (project.stack && project.stack.length > 0) {
+        // Limit to maximum 5 icons to avoid crowding
+        const visibleStack = project.stack.slice(0, 5);
+        
+        visibleStack.forEach(tech => {
+          const iconElement = renderOneStackIcon(tech);
+          if (iconElement) {
+            // Adjust the size for carousel
+            iconElement.classList.add('carousel-stack-icon');
+            stackIconsContainer.appendChild(iconElement);
+          }
+        });
+        
+        // If there are more than 5 stack items, add a "+X more" indicator
+        if (project.stack.length > 5) {
+          const moreLabel = document.createElement('div');
+          moreLabel.classList.add('more-stack-label');
+          moreLabel.textContent = `+${project.stack.length - 5} more`;
+          stackIconsContainer.appendChild(moreLabel);
+        }
+        
+        cardFooter.appendChild(stackIconsContainer);
+      } else {
+        // Fallback if no stack data
+        cardFooter.textContent = "No tech stack data available";
+      }
       
       cardDiv.appendChild(cardHeader);
       cardDiv.appendChild(cardBody);
@@ -204,6 +238,57 @@ async function loadCarouselProjects() {
       carouselItem.appendChild(cardDiv);
       carouselInner.appendChild(carouselItem);
     });
+
+    // Add additional styling for carousel stack icons
+    if (!document.getElementById('stack-icon-styles')) {
+      const stackStyles = document.createElement('style');
+      stackStyles.id = 'stack-icon-styles';
+      stackStyles.textContent = `
+        .stack-icons-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 10px;
+          align-items: center;
+        }
+        
+        .carousel-stack-icon {
+          transform: scale(0.9);
+        }
+        
+        .carousel-stack-icon .stack-image {
+          width: 24px;
+          height: 24px;
+          object-fit: contain;
+        }
+        
+        .carousel-stack-icon .stack-label {
+          font-size: 0.75rem;
+          max-width: 70px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        .stack-item-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-right: 8px;
+        }
+        
+        .more-stack-label {
+          font-size: 0.75rem;
+          color: #666;
+          align-self: center;
+        }
+        
+        body.dark-mode .more-stack-label {
+          color: #aaa;
+        }
+      `;
+      document.head.appendChild(stackStyles);
+    }
 
     // Initialize Bootstrap carousel
     try {
@@ -332,6 +417,18 @@ async function loadProjectCards() {
   }
 }
 
+// Function to update subheading based on toggle state
+function updateSubheading() {
+  const showcaseSubheading = document.querySelector('.hero-carousel .section-subheading');
+  if (showcaseSubheading) {
+    if (showMermaidProjects) {
+      showcaseSubheading.innerHTML = "These projects all have MermaidJS-powered <strong>Entity Relation</strong> diagrams you can explore.";
+    } else {
+      showcaseSubheading.innerHTML = "These projects have images of mockups and other tidbits uploaded for your perusal.";
+    }
+  }
+}
+
 // Add a listener for theme changes to update cards if needed
 function setupThemeChangeListener() {
   const observer = new MutationObserver((mutations) => {
@@ -351,6 +448,11 @@ function setupThemeChangeListener() {
 document.addEventListener('project-type-change', (event) => {
   showMermaidProjects = event.detail.showMermaid;
   console.log('Project type changed:', showMermaidProjects ? 'Mermaid' : 'Photos');
+  
+  // Update subheading text based on toggle state
+  updateSubheading();
+  
+  // Reload carousel with filtered projects
   loadCarouselProjects(); // Only reload carousel, not the feature cards
 });
 
@@ -365,6 +467,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedPreference) {
       showMermaidProjects = savedPreference === 'mermaid';
     }
+    
+    // Update subheading text based on initial toggle state
+    updateSubheading();
     
     loadCarouselProjects();
     loadProjectCards();
