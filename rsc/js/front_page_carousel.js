@@ -70,6 +70,7 @@ async function loadCarouselProjects() {
           border: 1px solid #ddd;
           border-radius: 8px;
           background-color: #fff;
+          color: #333;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           height: 200px;
           margin: 10px auto;
@@ -77,6 +78,14 @@ async function loadCarouselProjects() {
           max-width: 900px;
           display: flex;
           flex-direction: column;
+          transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.dark-mode .carousel-card {
+          background-color: #2a2a2a;
+          color: #e0e0e0;
+          border-color: #444;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .carousel-card-header {
@@ -85,6 +94,12 @@ async function loadCarouselProjects() {
           text-align: center;
           font-weight: bold;
           height: 15%;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.dark-mode .carousel-card-header {
+          background-color: #3a3a3a;
+          color: #e0e0e0;
         }
         
         .carousel-card-body {
@@ -100,6 +115,12 @@ async function loadCarouselProjects() {
           text-align: center;
           font-size: 0.8em;
           height: 20%;
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.dark-mode .carousel-card-footer {
+          background-color: #3a3a3a;
+          color: #e0e0e0;
         }
         
         #carouselContainer {
@@ -168,11 +189,27 @@ async function loadCarouselProjects() {
   }
 }
 
+// Add a listener for theme changes to update cards if needed
+function setupThemeChangeListener() {
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class' && 
+          mutation.target === document.body) {
+        console.log('Body class changed - theme may have changed');
+        // You could add additional updates here if needed
+      }
+    });
+  });
+  
+  observer.observe(document.body, { attributes: true });
+}
+
 // Make sure we don't duplicate initialization if called multiple ways
 let initialized = false;
 document.addEventListener('DOMContentLoaded', () => {
   if (!initialized) {
     initialized = true;
     loadCarouselProjects();
+    setupThemeChangeListener();
   }
 });

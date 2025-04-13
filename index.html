@@ -1,184 +1,148 @@
-<base href="/">
-<script>
-  // Dynamically set base href for GitHub Pages
-  if (window.location.hostname.includes('github.io') || 
-      window.location.pathname.includes('Personal-Static')) {
-    document.querySelector('base').href = '/Personal-Static/';
-  }
-</script>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/" />
+  <script>
+    if (window.location.hostname.includes('github.io') || 
+        window.location.pathname.includes('Personal-Static')) {
+      document.querySelector('base').href = '/Personal-Static/';
+    }
+  </script>
 
-  <title>Vincent's GitHub Page - Home</title>
-  <!-- Load Bootstrap first -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- Load our main CSS file which imports all others -->
-  <link rel="stylesheet" href="css/front-page-carousel.css">
-  <!-- <link rel="stylesheet" href="css/base.css"> -->
-  <!-- <link rel="stylesheet" href="css/sidebar.css"> -->
-  <!-- <link rel="stylesheet" href="css/header-footer.css"> -->
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Vincent Morrill — Portfolio</title>
+
+  <!-- Material Design Components -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+:root {
+  --md-sys-color-primary: #6750A4;
+  --md-sys-color-secondary: #03DAC6;
+  --md-sys-color-surface: #FFFFFF;
+  --md-sys-color-on-surface: #000000;
+  --md-sys-color-surface-dark: rgba(25, 25, 25, 0.6);
+  --md-sys-color-on-surface-dark: #FFFFFF;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+  background: linear-gradient(to bottom right, #1a1a1a, #121212);
+  color: var(--md-sys-color-on-surface-dark);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.hero-carousel {
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+}
+
+.hero-carousel h2 {
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.hero-carousel p {
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.project-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+md-elevated-card {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  background-color: var(--md-sys-color-surface);
+  transition: background-color 0.3s ease;
+}
+
+body.dark-mode md-elevated-card {
+  background-color: var(--md-sys-color-surface-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.carousel-card-header {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.carousel-card-body {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.carousel-card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+  </style>
 </head>
 
 <body>
-  <!-- Add data attributes for Barba.js -->
-  <div id="barba-wrapper" data-barba="wrapper">
-    <div data-barba="container" data-barba-namespace="home">
-  <!-- Header partial will be dynamically inserted -->
-  <div id="headerContainer"></div>
+  <!-- 🌗 Theme Toggle -->
+  <theme-toggle></theme-toggle>
 
-  <!-- Main "sandwich" container: Sidebar (left) + Main Content (right) -->
-  <div class="contentContainer">
-    <!-- Sidebar partial will be injected here -->
-    <div id="sidebarContainer"></div>
+  <!-- 🖼️ Hero Section (Carousel + Welcome) -->
+  <section class="hero-carousel">
+    <h2>Welcome to Vincent's Portfolio</h2>
+    <p>
+      Explore my technical journey through software paradigms, design patterns, and experimental UI work.
+      You can also check out the <a href="projects.html">full project gallery</a>.
+    </p>
 
-    <!-- Main Container for Home content -->
-    <div id="mainContainer">
-      <main id="mainContent">
-        <h2>Welcome to Vincent's GitHub Page!</h2>
-        <p>This is the home page where you'll find my latest news, updates, and featured projects.</p>
-        <br/>
-        <!-- TODO: responsvely generate description (e.g. "check the sidebar" vs. "see the footer") -->
-        <p>I'm currently looking for a long-term position, check out the sidebar for more contact info.<br/>
-          For information about my current working status if you're an employer or talent scout, scroll down to the footer.</p>
-          Otherwise if you want to get to know what kinds of tech I like to dig into, head over to my <a href="resources.html">resources</a> page. 
-        <p>There are some fun goodies I've snuck into this portfolio, given that it's confined to a static Jekyll 
-          environment.  As you can see below, there is a carousel linked to some static images. <br></p> 
-        <p>Speaking of carousels, you'll find another over in my <a href="./projects.html">project gallery</a> (concealed within a modal) that appears
-            wherever a badge showing a picture of a camera with a number next to it representative of the images inside the carousel.  
-        </p>
-        <!-- Insert carousel container underneath all <p> tags -->
-        <div id="carouselContainer" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <!-- Carousel items will be inserted here -->
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselContainer" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselContainer" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        
-        <!-- Inline script to load the carousel -->
-      </main>
+    <div id="carouselContainer" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner"></div>
     </div>
-  </div>
+  </section>
 
+  <!-- 🗂️ Project Preview Cards (Optional Static Display Here) -->
+  <section class="project-card-grid">
+    <md-elevated-card>
+      <div class="carousel-card">
+        <div class="carousel-card-header">Example Project</div>
+        <div class="carousel-card-body">Short description of the project or tech stack.</div>
+        <div class="carousel-card-footer">
+          <md-filled-button>View Project</md-filled-button>
+        </div>
+      </div>
+    </md-elevated-card>
+  </section>
 
-  <!-- Footer partial will be dynamically inserted -->
-  <div id="footerContainer"></div>
-  
-  <!-- Include Bootstrap JavaScript bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Add Barba.js core library -->
-  <script src="https://unpkg.com/@barba/core"></script>
-  
-  <!-- Transition script must load before main.js -->
-  <script src="./transition.js"></script>
-  
-  <!-- Main JavaScript file as a module -->
+  <!-- 🧩 Custom Scripts -->
   <script type="module" src="main.js"></script>
   <script type="module" src="rsc/js/carousel.js"></script>
-  <!-- Add this to index.html at the bottom of the body -->
-  <script type="module">
-    document.addEventListener('DOMContentLoaded', async function() {
-      console.log('Index page loaded, initializing carousel');
-      
-      // Load the carousel module
-      try {
-        const basePath = window.location.hostname.includes('github.io') ? 
-          '/Personal-Static/' : '/';
-          
-        const carouselModule = await import(`${basePath}rsc/js/front_page_carousel.js`);
-        console.log('Carousel module loaded successfully');
-        
-        // Call the initialization function if present
-        if (typeof carouselModule.initCarousel === 'function') {
-          carouselModule.initCarousel();
-        } else {
-          console.warn('Carousel module loaded but initCarousel function not found');
-        }
-      } catch (err) {
-        console.error('Failed to load carousel module:', err);
-        const carouselContainer = document.getElementById('carouselContainer');
-        if (carouselContainer) {
-          carouselContainer.innerHTML = 
-            `<div class="alert alert-danger">Failed to load carousel: ${err.message}</div>`;
-        }
-      }
-    });
-  </script>
-  <!-- Add this script to your index.html -->
-  <script>
-    // Force carousel initialization on page load
-    document.addEventListener('DOMContentLoaded', async function() {
-      console.log('Index page loaded, initializing carousel');
-      
-      const basePath = window.location.hostname.includes('github.io') ? 
-        '/Personal-Static/' : '/';
-      
-      // Try to load the carousel directly
-      try {
-        const response = await fetch(`${basePath}rsc/json/projects.json`);
-        if (!response.ok) throw new Error(`Failed to fetch projects: ${response.status}`);
-        
-        const projects = await response.json();
-        console.log('Projects loaded for carousel:', projects.length);
-        
-        // Filter projects with images & limit to 5
-        const projectsWithImages = projects
-          .filter(p => p.images && p.images.length > 0)
-          .slice(0, 5);
-        
-        const carouselInner = document.querySelector("#carouselContainer .carousel-inner");
-        if (!carouselInner) {
-          console.error("Carousel container not found");
-          return;
-        }
-        
-        // Clear and populate carousel
-        carouselInner.innerHTML = "";
-        
-        projectsWithImages.forEach((project, index) => {
-          const carouselItem = document.createElement("div");
-          carouselItem.classList.add("carousel-item");
-          if (index === 0) carouselItem.classList.add("active");
-          
-          // Create card structure (similar to your front_page_carousel.js)
-          carouselItem.innerHTML = `
-            <div class="carousel-card">
-              <div class="carousel-card-header">${project.title}</div>
-              <div class="carousel-card-body">
-                ${project.shortForm || project.description.substring(0, 100) + "..."}
-              </div>
-              <div class="carousel-card-footer">
-                ${project.stack ? project.stack.join(", ") : ""}
-              </div>
-            </div>
-          `;
-          
-          carouselInner.appendChild(carouselItem);
-        });
-        
-        // Initialize Bootstrap carousel
-        if (typeof bootstrap !== 'undefined') {
-          new bootstrap.Carousel(document.getElementById('carouselContainer'), {
-            interval: 5000,
-            wrap: true
-          });
-        }
-      } catch (error) {
-        console.error("Error loading carousel:", error);
-      }
-    });
-  </script>
+  <script type="module" src="./rsc/js/theme-toggle.js"></script>
 </body>
 </html>
