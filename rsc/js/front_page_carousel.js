@@ -209,11 +209,15 @@ async function loadCarouselProjects() {
         const visibleStack = project.stack.slice(0, 5);
         
         visibleStack.forEach(tech => {
-          const iconElement = renderOneStackIcon(tech);
-          if (iconElement) {
-            // Adjust the size for carousel
-            iconElement.classList.add('carousel-stack-icon');
-            stackIconsContainer.appendChild(iconElement);
+          try {
+            const iconElement = renderOneStackIcon(tech);
+            if (iconElement) {
+              // Adjust the size for carousel
+              iconElement.classList.add('carousel-stack-icon');
+              stackIconsContainer.appendChild(iconElement);
+            }
+          } catch (err) {
+            console.warn(`Failed to render icon for ${tech}:`, err);
           }
         });
         
@@ -226,6 +230,9 @@ async function loadCarouselProjects() {
         }
         
         cardFooter.appendChild(stackIconsContainer);
+        // Make the footer more prominent for tech stack
+        cardFooter.style.justifyContent = 'flex-start'; // Align items to the left
+        cardFooter.style.flexDirection = 'column';      // Stack elements vertically
       } else {
         // Fallback if no stack data
         cardFooter.textContent = "No tech stack data available";
@@ -247,19 +254,23 @@ async function loadCarouselProjects() {
         .stack-icons-container {
           display: flex;
           flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 10px;
+          gap: 12px;
+          margin-top: 12px;
           align-items: center;
+          width: 100%;
         }
         
         .carousel-stack-icon {
-          transform: scale(0.9);
+          transform: scale(1);
+          margin-bottom: 8px;
         }
         
         .carousel-stack-icon .stack-image {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           object-fit: contain;
+          display: block;
+          margin: 0 auto 4px;
         }
         
         .carousel-stack-icon .stack-label {
@@ -268,23 +279,55 @@ async function loadCarouselProjects() {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          text-align: center;
         }
         
         .stack-item-container {
           display: flex;
           flex-direction: column;
           align-items: center;
-          margin-right: 8px;
+          justify-content: center;
+          min-width: 50px;
+          margin-right: 0;
+          border: 1px solid rgba(0,0,0,0.05);
+          border-radius: 6px;
+          padding: 6px 4px;
+          background-color: rgba(255,255,255,0.5);
+        }
+        
+        body.dark-mode .stack-item-container {
+          border-color: rgba(255,255,255,0.1);
+          background-color: rgba(40,40,40,0.5);
         }
         
         .more-stack-label {
-          font-size: 0.75rem;
+          font-size: 0.8rem;
           color: #666;
           align-self: center;
+          margin-left: 8px;
+          padding: 4px 8px;
+          border-radius: 12px;
+          background-color: #f0f0f0;
         }
         
         body.dark-mode .more-stack-label {
+          color: #ccc;
+          background-color: #333;
+        }
+        
+        .carousel-card-footer {
+          margin-top: auto;
+          padding-top: 1rem;
+          font-size: 0.85rem;
+          color: #666;
+          border-top: 1px solid rgba(0, 0, 0, 0.05);
+          display: flex;
+          flex-direction: column;
+        }
+        
+        body.dark-mode .carousel-card-footer {
           color: #aaa;
+          border-top-color: rgba(255, 255, 255, 0.05);
         }
       `;
       document.head.appendChild(stackStyles);
