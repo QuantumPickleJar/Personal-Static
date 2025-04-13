@@ -7,6 +7,8 @@ export function initCarousel() {
   loadCarouselProjects();
 }
 
+let showMermaidProjects = false; // Default to showing photo projects
+
 async function loadCarouselProjects() {
   const carouselContainer = document.getElementById('carouselContainer');
   if (!carouselContainer) {
@@ -52,12 +54,24 @@ async function loadCarouselProjects() {
     const projects = await response.json();
     console.log('Projects loaded for carousel:', projects.length);
 
-    // Filter projects that have images
-    const projectsWithImages = projects.filter(project => project.images && project.images.length > 0);
-    console.log('Projects with images:', projectsWithImages.length);
+    // Filter projects based on toggle state
+    const filteredProjects = showMermaidProjects 
+      ? projects.filter(project => project.mermaid && project.mermaid.trim())
+      : projects.filter(project => project.images && project.images.length > 0);
+    
+    console.log(`Showing ${showMermaidProjects ? 'Mermaid' : 'Photo'} projects in carousel:`, filteredProjects.length);
 
-    if (projectsWithImages.length === 0) {
-      console.warn("No projects with images found");
+    if (filteredProjects.length === 0) {
+      console.warn(`No projects with ${showMermaidProjects ? 'Mermaid diagrams' : 'photos'} found`);
+      carouselInner.innerHTML = `
+        <div class="carousel-item active">
+          <div class="carousel-card">
+            <div class="carousel-card-header">No Projects Found</div>
+            <div class="carousel-card-body">
+              No projects with ${showMermaidProjects ? 'Mermaid diagrams' : 'photos'} are available.
+            </div>
+          </div>
+        </div>`;
       return;
     }
 
@@ -152,7 +166,7 @@ async function loadCarouselProjects() {
     carouselInner.innerHTML = "";
 
     // Limit to 5 projects
-    const limitedProjects = projectsWithImages.slice(0, 5);
+    const limitedProjects = filteredProjects.slice(0, 5);
 
     // Populate the carousel
     limitedProjects.forEach((project, index) => {
@@ -166,8 +180,13 @@ async function loadCarouselProjects() {
       cardDiv.classList.add("carousel-card");
       
       const cardHeader = document.createElement("div");
-      cardHeader.classList.add("carousel-card-header");
+      cardHeader.classList.add("carousel-card-header", "project-title-link");
       cardHeader.textContent = project.title;
+      cardHeader.style.cursor = "pointer";
+      // Make the title clickable to navigate to project page
+      cardHeader.addEventListener("click", () => {
+        window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
+      });
       
       const cardBody = document.createElement("div");
       cardBody.classList.add("carousel-card-body");
@@ -246,12 +265,23 @@ async function loadProjectCards() {
     const projects = await response.json();
     console.log('Projects loaded for card grid:', projects.length);
 
-    // Clear existing content (except the first card which can serve as template)
-    // Optional: remove if you want to keep the example card
+    // Clear existing content
     projectCardGrid.innerHTML = '';
 
-    // Limit to 3 (or your preferred number) featured projects
+    // For featured projects section, always show a mix of best projects
     const featuredProjects = projects.slice(0, 3);
+
+    if (featuredProjects.length === 0) {
+      // Show message if no projects match the filter
+      const emptyMessage = document.createElement('div');
+      emptyMessage.className = 'empty-message';
+      emptyMessage.textContent = `No projects found.`;
+      emptyMessage.style.gridColumn = '1 / -1';
+      emptyMessage.style.textAlign = 'center';
+      emptyMessage.style.padding = '2rem';
+      projectCardGrid.appendChild(emptyMessage);
+      return;
+    }
 
     // Populate the project card grid
     featuredProjects.forEach((project) => {
@@ -261,8 +291,13 @@ async function loadProjectCards() {
       cardDiv.classList.add('carousel-card');
       
       const cardHeader = document.createElement('div');
-      cardHeader.classList.add('carousel-card-header');
+      cardHeader.classList.add('carousel-card-header', 'project-title-link');
       cardHeader.textContent = project.title;
+      cardHeader.style.cursor = "pointer";
+      // Make the title clickable to navigate to project page
+      cardHeader.addEventListener("click", () => {
+        window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
+      });
       
       const cardBody = document.createElement('div');
       cardBody.classList.add('carousel-card-body');
@@ -278,7 +313,6 @@ async function loadProjectCards() {
       const viewButton = document.createElement('md-filled-button');
       viewButton.textContent = 'View Project';
       viewButton.addEventListener('click', () => {
-        // Redirect to projects page with project ID in query parameter
         window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
       });
       
@@ -313,11 +347,25 @@ function setupThemeChangeListener() {
   observer.observe(document.body, { attributes: true });
 }
 
+// Listen for project type toggle events - move this to affect carousel
+document.addEventListener('project-type-change', (event) => {
+  showMermaidProjects = event.detail.showMermaid;
+  console.log('Project type changed:', showMermaidProjects ? 'Mermaid' : 'Photos');
+  loadCarouselProjects(); // Only reload carousel, not the feature cards
+});
+
 // Make sure we don't duplicate initialization if called multiple ways
 let initialized = false;
 document.addEventListener('DOMContentLoaded', () => {
   if (!initialized) {
     initialized = true;
+    
+    // Check localStorage for saved preference
+    const savedPreference = localStorage.getItem('projectToggle');
+    if (savedPreference) {
+      showMermaidProjects = savedPreference === 'mermaid';
+    }
+    
     loadCarouselProjects();
     loadProjectCards();
     setupThemeChangeListener();
