@@ -29,6 +29,8 @@
   --md-sys-color-on-surface: #000000;
   --md-sys-color-surface-dark: rgba(25, 25, 25, 0.6);
   --md-sys-color-on-surface-dark: #FFFFFF;
+  --card-border-radius: 20px;
+  --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 body {
@@ -47,66 +49,126 @@ body.dark-mode {
 
 .theme-toggle {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: 1.5rem;
+  right: 1.5rem;
   z-index: 10;
 }
 
-.hero-carousel {
-  padding: 3rem 2rem 2rem;
-  text-align: center;
-}
-
-.hero-carousel h2 {
+.section-heading {
   font-size: 2.25rem;
-  margin-bottom: 0.75rem;
+  margin: 2rem 0 1.5rem;
+  text-align: center;
+  font-weight: 500;
 }
 
-.hero-carousel p {
+.section-subheading {
   font-size: 1.1rem;
   max-width: 700px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  line-height: 1.6;
 }
 
 .project-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
+  gap: 2.5rem;
+  padding: 2rem 3rem;
+  margin-top: 2rem;
 }
 
 md-elevated-card {
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
-  backdrop-filter: blur(8px);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
   background-color: var(--md-sys-color-surface);
-  transition: background-color 0.3s ease;
+  color: var(--md-sys-color-on-surface);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  height: 100%;
+}
+
+md-elevated-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 body.dark-mode md-elevated-card {
-  background-color: var(--md-sys-color-surface-dark);
+  background-color: rgba(42, 42, 42, 0.8);
+  color: var(--md-sys-color-on-surface-dark);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.carousel-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .carousel-card-header {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--md-sys-color-primary);
 }
 
 .carousel-card-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.spacer {
   flex-grow: 1;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
 }
 
 .carousel-card-footer {
+  margin-top: auto;
+  padding-top: 1rem;
   display: flex;
   justify-content: flex-end;
 }
 
+md-filled-button {
+  --md-filled-button-container-color: var(--md-sys-color-primary);
+  --md-filled-button-label-text-color: white;
+}
+
+.hero-carousel {
+  padding: 2rem 2rem 3rem;
+  margin-top: 1rem;
+}
+
+#carouselContainer {
+  width: 92%;
+  margin: 1.5rem auto;
+  border-radius: var(--card-border-radius);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+/* Added styles for links */
+a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--md-sys-color-secondary);
+  text-decoration: underline;
+}
+
+body.dark-mode a {
+  color: #a991f7; /* Lighter purple in dark mode */
+}
+
+body.dark-mode a:hover {
+  color: var(--md-sys-color-secondary);
+}
   </style>
 </head>
 
@@ -114,12 +176,24 @@ body.dark-mode md-elevated-card {
   <!-- 🌗 Theme Toggle -->
   <theme-toggle></theme-toggle>
 
-  <!-- 🖼️ Hero Section (Carousel + Welcome) -->
+  <!-- 🗂️ Featured Projects Section - Moved to the top -->
+  <section>
+    <h2 class="section-heading">Featured Projects</h2>
+    <p class="section-subheading">
+      Explore some of my highlighted work. Each project demonstrates different skills and technologies.
+    </p>
+    
+    <div class="project-card-grid">
+      <!-- Cards will be dynamically injected here -->
+    </div>
+  </section>
+
+  <!-- 🖼️ Hero Section (Carousel) - Moved below -->
   <section class="hero-carousel">
-    <h2>Welcome to Vincent's Portfolio</h2>
-    <p>
-      Explore my technical journey through software paradigms, design patterns, and experimental UI work.
-      You can also check out the <a href="projects.html">full project gallery</a>.
+    <h2 class="section-heading">Project Showcase</h2>
+    <p class="section-subheading">
+      Visual examples of my work. For a complete collection,
+      visit the <a href="projects.html">full project gallery</a>.
     </p>
 
     <div id="carouselContainer" class="carousel slide" data-bs-ride="carousel">
@@ -127,22 +201,11 @@ body.dark-mode md-elevated-card {
     </div>
   </section>
 
-  <!-- 🗂️ Project Preview Cards (Optional Static Display Here) -->
-  <section class="project-card-grid">
-    <md-elevated-card>
-      <div class="carousel-card">
-        <div class="carousel-card-header">Example Project</div>
-        <div class="carousel-card-body">Short description of the project or tech stack.</div>
-        <div class="carousel-card-footer">
-          <md-filled-button>View Project</md-filled-button>
-        </div>
-      </div>
-    </md-elevated-card>
-  </section>
-
   <!-- 🧩 Custom Scripts -->
   <script type="module" src="main.js"></script>
   <script type="module" src="rsc/js/carousel.js"></script>
   <script type="module" src="./rsc/js/theme-toggle.js"></script>
+  <!-- Add Bootstrap if not already included -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

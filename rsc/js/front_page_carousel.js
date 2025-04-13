@@ -3,6 +3,7 @@ console.log('Front page carousel script executing');
 // Export a function that can be called from main.js
 export function initCarousel() {
   console.log('Initializing carousel from exported function');
+  loadProjectCards();
   loadCarouselProjects();
 }
 
@@ -66,66 +67,82 @@ async function loadCarouselProjects() {
       style.id = 'carousel-styles';
       style.textContent = `
         .carousel-card {
-          padding: 15px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
+          padding: 18px;
+          border-radius: 16px;
           background-color: #fff;
           color: #333;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          height: 200px;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+          height: 100%;
           margin: 10px auto;
           width: 95%;
           max-width: 900px;
           display: flex;
           flex-direction: column;
-          transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+          transition: all 0.3s ease;
         }
         
         body.dark-mode .carousel-card {
           background-color: #2a2a2a;
           color: #e0e0e0;
-          border-color: #444;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
         
         .carousel-card-header {
-          background-color: #f0f0f0;
-          padding: 10px;
-          text-align: center;
-          font-weight: bold;
-          height: 15%;
-          transition: background-color 0.3s ease, color 0.3s ease;
+          font-size: 1.35rem;
+          font-weight: 500;
+          margin-bottom: 12px;
+          color: var(--md-sys-color-primary, #6750A4);
+          padding-bottom: 8px;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
         
         body.dark-mode .carousel-card-header {
-          background-color: #3a3a3a;
-          color: #e0e0e0;
+          color: #bb9dfc;
+          border-bottom-color: rgba(255, 255, 255, 0.1);
         }
         
         .carousel-card-body {
-          padding: 10px;
-          height: 65%;
+          font-size: 0.95rem;
+          line-height: 1.6;
+          flex-grow: 1;
           overflow: hidden;
-          line-height: 1.4;
+          margin-bottom: 12px;
+        }
+        
+        .spacer {
+          flex-grow: 1;
+          min-height: 8px;
         }
         
         .carousel-card-footer {
-          background-color: #f0f0f0;
-          padding: 8px 4px 0;
-          text-align: center;
-          font-size: 0.8em;
-          height: 20%;
-          transition: background-color 0.3s ease, color 0.3s ease;
+          margin-top: auto;
+          padding-top: 1rem;
+          font-size: 0.85rem;
+          color: #666;
+          border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
         
         body.dark-mode .carousel-card-footer {
-          background-color: #3a3a3a;
-          color: #e0e0e0;
+          color: #aaa;
+          border-top-color: rgba(255, 255, 255, 0.05);
         }
         
         #carouselContainer {
-          width: 90%;
+          width: 92%;
           margin: 20px auto;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+        
+        .carousel-item {
+          padding: 8px 0 28px;
+        }
+        
+        md-filled-button {
+          --md-filled-button-container-color: var(--md-sys-color-primary, #6750A4);
+          --md-filled-button-label-text-color: white;
+          margin-top: 8px;
         }
       `;
       document.head.appendChild(style);
@@ -189,6 +206,98 @@ async function loadCarouselProjects() {
   }
 }
 
+// New function to load project cards into the grid
+async function loadProjectCards() {
+  const projectCardGrid = document.querySelector('.project-card-grid');
+  if (!projectCardGrid) {
+    console.error("Project card grid not found");
+    return;
+  }
+
+  try {
+    console.log('Fetching projects for card grid');
+    
+    // Reuse the same path resolution logic
+    const basePath = window.location.hostname.includes('github.io') ? 
+      '/Personal-Static/' : '/';
+    
+    // Use multiple path variations to ensure it works
+    let response;
+    const pathsToTry = [
+      `${basePath}rsc/json/projects.json`,
+      './rsc/json/projects.json',
+      '/rsc/json/projects.json',
+      'rsc/json/projects.json'
+    ];
+    
+    for (const path of pathsToTry) {
+      try {
+        response = await fetch(path);
+        if (response.ok) break;
+      } catch (e) {
+        console.log(`Failed to fetch from ${path}`);
+      }
+    }
+    
+    if (!response || !response.ok) {
+      throw new Error("Failed to fetch projects.json from any path");
+    }
+    
+    const projects = await response.json();
+    console.log('Projects loaded for card grid:', projects.length);
+
+    // Clear existing content (except the first card which can serve as template)
+    // Optional: remove if you want to keep the example card
+    projectCardGrid.innerHTML = '';
+
+    // Limit to 3 (or your preferred number) featured projects
+    const featuredProjects = projects.slice(0, 3);
+
+    // Populate the project card grid
+    featuredProjects.forEach((project) => {
+      const cardElement = document.createElement('md-elevated-card');
+      
+      const cardDiv = document.createElement('div');
+      cardDiv.classList.add('carousel-card');
+      
+      const cardHeader = document.createElement('div');
+      cardHeader.classList.add('carousel-card-header');
+      cardHeader.textContent = project.title;
+      
+      const cardBody = document.createElement('div');
+      cardBody.classList.add('carousel-card-body');
+      cardBody.textContent = project.shortForm || 
+        (project.description ? project.description.substring(0, 120) + "..." : "No description available");
+      
+      const spacer = document.createElement('div');
+      spacer.classList.add('spacer');
+      
+      const cardFooter = document.createElement('div');
+      cardFooter.classList.add('carousel-card-footer');
+      
+      const viewButton = document.createElement('md-filled-button');
+      viewButton.textContent = 'View Project';
+      viewButton.addEventListener('click', () => {
+        // Redirect to projects page with project ID in query parameter
+        window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
+      });
+      
+      cardFooter.appendChild(viewButton);
+      
+      cardDiv.appendChild(cardHeader);
+      cardDiv.appendChild(cardBody);
+      cardDiv.appendChild(spacer);
+      cardDiv.appendChild(cardFooter);
+      
+      cardElement.appendChild(cardDiv);
+      projectCardGrid.appendChild(cardElement);
+    });
+
+  } catch (error) {
+    console.error("Error loading projects for card grid:", error);
+  }
+}
+
 // Add a listener for theme changes to update cards if needed
 function setupThemeChangeListener() {
   const observer = new MutationObserver((mutations) => {
@@ -210,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!initialized) {
     initialized = true;
     loadCarouselProjects();
+    loadProjectCards();
     setupThemeChangeListener();
   }
 });

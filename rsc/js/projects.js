@@ -20,6 +20,16 @@ document.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('projectsGallery')) {
     console.log('Projects gallery found, initializing projects');
     initializeProjects();
+    
+    // Check if we should open a specific project modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectToShow = urlParams.get('showProject');
+    if (projectToShow) {
+      // Wait for projects to load before opening modal
+      setTimeout(() => {
+        openProjectModal(projectToShow);
+      }, 500); // Short delay to ensure projects are loaded
+    }
   } else {
     console.log('No projects gallery found, skipping initialization');
   }
@@ -673,6 +683,12 @@ export function openProjectModal(projectId) {
 
   // Show the modal
   const modal = document.getElementById('projectModal');
+  if (!modal) {
+    console.error('Project modal not found, redirecting to projects page');
+    window.location.href = 'projects.html';
+    return;
+  }
+  
   modal.style.display = 'block';
   
   // Set the title
@@ -748,7 +764,7 @@ export function closeModal() {
     const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
     if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
     
-    const mermaidContainer = document.getElementById('mermaidContainer');
+    const mermaidContainer = modalImages.querySelector('.mermaid-container');
     if (mermaidContainer) {
       mermaidContainer.style.display = 'none';
       mermaidContainer.innerHTML = '';
