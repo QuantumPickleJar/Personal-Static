@@ -194,6 +194,47 @@ body.dark-mode a {
 body.dark-mode a:hover {
   color: var(--md-sys-color-secondary);
 }
+
+/* Add these styles to your existing CSS */
+
+/* Base icon text color for light mode */
+.stack-item-container {
+  color: var(--md-sys-color-on-surface);
+}
+
+/* Icon text color for dark mode */
+body.dark-mode .stack-item-container {
+  color: var(--md-sys-color-on-surface-dark);
+}
+
+/* Make sure the stack-label specifically gets the right color */
+.stack-label {
+  font-size: 0.75rem;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  color: inherit; /* Inherit from parent container */
+  transition: color 0.3s ease; /* Smooth transition when theme changes */
+}
+
+/* Ensure all text elements within stack icons follow the theme */
+.stack-icons-container * {
+  transition: color 0.3s ease;
+}
+
+/* More specific selector for the "more" label */
+.more-stack-label {
+  color: var(--md-sys-color-on-surface);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+body.dark-mode .more-stack-label {
+  color: var(--md-sys-color-on-surface-dark);
+  background-color: rgba(60, 60, 60, 0.8);
+}
+
 @media screen and (max-width: 768px) {
   .section-heading {
     font-size: 1.8rem;
