@@ -366,92 +366,7 @@ async function loadCarouselProjects() {
           --md-filled-button-container-elevation: 2;
         }
         
-        .project-title {
-          font-size: 1.2rem;
-          font-weight: 500;
-          color: var(--md-sys-color-on-surface, #1c1b1f);
-          margin: 0;
-          letter-spacing: -0.01em;
-          line-height: 1.4;
-          transition: color 0.2s ease;
-        }
-        
-        md-elevated-card:hover .project-title {
-          color: var(--md-sys-color-primary, #6750a4);
-        }
-        
-        body.dark-mode .project-title {
-          color: var(--md-sys-color-on-surface, #e6e0e9);
-        }
-        
-        body.dark-mode md-elevated-card:hover .project-title {
-          color: var(--md-sys-color-primary, #d0bcff);
-        }
-
-        .short-form-truncated {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          white-space: normal;
-          line-height: 1.5;
-          min-height: 3.5rem;
-          color: var(--md-sys-color-on-surface-variant, #49454f);
-          font-size: 0.875rem;
-        }
-        
-        body.dark-mode .short-form-truncated {
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
-        }
-
-        .stack-icons {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: auto;
-          padding-top: 12px;
-          position: relative;
-        }
-
-        .stack-icons::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 1px;
-          background-color: var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
-        }
-        
-        body.dark-mode .stack-icons::before {
-          background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
-        }
-
-        .stack-icon {
-          background: var(--md-sys-color-surface-variant, #e7e0ec);
-          color: var(--md-sys-color-on-surface-variant, #49454f);
-          padding: 4px 10px;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 500;
-          transition: all 0.2s ease;
-        }
-
-        .stack-icon:hover {
-          background: var(--md-sys-color-primary-container, #eaddff);
-          color: var(--md-sys-color-on-primary-container, #21005d);
-        }
-        
-        body.dark-mode .stack-icon {
-          background: var(--md-sys-color-surface-variant, #49454f);
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
-        }
-        
-        body.dark-mode .stack-icon:hover {
-          background: var(--md-sys-color-primary-container, #4f378b);
-          color: var(--md-sys-color-on-primary-container, #eaddff);
-        }
-        
+        /* Material Design 3 Button Styles */
         md-filled-button.open-modal-btn {
           --md-filled-button-container-color: var(--md-sys-color-primary, #6750a4);
           --md-filled-button-label-text-color: var(--md-sys-color-on-primary, #ffffff);
@@ -459,6 +374,65 @@ async function loadCarouselProjects() {
           font-size: 0.875rem;
           height: 36px;
           padding: 0 16px;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Add ripple effect */
+        md-filled-button.open-modal-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: transparent;
+          border-radius: inherit;
+          pointer-events: none;
+          transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        md-filled-button.open-modal-btn:hover::before {
+          background-color: rgba(255, 255, 255, 0.08);
+        }
+        
+        md-filled-button.open-modal-btn:active::before {
+          background-color: rgba(255, 255, 255, 0.12);
+        }
+        
+        /* Add button outline/focus state */
+        md-filled-button.open-modal-btn::after {
+          content: '';
+          position: absolute;
+          top: -3px;
+          left: -3px;
+          right: -3px;
+          bottom: -3px;
+          border: 2px solid var(--md-sys-color-primary, #6750a4);
+          border-radius: 24px; /* Slightly larger to wrap around the button */
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        md-filled-button.open-modal-btn:focus-visible::after {
+          opacity: 1;
+        }
+        
+        body.dark-mode md-filled-button.open-modal-btn::after {
+          border-color: var(--md-sys-color-primary, #d0bcff);
+        }
+        
+        /* Add elevation shadow on hover */
+        md-filled-button.open-modal-btn:hover {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          transform: translateY(-1px);
+        }
+        
+        md-filled-button.open-modal-btn:active {
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          transform: translateY(0);
         }
         
         /* Responsive adjustments */
@@ -666,6 +640,9 @@ async function loadProjectCards() {
       const cardElement = document.createElement('md-elevated-card');
       cardElement.classList.add('project-card');
       
+      // Add home-page specific class to enable different styling
+      document.querySelector('.project-card-grid').classList.add('home-page');
+      
       // Main card content - no click handler on the card itself
       const cardDiv = document.createElement('div');
       cardDiv.classList.add('project-content-wrapper');
@@ -678,11 +655,16 @@ async function loadProjectCards() {
         window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
       });
       
-      // Description - non-clickable
+      // Description - non-clickable with proper truncation
       const descriptionElement = document.createElement('p');
       descriptionElement.classList.add('short-form-truncated');
-      descriptionElement.textContent = project.shortForm || 
-        (project.description ? project.description.substring(0, 120) + "..." : "No description available");
+      
+      // Use shortForm if available, otherwise take a portion of description
+      const shortText = project.shortForm || 
+        (project.description ? project.description.substring(0, 180) : "No description available");
+      
+      // Set the text content - CSS will handle the truncation properly
+      descriptionElement.textContent = shortText;
       
       // Add stack icons if present
       const stackContainer = document.createElement('div');

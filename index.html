@@ -31,6 +31,12 @@
   --md-sys-color-on-surface-dark: #FFFFFF;
   --card-border-radius: 20px;
   --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  
+  /* Index-specific card accent colors */
+  --index-card-accent: #3D8BF7;
+  --index-card-accent-hover: #1E75E8;
+  --index-card-button-bg: #3D8BF7;
+  --index-card-button-text: white;
 }
 
 body {
@@ -45,6 +51,9 @@ body {
 body.dark-mode {
   background: linear-gradient(to bottom right, #1a1a1a, #121212);
   color: var(--md-sys-color-on-surface-dark);
+  --index-card-accent: #5E9CF9;
+  --index-card-accent-hover: #7EACF9;
+  --index-card-button-bg: #5E9CF9;
 }
 
 .theme-toggle {
@@ -84,6 +93,72 @@ body.dark-mode {
 .project-title-link:hover {
   color: var(--md-sys-color-secondary);
   text-decoration: underline;
+}
+
+/* Special styling for index page project titles */
+.home-page .project-title {
+  color: var(--index-card-accent);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.home-page .project-title-link:hover {
+  color: var(--index-card-accent-hover);
+}
+
+.home-page md-elevated-card {
+  border-top: 3px solid var(--index-card-accent);
+}
+
+.home-page md-elevated-card:hover {
+  border-top-color: var(--index-card-accent-hover);
+}
+
+.home-page md-filled-button {
+  --md-filled-button-container-color: var(--index-card-button-bg);
+  --md-filled-button-label-text-color: var(--index-card-button-text);
+}
+
+/* Make home page project cards full width on mobile, horizontal row on desktop */
+.home-page.project-card-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Default to single column full width */
+  gap: 1.5rem;
+  padding: 1rem 3rem;
+}
+
+/* Media query for desktop view to show all three cards in a row */
+@media (min-width: 992px) {
+  .home-page.project-card-grid {
+    grid-template-columns: repeat(3, 1fr); /* Show all three cards in a row on desktop */
+    gap: 2rem;
+    padding: 2rem 3rem;
+  }
+  
+  .home-page md-elevated-card.project-card {
+    /* Keep consistent card height in desktop row view */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.home-page md-elevated-card.project-card {
+  max-width: none;
+  width: 100%;
+}
+
+/* Ensure short-form description truncates properly */
+.home-page .short-form-truncated {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.5;
+  min-height: calc(1.5em * 2); /* Exactly two lines height */
+  max-height: calc(1.5em * 2); /* Enforce maximum height */
 }
 
 .section-subheading {
@@ -280,6 +355,10 @@ body.dark-mode .more-stack-label {
 
   .carousel-card-body {
     font-size: 0.95rem;
+  }
+
+  .home-page.project-card-grid {
+    padding: 1rem;
   }
 }
 

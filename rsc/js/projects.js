@@ -772,7 +772,7 @@ export function openProjectModal(projectId) {
   
   // Set modal title and description
   document.getElementById('modalTitle').textContent = project.title;
-  document.getElementById('modalDescription').textContent = project.description || "No description available.";
+  document.getElementById('modalDescription').innerHTML = project.description || "No description available.";
   
   // Set project status if available
   const statusElement = document.getElementById('projectStatus');
