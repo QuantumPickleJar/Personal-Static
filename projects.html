@@ -124,27 +124,28 @@
       
     </div>
   
-
     <template id="projectCardTemplate">
       <md-elevated-card data-project-id="" class="project-card">
-        <img class="project-thumbnail" src="" alt="">
-        <div class="label-row">
-          <span class="date-label" data-tooltip=""></span>
-        </div>
-        <span class="academic-label"></span>
         <div class="badge-container">
+          <span class="academic-label"></span>
           <div class="image-count-icon" style="display: none;">
             <span class="icon">&#128247;</span>
             <span class="count"></span>
           </div>
           <div class="mermaid-icon" style="display: none;">
-            <img src="./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram">
+            <img src="./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />
           </div>
         </div>
+    
+        <!-- <img class="project-thumbnail" src="" alt="Project Thumbnail" /> -->
+    
         <div class="project-title"></div>
+    
         <span class="short-form-truncated"></span>
+    
         <div class="stack-icons"></div>
-        <div class="project-card-footer">
+    
+        <div class="carousel-card-footer">
           <md-filled-button class="open-modal-btn">View Project</md-filled-button>
         </div>
       </md-elevated-card>

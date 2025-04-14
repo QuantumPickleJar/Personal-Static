@@ -23,6 +23,23 @@
   body {
     overflow: auto; /* Re-enable vertical scrolling */
   }
+  
+  /* New mobile styles for project cards */
+  .project-thumbnail {
+    height: 140px;
+  }
+
+  .project-title {
+    font-size: 1rem;
+  }
+
+  .short-form-truncated {
+    font-size: 0.85rem;
+  }
+
+  .stack-icons {
+    font-size: 0.7rem;
+  }
 }
 
 /* For very small screens (max-width: 400px) force single-column project cards */
@@ -94,7 +111,6 @@
     width: 100%; /* Ensure mainContent takes full width */
   }
 }
-
 
 /* The profile photo can be 200x200 for wider screens */
 .profile-photo {

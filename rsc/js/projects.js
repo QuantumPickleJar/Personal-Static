@@ -207,24 +207,22 @@ export function renderProjectsGallery(projects) {
       mermaidIcon.style.display = "block";
     }
 
-    // Make the entire card clickable to open the modal
-    if (card) {
-      card.addEventListener('click', (e) => {
-        // Check if the click was on the button (to avoid double event firing)
-        if (!e.target.closest('.open-modal-btn')) {
-          console.log('Card clicked for project:', project.id);
-          openProjectModal(project.id);
-        }
-      });
-    }
+    // make just the corner of the card clickable, not the entire card
+    const viewButton = card.querySelector('.open-modal-btn');
+    viewButton.style.cursor = "pointer"; // Change cursor to pointer
+    viewButton.addEventListener('click', () => {
+      openProjectModal(project);
+    });
+    
 
     // Also add the modal handler to the button specifically
     const modalButton = clone.querySelector(".open-modal-btn");
     if (modalButton) {
+      modalButton.style.cursor = "pointer"; // Change cursor to pointer
       modalButton.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent the card click event from firing
-        console.log('Button clicked for project:', project.id);
-        openProjectModal(project.id);
+      e.stopPropagation(); // Prevent the card click event from firing
+      console.log('Button clicked for project:', project.id);
+      openProjectModal(project.id);
       });
     }
 
