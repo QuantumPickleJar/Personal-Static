@@ -165,6 +165,343 @@ async function loadCarouselProjects() {
       document.head.appendChild(style);
     }
 
+    // Add additional styling for carousel stack icons
+    if (!document.getElementById('stack-icon-styles')) {
+      const stackStyles = document.createElement('style');
+      stackStyles.id = 'stack-icon-styles';
+      stackStyles.textContent = `
+        .stack-icons-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 12px;
+          align-items: center;
+          width: 100%;
+        }
+        
+        .carousel-stack-icon {
+          transform: scale(1);
+          margin-bottom: 6px;
+          transition: transform 0.2s ease;
+        }
+        
+        .carousel-stack-icon:hover {
+          transform: scale(1.08);
+        }
+        
+        .carousel-stack-icon .stack-image {
+          width: 28px;
+          height: 28px;
+          object-fit: contain;
+          display: block;
+          margin: 0 auto 4px;
+          transition: transform 0.2s ease;
+        }
+        
+        .carousel-stack-icon .stack-label {
+          font-size: 0.75rem;
+          max-width: 70px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          text-align: center;
+          color: var(--md-sys-color-on-surface-variant, #49454f);
+        }
+        
+        body.dark-mode .carousel-stack-icon .stack-label {
+          color: var(--md-sys-color-on-surface-variant, #cac4d0);
+        }
+        
+        .stack-item-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-width: 50px;
+          margin-right: 0;
+          border-radius: 12px;
+          padding: 8px 6px;
+          background-color: var(--md-sys-color-surface-container-low, #f4eff4);
+          transition: all 0.2s ease;
+          border: 1px solid var(--md-sys-color-outline-variant, rgba(0,0,0,0.05));
+        }
+        
+        .stack-item-container:hover {
+          background-color: var(--md-sys-color-surface-container-high, #ece6ec);
+          transform: translateY(-2px);
+        }
+        
+        body.dark-mode .stack-item-container {
+          background-color: var(--md-sys-color-surface-container-low, #1d1a1d);
+          border-color: var(--md-sys-color-outline-variant, rgba(255,255,255,0.1));
+        }
+        
+        body.dark-mode .stack-item-container:hover {
+          background-color: var(--md-sys-color-surface-container-high, #2b282b);
+        }
+        
+        .more-stack-label {
+          font-size: 0.8rem;
+          color: var(--md-sys-color-on-surface-variant, #49454f);
+          align-self: center;
+          margin-left: 8px;
+          padding: 4px 10px;
+          border-radius: 16px;
+          background-color: var(--md-sys-color-surface-variant, #e7e0ec);
+          transition: all 0.2s ease;
+        }
+        
+        .more-stack-label:hover {
+          background-color: var(--md-sys-color-primary-container, #eaddff);
+          color: var(--md-sys-color-on-primary-container, #21005d);
+        }
+        
+        body.dark-mode .more-stack-label {
+          color: var(--md-sys-color-on-surface-variant, #cac4d0);
+          background-color: var(--md-sys-color-surface-variant, #49454f);
+        }
+        
+        body.dark-mode .more-stack-label:hover {
+          background-color: var(--md-sys-color-primary-container, #4f378b);
+          color: var(--md-sys-color-on-primary-container, #eaddff);
+        }
+        
+        /* Material Design 3 card styles */
+        .carousel-card {
+          padding: 20px;
+          border-radius: 28px;
+          background-color: var(--md-sys-color-surface-container, #f9f9f9);
+          color: var(--md-sys-color-on-surface, #1c1b1f);
+          box-shadow: var(--md-sys-elevation-level2, 0 2px 6px rgba(0, 0, 0, 0.1));
+          height: 100%;
+          margin: 10px auto;
+          width: 95%;
+          max-width: 900px;
+          display: flex;
+          flex-direction: column;
+          transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+          overflow: hidden;
+        }
+        
+        .carousel-card:hover {
+          box-shadow: var(--md-sys-elevation-level3, 0 6px 12px rgba(0, 0, 0, 0.12));
+          background-color: var(--md-sys-color-surface-container-high, #f3f3f3);
+        }
+        
+        body.dark-mode .carousel-card {
+          background-color: var(--md-sys-color-surface-container, #1d1b20);
+          color: var(--md-sys-color-on-surface, #e6e0e9);
+          border-color: transparent;
+          box-shadow: var(--md-sys-elevation-level2, 0 2px 6px rgba(0, 0, 0, 0.3));
+        }
+        
+        body.dark-mode .carousel-card:hover {
+          background-color: var(--md-sys-color-surface-container-high, #2b2930);
+          box-shadow: var(--md-sys-elevation-level3, 0 6px 12px rgba(0, 0, 0, 0.35));
+        }
+        
+        .carousel-card-header {
+          font-size: 1.5rem;
+          font-weight: 400;
+          margin-bottom: 16px;
+          color: var(--md-sys-color-on-surface, #1c1b1f);
+          padding-bottom: 12px;
+          border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+          transition: color 0.2s ease;
+        }
+        
+        .carousel-card:hover .carousel-card-header {
+          color: var(--md-sys-color-primary, #6750a4);
+        }
+        
+        body.dark-mode .carousel-card-header {
+          color: var(--md-ssys-color-on-surface, #e6e0e9);
+          border-bottom-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+        }
+        
+        body.dark-mode .carousel-card:hover .carousel-card-header {
+          color: var(--md-sys-color-primary, #d0bcff);
+        }
+        
+        .carousel-card-body {
+          font-size: 1rem;
+          line-height: 1.6;
+          flex-grow: 1;
+          overflow: hidden;
+          margin-bottom: 16px;
+          color: var(--md-sys-color-on-surface-variant, #49454f);
+        }
+        
+        body.dark-mode .carousel-card-body {
+          color: var(--md-sys-color-on-surface-variant, #cac4d0);
+        }
+        
+        .carousel-card-footer {
+          margin-top: auto;
+          padding-top: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-top: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+        }
+        
+        body.dark-mode .carousel-card-footer {
+          border-top-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+        }
+        
+        md-filled-button {
+          --md-filled-button-container-color: var(--md-sys-color-primary, #6750a4);
+          --md-filled-button-label-text-color: var(--md-sys-color-on-primary, #ffffff);
+          --md-filled-button-container-shape: 20px;
+          margin-top: 0;
+          height: 36px;
+          padding: 0 24px;
+          font-size: 0.875rem;
+          text-transform: none;
+          letter-spacing: 0.01em;
+          transition: all 0.2s ease;
+        }
+        
+        md-filled-button:hover {
+          --md-filled-button-container-elevation: 2;
+        }
+        
+        .project-title {
+          font-size: 1.2rem;
+          font-weight: 500;
+          color: var(--md-sys-color-on-surface, #1c1b1f);
+          margin: 0;
+          letter-spacing: -0.01em;
+          line-height: 1.4;
+          transition: color 0.2s ease;
+        }
+        
+        md-elevated-card:hover .project-title {
+          color: var(--md-sys-color-primary, #6750a4);
+        }
+        
+        body.dark-mode .project-title {
+          color: var(--md-sys-color-on-surface, #e6e0e9);
+        }
+        
+        body.dark-mode md-elevated-card:hover .project-title {
+          color: var(--md-sys-color-primary, #d0bcff);
+        }
+
+        .short-form-truncated {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          white-space: normal;
+          line-height: 1.5;
+          min-height: 3.5rem;
+          color: var(--md-sys-color-on-surface-variant, #49454f);
+          font-size: 0.875rem;
+        }
+        
+        body.dark-mode .short-form-truncated {
+          color: var(--md-sys-color-on-surface-variant, #cac4d0);
+        }
+
+        .stack-icons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: auto;
+          padding-top: 12px;
+          position: relative;
+        }
+
+        .stack-icons::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background-color: var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+        }
+        
+        body.dark-mode .stack-icons::before {
+          background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+        }
+
+        .stack-icon {
+          background: var(--md-sys-color-surface-variant, #e7e0ec);
+          color: var(--md-sys-color-on-surface-variant, #49454f);
+          padding: 4px 10px;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+
+        .stack-icon:hover {
+          background: var(--md-sys-color-primary-container, #eaddff);
+          color: var(--md-sys-color-on-primary-container, #21005d);
+        }
+        
+        body.dark-mode .stack-icon {
+          background: var(--md-sys-color-surface-variant, #49454f);
+          color: var(--md-sys-color-on-surface-variant, #cac4d0);
+        }
+        
+        body.dark-mode .stack-icon:hover {
+          background: var(--md-sys-color-primary-container, #4f378b);
+          color: var(--md-sys-color-on-primary-container, #eaddff);
+        }
+        
+        md-filled-button.open-modal-btn {
+          --md-filled-button-container-color: var(--md-sys-color-primary, #6750a4);
+          --md-filled-button-label-text-color: var(--md-sys-color-on-primary, #ffffff);
+          --md-filled-button-container-shape: 20px;
+          font-size: 0.875rem;
+          height: 36px;
+          padding: 0 16px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .carousel-card {
+            padding: 16px;
+            border-radius: 24px;
+          }
+          
+          .carousel-card-header {
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+          }
+          
+          .carousel-card-body {
+            font-size: 0.9375rem;
+            margin-bottom: 12px;
+          }
+          
+          .carousel-card-footer {
+            padding-top: 12px;
+          }
+          
+          md-filled-button {
+            height: 32px;
+            padding: 0 16px;
+            font-size: 0.8125rem;
+          }
+          
+          .stack-item-container {
+            padding: 6px 4px;
+          }
+          
+          .carousel-stack-icon .stack-image {
+            width: 24px;
+            height: 24px;
+          }
+        }
+      `;
+      document.head.appendChild(stackStyles);
+    }
+
     // Clear existing content in carousel
     carouselInner.innerHTML = "";
 
@@ -245,93 +582,6 @@ async function loadCarouselProjects() {
       carouselItem.appendChild(cardDiv);
       carouselInner.appendChild(carouselItem);
     });
-
-    // Add additional styling for carousel stack icons
-    if (!document.getElementById('stack-icon-styles')) {
-      const stackStyles = document.createElement('style');
-      stackStyles.id = 'stack-icon-styles';
-      stackStyles.textContent = `
-        .stack-icons-container {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          margin-top: 12px;
-          align-items: center;
-          width: 100%;
-        }
-        
-        .carousel-stack-icon {
-          transform: scale(1);
-          margin-bottom: 8px;
-        }
-        
-        .carousel-stack-icon .stack-image {
-          width: 28px;
-          height: 28px;
-          object-fit: contain;
-          display: block;
-          margin: 0 auto 4px;
-        }
-        
-        .carousel-stack-icon .stack-label {
-          font-size: 0.75rem;
-          max-width: 70px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          text-align: center;
-        }
-        
-        .stack-item-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-width: 50px;
-          margin-right: 0;
-          border: 1px solid rgba(0,0,0,0.05);
-          border-radius: 6px;
-          padding: 6px 4px;
-          background-color: rgba(255,255,255,0.5);
-        }
-        
-        body.dark-mode .stack-item-container {
-          border-color: rgba(255,255,255,0.1);
-          background-color: rgba(40,40,40,0.5);
-        }
-        
-        .more-stack-label {
-          font-size: 0.8rem;
-          color: #666;
-          align-self: center;
-          margin-left: 8px;
-          padding: 4px 8px;
-          border-radius: 12px;
-          background-color: #f0f0f0;
-        }
-        
-        body.dark-mode .more-stack-label {
-          color: #ccc;
-          background-color: #333;
-        }
-        
-        .carousel-card-footer {
-          margin-top: auto;
-          padding-top: 1rem;
-          font-size: 0.85rem;
-          color: #666;
-          border-top: 1px solid rgba(0, 0, 0, 0.05);
-          display: flex;
-          flex-direction: column;
-        }
-        
-        body.dark-mode .carousel-card-footer {
-          color: #aaa;
-          border-top-color: rgba(255, 255, 255, 0.05);
-        }
-      `;
-      document.head.appendChild(stackStyles);
-    }
 
     // Initialize Bootstrap carousel
     try {
@@ -414,42 +664,67 @@ async function loadProjectCards() {
     // Populate the project card grid
     featuredProjects.forEach((project) => {
       const cardElement = document.createElement('md-elevated-card');
+      cardElement.classList.add('project-card');
       
+      // Main card content - no click handler on the card itself
       const cardDiv = document.createElement('div');
-      cardDiv.classList.add('carousel-card');
+      cardDiv.classList.add('project-content-wrapper');
       
-      const cardHeader = document.createElement('div');
-      cardHeader.classList.add('carousel-card-header', 'project-title-link');
-      cardHeader.textContent = project.title;
-      cardHeader.style.cursor = "pointer";
-      // Make the title clickable to navigate to project page
-      cardHeader.addEventListener("click", () => {
+      // Title - keep clickable
+      const titleElement = document.createElement('h3');
+      titleElement.classList.add('project-title', 'project-title-link');
+      titleElement.textContent = project.title;
+      titleElement.addEventListener("click", () => {
         window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
       });
       
-      const cardBody = document.createElement('div');
-      cardBody.classList.add('carousel-card-body');
-      cardBody.textContent = project.shortForm || 
+      // Description - non-clickable
+      const descriptionElement = document.createElement('p');
+      descriptionElement.classList.add('short-form-truncated');
+      descriptionElement.textContent = project.shortForm || 
         (project.description ? project.description.substring(0, 120) + "..." : "No description available");
       
-      const spacer = document.createElement('div');
-      spacer.classList.add('spacer');
+      // Add stack icons if present
+      const stackContainer = document.createElement('div');
+      stackContainer.classList.add('stack-icons');
       
-      const cardFooter = document.createElement('div');
-      cardFooter.classList.add('carousel-card-footer');
+      if (project.stack && project.stack.length > 0) {
+        const visibleStack = project.stack.slice(0, 4); // Show only top 4
+        
+        visibleStack.forEach(tech => {
+          const stackTag = document.createElement('span');
+          stackTag.classList.add('stack-icon');
+          stackTag.textContent = tech;
+          stackContainer.appendChild(stackTag);
+        });
+        
+        if (project.stack.length > 4) {
+          const moreLabel = document.createElement('span');
+          moreLabel.classList.add('stack-icon');
+          moreLabel.textContent = `+${project.stack.length - 4}`;
+          stackContainer.appendChild(moreLabel);
+        }
+      }
       
+      // Button container with explicit click handling
+      const buttonContainer = document.createElement('div');
+      buttonContainer.classList.add('carousel-card-footer');
+      
+      // Create the view button - only this should be clickable
       const viewButton = document.createElement('md-filled-button');
+      viewButton.classList.add('open-modal-btn');
       viewButton.textContent = 'View Project';
       viewButton.addEventListener('click', () => {
         window.location.href = `projects.html?showProject=${project.id || project.title.replace(/\s+/g, '-').toLowerCase()}`;
       });
       
-      cardFooter.appendChild(viewButton);
+      buttonContainer.appendChild(viewButton);
       
-      cardDiv.appendChild(cardHeader);
-      cardDiv.appendChild(cardBody);
-      cardDiv.appendChild(spacer);
-      cardDiv.appendChild(cardFooter);
+      // Add all elements to card
+      cardDiv.appendChild(titleElement);
+      cardDiv.appendChild(descriptionElement);
+      cardDiv.appendChild(stackContainer);
+      cardDiv.appendChild(buttonContainer);
       
       cardElement.appendChild(cardDiv);
       projectCardGrid.appendChild(cardElement);

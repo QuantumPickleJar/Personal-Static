@@ -1,44 +1,79 @@
 /* Mobile Styles */
 @media (max-width: 768px) {
-  /* Changed from .project-card to md-elevated-card.project-card */
+  /* Card layout adjustments */
   md-elevated-card.project-card {
     flex: 1 1 100%;
     max-width: 100%;
     height: auto;
-    margin-right: 8px;
+    margin-right: 0;
+    padding: 12px;
+    border-radius: 16px;
+    gap: 8px;
   }
   
   .contentContainer {
     flex-direction: column;
   }
+  
   #sidebar {
     width: 100%;
-    max-width: none; /* Override fixed sidebar width */
+    max-width: none;
     order: 0;
   }
+  
   #mainContainer {
     width: 100%;
     order: 1;
   }
+  
   body {
-    overflow: auto; /* Re-enable vertical scrolling */
+    overflow: auto;
   }
   
-  /* New mobile styles for project cards */
+  /* Project card content mobile adjustments */
   .project-thumbnail {
     height: 140px;
+    border-radius: 12px;
+    margin-bottom: 6px;
   }
 
   .project-title {
-    font-size: 1rem;
+    font-size: 1.125rem;
+    margin-bottom: 2px;
   }
 
   .short-form-truncated {
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
+    -webkit-line-clamp: 2;
+    min-height: 2.5rem;
+    margin-bottom: 6px;
   }
 
   .stack-icons {
-    font-size: 0.7rem;
+    gap: 6px;
+    padding-top: 10px;
+  }
+  
+  .stack-icon {
+    padding: 3px 8px;
+    font-size: 0.6875rem;
+  }
+  
+  .carousel-card-footer {
+    padding-top: 10px;
+  }
+  
+  md-filled-button.open-modal-btn {
+    --md-filled-button-container-shape: 16px;
+    font-size: 0.8125rem;
+    min-height: 32px;
+    padding: 0 12px;
+  }
+  
+  .project-meta {
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.6875rem;
   }
 }
 
@@ -48,7 +83,12 @@
     flex: none;
     width: 100%;
     max-width: 100%;
-    margin: 8px 0; /* optional: space between cards */
+    margin: 8px 0;
+    padding: 10px;
+  }
+  
+  .project-thumbnail {
+    height: 120px;
   }
   
   /* Ensure the sidebar remains consistent */
