@@ -396,7 +396,7 @@ md-elevated-card.project-card .academic-label {
 }
 
 md-elevated-card.project-card .personal-label {
-  background-color: #34A853; /* Google green for personal */
+  background-color: orange;
   color: white;
   border-left: 3px solid #137333; /* Darker green accent */
 }
@@ -431,11 +431,3 @@ md-elevated-card.project-card .personal-label {
   visibility: visible;
 }
 
-/* Card accent styles based on project type */
-md-elevated-card.project-card.academic {
-  border-top: 3px solid #4285F4; /* Google blue top border for academic */
-}
-
-md-elevated-card.project-card.personal {
-  border-top: 3px solid #34A853; /* Google green top border for personal */
-}

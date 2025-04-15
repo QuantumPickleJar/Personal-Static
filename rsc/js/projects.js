@@ -133,7 +133,7 @@ export function createProjectCard(project) {
   
   if (project.academic) {
     academicLabel.textContent = "Academic";
-    academicLabel.classList.add("academic");
+    academicLabel.className = "project-type-label academic-label";
     academicLabel.style.display = "inline-block";
     
     // Add date tooltip for academic projects
@@ -150,7 +150,7 @@ export function createProjectCard(project) {
     // For non-academic projects, change to Personal
     academicLabel.textContent = "Personal";
     academicLabel.classList.remove("academic");
-    academicLabel.classList.add("personal");
+    academicLabel.className = "project-type-label personal-label";
     academicLabel.style.display = "inline-block";
     
     // Also add date tooltip for personal projects if dates exist

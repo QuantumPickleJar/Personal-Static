@@ -17,6 +17,7 @@
   <!-- Material Design Components -->
   <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css" />
@@ -366,6 +367,9 @@ body.dark-mode .more-stack-label {
 </head>
 
 <body>
+  <!-- Load Navigation Drawer HTML Component -->
+  <div id="navDrawerContainer"></div>
+  
   <!-- 🌗 Theme Toggle -->
   <theme-toggle></theme-toggle>
   
@@ -402,6 +406,17 @@ body.dark-mode .more-stack-label {
   </section>
 
   <!-- 🧩 Custom Scripts -->
+  <script>
+    // Load nav drawer component
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('htmlModules/nav-drawer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navDrawerContainer').innerHTML = html;
+        })
+        .catch(error => console.error('Error loading nav drawer:', error));
+    });
+  </script>
   <script type="module" src="main.js"></script>
   <script type="module" src="rsc/js/carousel.js"></script>
   <script type="module" src="./rsc/js/theme-toggle.js"></script>
