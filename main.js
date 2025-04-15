@@ -1,5 +1,7 @@
 import { projectsPerPage } from './rsc/js/perPageSettings.js';
-import { closeModal, loadProjects } from './rsc/js/projects.js';
+// import { closeModal, loadProjects } from './rsc/js/projects.js';
+import { closeModal } from './rsc/js/project-modal.js';
+import { loadProjects } from './rsc/js/projects.js';
 import { initPagination, updateItemsPerPage } from './rsc/js/pagination.js';
 import { filterProjByTitle, filterByDate } from './rsc/js/gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';

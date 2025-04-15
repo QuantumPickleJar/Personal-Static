@@ -104,3 +104,18 @@ function createCircularPlaceholder(stack) {
 
   return 'data:image/svg+xml;base64,' + btoa(svg);
 }
+
+/**
+ * Sets up stack icons in a container.
+ * @param {HTMLElement} container - The container to populate with stack icons.
+ * @param {Array} stack - Array of technology names.
+ */
+export function setupStackIcons(container, stack) {
+  container.innerHTML = ''; // Clear existing content
+  stack.forEach((tech) => {
+    const iconElement = document.createElement('span');
+    iconElement.className = 'stack-icon';
+    iconElement.textContent = tech;
+    container.appendChild(iconElement);
+  });
+}

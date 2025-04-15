@@ -4,128 +4,147 @@
 .modal {
   display: none;
   position: fixed;
-  z-index: 9999;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
+  animation: fadeIn 0.3s ease;
 }
 
 .modal-content {
-  background-color: #fff;
-  margin: 2% auto;
-  width: 60%;
+  position: relative;
+  background-color: var(--md-sys-color-surface, #fff);
+  margin: 5vh auto;
+  padding: 20px;
+  border-radius: 16px;
+  width: 80%;
   max-width: 1000px;
   max-height: 90vh;
-  border-radius: 6px;
-  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
   display: flex;
   flex-direction: column;
+}
+
+body.dark-mode .modal-content {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 2rem;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
   cursor: pointer;
-  z-index: 10001;
+  z-index: 10;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+body.dark-mode .close-button {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
 }
 
 /* Modal layout sections */
 .modal-top {
-  flex: 0 0 auto;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
   display: flex;
-  max-height: 375px;
-  transition: all 0.3s ease-in-out;
+  min-height: 200px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  gap: 20px;
 }
 
 .modal-top-left {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  max-height: 375px;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-  position: relative;
-  background-color: white;
-  z-index: 100;
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s ease;
 }
 
 .modal-top-right {
-  flex: 1;
+  width: 200px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #ddd;
-  padding-left: 10px;
-  overflow-y: auto;
-  max-height: 375px;
-  height: 100%;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
 }
 
 .modal-top-right-upper {
-  flex: 1 1 auto;
-  overflow-y: auto;
+  flex: 1;
 }
 
 .modal-top-right-lower {
-  flex: 0 0 auto;
-  border-top: 1px solid #ddd;
-  padding: 8px 4px 0;
-  font-size: 0.9rem;
-  text-align: center;
+  flex: 2;
 }
 
 .modal-bottom {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
+  margin-top: 20px;
 }
 
 /* Modal title and headings */
 #modalTitle, h4 {
-  z-index: 1000;
-  background-color: white;
+  margin-top: 0;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding-right: 30px; /* Space for close button */
+}
+
+body.dark-mode #modalTitle, 
+body.dark-mode h4 {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
 }
 
 /* Tech Stack heading with sticky opaque background */
 .modal-section-heading {
-  background-color: white;
   position: sticky;
   top: 0;
-  z-index: 10;
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  width: 100%;
+  background-color: var(--md-sys-color-surface, #fff);
+  padding: 8px 0;
+  margin: 0 0 10px 0;
+  font-size: 1em;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-weight: 500;
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .modal-section-heading {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
 }
 
 /* Images area */
 .modal-images {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 375px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: var(--md-sys-color-surface-variant, #f5f5f5);
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .modal-images {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
 }
 
 .modal-image {
-  max-width: 100px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 /* Modal content views */
 .modal-images.images-view {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  max-width: 100%;
+  max-height: 375px;
+  overflow: hidden;
 }
 
 .modal-images.mermaid-view {
@@ -186,11 +205,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #eee;
-  color: #888;
+  background-color: var(--md-sys-color-surface-variant, #eee);
+  color: var(--md-sys-color-on-surface-variant, #888);
   font-size: 1.2rem;
   position: relative;
   filter: grayscale(100%);
+}
+
+body.dark-mode .no-mermaid {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
+  color: var(--md-sys-color-on-surface-variant, #cac4d0);
 }
 
 .no-mermaid::after {
@@ -223,50 +247,130 @@
 .stack-item-container {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  position: relative;
+  gap: 8px;
+  padding: 5px 8px;
+  background-color: var(--md-sys-color-surface-container-low, #f4eff4);
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease;
+}
+
+body.dark-mode .stack-item-container {
+  background-color: var(--md-sys-color-surface-container-low, #1d1a1d);
+}
+
+.stack-item-container:hover {
+  background-color: var(--md-sys-color-surface-container-high, #ece6ec);
+  transform: translateY(-2px);
+}
+
+body.dark-mode .stack-item-container:hover {
+  background-color: var(--md-sys-color-surface-container-high, #2b282b);
 }
 
 .stack-image {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
-  flex-shrink: 0;
-  margin-right: 8px;
 }
 
 .stack-label {
-  font-size: 0.9rem;
-  color: #333;
-  white-space: nowrap;
-  line-height: 32px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  flex: 1;
 }
 
-/* FAB styling & positioning */
+body.dark-mode .stack-label {
+  color: var(--md-sys-color-on-surface-variant, #cac4d0);
+}
+
+/* Description content, properly themed */
+#modalDescription {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  margin-bottom: 20px;
+}
+
+body.dark-mode #modalDescription {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+}
+
+/* Animations for the modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Layout change for mermaid expanded view */
+.modal-top.mermaid-expanded {
+  flex-direction: column-reverse;
+  transition: all 0.3s ease;
+}
+
+.modal-top.mermaid-expanded .modal-top-left {
+  flex: none;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.modal-top.mermaid-expanded .modal-top-right {
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modal-top.mermaid-expanded .modal-top-right-upper,
+.modal-top.mermaid-expanded .modal-top-right-lower {
+  flex: 1 1 45%;
+}
+
+.heading-hidden {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* FAB styles for mermaid/images toggle */
 .fab-container {
   position: absolute;
-  top: 55px;
-  right: 60px;
-  z-index: 10001;
+  bottom: 20px;
+  right: 20px;
   display: flex;
-  gap: 10px;
   flex-direction: column;
+  gap: 10px;
+  z-index: 50;
 }
 
 .fab {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background-color: #f1f1f1;
+  background-color: var(--md-sys-color-surface, #f5f5f5);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
   border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
   font-size: 0.8rem;
   overflow: visible;
+}
+
+body.dark-mode .fab {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .fab img {
@@ -276,13 +380,22 @@
 }
 
 .fab:hover {
-  background-color: #e1e1e1;
+  background-color: var(--md-sys-color-surface-variant, #e1e1e1);
   transform: scale(1.05);
 }
 
+body.dark-mode .fab:hover {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
+}
+
 .fab.selected {
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--md-sys-color-primary, #007bff);
+  color: var(--md-sys-color-on-primary, #fff);
+}
+
+body.dark-mode .fab.selected {
+  background-color: var(--md-sys-color-primary, #d0bcff);
+  color: var(--md-sys-color-on-primary, #000000);
 }
 
 .fab.disabled,
@@ -305,117 +418,141 @@
   border-radius: 4px;
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-  z-index: 19999;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.fab-tooltip.show {
+.fab:hover .fab-tooltip {
   opacity: 1;
+  visibility: visible;
 }
 
-/* Mermaid container styling */
-#mermaidContainer {
-  position: relative;
-  width: 100%;
-  min-height: 300px;
-  overflow: visible !important;
-  transition: all 0.3s ease-in-out;
-  z-index: 5;
-}
-
-#mermaidContainer svg {
-  width: 100%;
-  height: auto;
-}
-
-.modal-top-left.mermaid-mode,
-.modal-images.mermaid-view {
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-/* Responsive styles */
-@media (min-width: 769px) {
-  .stack-label {
-    display: inline;
-  }
-  
-  /* Mermaid expanded layout - desktop only */
-  .mermaid-expanded .modal-top-left {
-    flex: 4; /* 80% of the space */
-  }
-
-  .mermaid-expanded .modal-top-right {
-    flex: 1; /* 20% of the space */
-    padding-left: 5px; /* Reduce left padding in expanded mode */
-  }
-  
-  /* Hide labels when in mermaid expanded view on any screen size */
-  .mermaid-expanded .stack-label {
-    display: none;
-  }
-  
-  /* Make the Tech Stack heading more compact in expanded mode */
-  .mermaid-expanded .modal-section-heading {
-    font-size: 0.8rem;
-    padding: 2px 0; 
-    margin-bottom: 5px;
-    text-align: center;
-  }
-  
-  /* Move stack icons closer to the right edge in expanded mode */
-  .mermaid-expanded .vertical-stack {
-    padding-right: 2px;
-  }
-  
-  /* Make stack icons slightly smaller in expanded mode */
-  .mermaid-expanded .stack-image {
-    width: 24px;
-    height: 24px;
-  }
-  
-  /* Tech Stack container padding adjustments */
-  .mermaid-expanded #modalStack {
-    padding-right: 2px; 
-    padding-left: 0;
-    max-height: none; /* Allow full height */
-  }
-  
-  /* Hide the Tech Stack heading completely in expanded mode */
-  .mermaid-expanded .modal-section-heading {
-    visibility: hidden;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-}
-
-@media (max-width: 768px) {
-  .stack-label {
-    display: none;
-  }
-  
-  /* Add hover tooltip for small screens */
-  .stack-item-container:hover::after {
-    content: attr(data-tech);
-    position: absolute;
-    left: 40px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    z-index: 1000;
-  }
-  
-  /* Smaller modal on mobile */
+/* Responsive modal positioning for different screen sizes */
+@media (max-width: 767px) {
   .modal-content {
-    width: 90%;
-    margin: 5% auto;
+    width: 95%;
+    margin: 2vh auto;
+    padding: 15px;
+    max-height: 96vh;
   }
+  
+  .modal-top {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .modal-top-right {
+    width: 100%;
+  }
+  
+  .modal-images {
+    height: 300px;
+  }
+  
+  #projectImageCarousel {
+    height: 300px;
+  }
+  
+  .modal-top.mermaid-expanded .modal-top-right {
+    flex-direction: column;
+  }
+}
+
+/* Special styling for mermaid expanded mode */
+/* When in mermaid expanded mode, stack the tech stack horizontally */
+.mermaid-expanded .modal-top-right-lower {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.mermaid-expanded .stack-item-container {
+  flex: 0 0 auto;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  max-width: 32px;
+  overflow: hidden;
+}
+
+.mermaid-expanded #modalStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: none;
+  padding-right: 50px; /* Make room for FABs */
+}
+
+/* For phone screens in landscape mode */
+@media (max-height: 500px) {
+  .modal-content {
+    max-height: 98vh;
+    margin: 1vh auto;
+  }
+  
+  .modal-top {
+    min-height: auto;
+  }
+  
+  .modal-images {
+    height: 200px;
+  }
+  
+  #projectImageCarousel {
+    height: 200px;
+  }
+}
+
+/* For extra large screens, prevent modal from being too big */
+@media (min-width: 1600px) {
+  .modal-content {
+    max-width: 1200px;
+  }
+}
+
+/* Mermaid diagram fullscreen expand styles */
+.mermaid-expanded #mermaidContainer {
+  width: 100%;
+  height: 65vh;
+  overflow: visible;
+}
+
+/* In expanded view, change layout to maximize diagram space */
+.mermaid-expanded .modal-top-left {
+  flex: 4;
+}
+
+.mermaid-expanded .modal-top-right {
+  flex: 1; /* 20% of the space */
+  padding-left: 5px; /* Reduce left padding in expanded mode */
+}
+
+/* Hide labels when in mermaid expanded view on any screen size */
+.mermaid-expanded .stack-label {
+  display: none;
+}
+
+/* Make the Tech Stack heading more compact in expanded mode */
+.mermaid-expanded .modal-section-heading {
+  font-size: 0.8rem;
+  padding: 2px 0; 
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+/* Move stack icons closer to the right edge in expanded mode */
+.mermaid-expanded .vertical-stack {
+  padding-right: 2px;
+}
+
+/* Make stack icons slightly smaller in expanded mode */
+.mermaid-expanded .stack-image {
+  width: 24px;
+  height: 24px;
+}
+
+/* Tech Stack container padding adjustments */
+.mermaid-expanded #modalStack {
+  padding-right: 2px; 
+  padding-left: 0;
 }

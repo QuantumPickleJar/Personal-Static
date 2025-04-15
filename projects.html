@@ -42,7 +42,7 @@
   <!-- Load Navigation Drawer HTML Component -->
   <div id="navDrawerContainer"></div>
   
-  <!-- Theme Toggle -->
+  <!-- Theme Toggle (shows the dark/light mode slider)-->
   <theme-toggle></theme-toggle>
   
   <!-- Wrap with Barba containers -->
@@ -74,13 +74,37 @@
                   <label for="searchBar" class="visually-hidden">Search Projects:</label>
                   <input type="text" id="searchBar" placeholder="Search Projects..." class="form-control">
                 </div>
-                <div style="max-width: 200px;">
-                  <select id="filterDropdown" class="form-select">
-                    <option value="">Sort Projects...</option>
-                    <option value="title">Filter by Title</option>
-                    <option value="date">Filter by Date</option>
-                  </select>
+ 
+                <!-- filter by dropdown -->
+                <div id="projectFilters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+                  <!-- Anchor for menu -->
+                  <div id="filterAnchor" style="position: relative;"></div>
+
+                  <!-- Material 3 Menu for filters -->
+                  <md-menu anchor="filterAnchor" id="projectFilterMenu">
+                    <md-menu-item type="checkbox" id="filterImages">Has Images</md-menu-item>
+                    <md-menu-item type="checkbox" id="filterMermaid">Has Mermaid</md-menu-item>
+                    <md-divider></md-divider>
+                    <div style="padding: 10px; max-width: 250px;">
+                      <p style="margin: 0 0 8px;">Filter by Technology:</p>
+                      <div id="stackFilterChips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                    </div>
+                  </md-menu>
+                  
+                  <!-- Sort By dropdown remains unchanged -->
+                  <md-outlined-select label="Sort By" id="sortDropdown">
+                    <md-select-option value="title">
+                      <span>Title</span>
+                    </md-select-option>
+                    <md-select-option value="date">
+                      <span>Date</span>
+                    </md-select-option>
+                  </md-outlined-select>
+                  
+                  <!-- Filter toggle button -->
+                  <md-filled-tonal-button id="filterToggleBtn">Filter Options</md-filled-tonal-button>
                 </div>
+                
               </div>
               <!-- Inline pagination for larger screens -->
               <div id="inlinePaginationContainer"></div>
@@ -223,8 +247,14 @@
     import { LitElement } from 'https://esm.sh/lit@2.8.0';
     import 'https://cdn.jsdelivr.net/npm/@material/web/elevated-card/elevated-card.js';
     import 'https://cdn.jsdelivr.net/npm/@material/web/filled-button/filled-button.js';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/menu/menu.js';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/menu/menu-item.js';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/divider/divider.js';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/filled-tonal-button/filled-tonal-button.js';
+    import 'https://cdn.jsdelivr.net/npm/@material/web/filter-chip/filter-chip.js';
   </script>
 
+  <script type="module" src="rsc/js/theme-toggle.js"></script>
 </body>
 
 </html>

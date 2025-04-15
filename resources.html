@@ -12,6 +12,12 @@
   <link rel="stylesheet" href="css/resources-page.css">
 </head>
 <body>
+  <!-- Load Navigation Drawer HTML Component -->
+  <div id="navDrawerContainer"></div>
+  
+  <!-- Theme Toggle -->
+  <theme-toggle></theme-toggle>
+  
   <!-- Header partial -->
   <div class="barba-wrapper" data-barba="wrapper">
     <div data-barba="container" data-barba-namespace="resources">
@@ -200,5 +206,19 @@
   });
 </script>
 <script src="rsc/js/bookmarks.js"></script>
+<!-- Load theme toggle script -->
+<script type="module" src="rsc/js/theme-toggle.js"></script>
+<!-- Load navigation drawer script -->
+<script>
+  // Load nav drawer component
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('htmlModules/nav-drawer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('navDrawerContainer').innerHTML = html;
+      })
+      .catch(error => console.error('Error loading nav drawer:', error));
+  });
+</script>
 </body>
 </html>
