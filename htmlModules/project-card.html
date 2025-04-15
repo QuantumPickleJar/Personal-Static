@@ -1,38 +1,15 @@
 <!-- 
   Template: Project Card
-  Description: This template defines the structure of a project card component. It is designed to display project-related information such as a thumbnail, title, date, labels, and additional metadata. The card also includes interactive elements like a button to view more details about the project.
-
-  Elements:
-  - <md-elevated-card>: A Material Design elevated card container for the project card. It provides a visually distinct card with elevation styling.
-  - <img class="project-thumbnail">: Displays the project's thumbnail image. The `src` attribute should be set to the image URL, and `alt` should provide a description for accessibility.
-  - <div class="label-row">: Contains labels such as the date of the project. The `data-tooltip` attribute can be used to show additional information on hover.
-  - <span class="academic-label">: Displays an academic-related label, if applicable.
-  - <div class="badge-container">: Contains badges or icons that provide additional metadata about the project.
-    - <div class="image-count-icon">: Displays an icon and count for the number of images in the project. Hidden by default (`style="display: none;"`).
-    - <div class="mermaid-icon">: Displays an icon indicating the presence of Mermaid diagrams. Hidden by default (`style="display: none;"`).
-  - <div class="project-title">: Displays the title of the project.
-  - <span class="short-form-truncated">: Displays a truncated version of the project's short description.
-  - <div class="stack-icons">: A container for stack-related icons (e.g., technologies or tools used in the project).
-  - <div class="project-card-footer">: Contains footer elements for the card.
-    - <md-filled-button class="open-modal-btn">: A Material Design filled button that opens a modal to view more details about the project.
-
-  Notes for Non-MWC (Material Web Components) Users:
-  - The `<md-elevated-card>` and `<md-filled-button>` elements are part of Material Web Components (MWC). If you are not using MWC, you may need to replace these elements with standard HTML elements or equivalent components from your UI framework.
-  - Ensure that the appropriate styles and scripts for MWC are included in your project if you intend to use these components.
-  - The `data-*` attributes (e.g., `data-project-id`, `data-tooltip`) are custom attributes used for storing additional metadata. These can be accessed via JavaScript for dynamic behavior.
+  Description: This template defines the structure of a project card component using Material Web Components.
 -->
 <template id="projectCardTemplate">
   <md-elevated-card data-project-id="" class="project-card">
-    <img class="project-thumbnail" src="" alt="">
-    
-    <div class="label-row">
-      <span class="date-label" data-tooltip=""></span>
-    </div>
+    <!-- Badge and labels -->
     <span class="academic-label"></span>
-
+    
     <div class="badge-container">
       <div class="image-count-icon" style="display: none;">
-        <span class="icon">&#128247;</span>
+        <md-icon>photo_library</md-icon>
         <span class="count"></span>
       </div>
       <div class="mermaid-icon" style="display: none;">
@@ -40,13 +17,27 @@
       </div>
     </div>
 
-    <div class="project-title"></div>
-    <span class="short-form-truncated"></span>
+    <!-- Project content -->
+    <div class="project-content">
+      <md-headline class="project-title"></md-headline>
+      <md-body class="short-form-truncated"></md-body>
+    </div>
 
     <div class="stack-icons"></div>
 
     <div class="project-card-footer">
-      <md-filled-button class="open-modal-btn">View Project</md-filled-button>
+      <md-filled-tonal-button class="open-modal-btn">
+        <md-icon slot="icon">visibility</md-icon>
+        View Project
+      </md-filled-tonal-button>
     </div>
   </md-elevated-card>
+</template>
+
+<template id="stackItemTemplate">
+  <md-chip class="stack-icon"></md-chip>
+</template>
+
+<template id="moreStackTemplate">
+  <md-text-button class="more-link"></md-text-button>
 </template>

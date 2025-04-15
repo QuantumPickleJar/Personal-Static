@@ -318,14 +318,124 @@ md-elevated-card.project-card .image-count-icon {
 }
 
 .academic-label.academic {
-  /* Your academic-specific styles here */
-  background-color: #ffeb3b; /* Example: yellow background for academic labels */
+  background-color: #4a6da7;
   color: #000;
   border: 1px solid #ccc;
   opacity: 60%;
 }
 
 .academic-label.personal {
-  background-color: lightcoral;
+  background-color: #6a4a99;
   opacity: 60%;
+}
+
+/* Academic project date tooltip */
+md-elevated-card.project-card .academic-label {
+  background-color: #5B9BD5; /* Blue for academic */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  position: absolute;
+  top: 10px;
+  left: 10px; /* Position on the left side */
+  z-index: 2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Date tooltip styling */
+.academic-label .date-tooltip {
+  position: absolute;
+  top: -3px; /* Align with the top of the label */
+  left: 105%; /* Position to the right of the label */
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  z-index: 100;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  max-width: 150px;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.academic-label:hover .date-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Academic and personal labels styling - compact size */
+md-elevated-card.project-card .academic-label,
+md-elevated-card.project-card .personal-label {
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  position: absolute;
+  top: 10px;
+  left: 10px; /* Position on the left side */
+  z-index: 2;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  max-width: 75px;
+  text-align: center;
+}
+
+/* Different colors for academic and personal projects */
+md-elevated-card.project-card .academic-label {
+  background-color: #4285F4; /* Google blue for academic */
+  color: white;
+  border-left: 3px solid #1967D2; /* Darker blue accent */
+}
+
+md-elevated-card.project-card .personal-label {
+  background-color: #34A853; /* Google green for personal */
+  color: white;
+  border-left: 3px solid #137333; /* Darker green accent */
+}
+
+/* Date tooltip styling - positioned to the right */
+.academic-label .date-tooltip,
+.personal-label .date-tooltip {
+  position: absolute;
+  top: -3px; /* Align with the top of the label */
+  left: 105%; /* Position to the right of the label */
+  transform: none; /* Reset any transform */
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  z-index: 100;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  max-width: 150px;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.academic-label:hover .date-tooltip,
+.personal-label:hover .date-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Card accent styles based on project type */
+md-elevated-card.project-card.academic {
+  border-top: 3px solid #4285F4; /* Google blue top border for academic */
+}
+
+md-elevated-card.project-card.personal {
+  border-top: 3px solid #34A853; /* Google green top border for personal */
 }

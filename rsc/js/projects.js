@@ -99,139 +99,132 @@ export function renderProjectsGallery(projects) {
   gallery.innerHTML = ""; // clear
 
   projects.forEach(project => {
-    const clone = template.content.cloneNode(true);
-    const card = clone.querySelector("md-elevated-card");
-    
-    // Ensure the project-card class is added
-    if (card && !card.classList.contains('project-card')) {
-      card.classList.add('project-card');
-    }
-
-    if (card) {
-      card.dataset.projectId = project.id;
-    }
-
-    const thumbnail = clone.querySelector(".project-thumbnail");
-    if (thumbnail) {
-      thumbnail.src = project.thumbnail || "rsc/images/placeholder.png";
-      thumbnail.alt = `Image for ${project.title}`;
-    }
-
-    // Set the project title
-    const titleElement = clone.querySelector(".project-title");
-    if (titleElement) {
-      titleElement.textContent = project.title;
-    }
-    
-    // Set the short form description
-    const shortFormElement = clone.querySelector(".short-form-truncated");
-    if (shortFormElement) {
-      shortFormElement.textContent = project.shortForm || "";
-    }
-
-    // Handle date label if present
-    const dateLabel = clone.querySelector(".date-label");
-    if (dateLabel) {
-      // Set the date content
-      dateLabel.textContent = project.dates || "";
-      // Also set data-tooltip attribute for hover functionality
-      dateLabel.setAttribute('data-tooltip', project.dates || "");
-    }
-
-    // Handle academic label if present
-    const academicLabel = clone.querySelector(".academic-label");
-    if (academicLabel) {
-      if (project.academic) {
-        academicLabel.textContent = "Academic";
-        academicLabel.classList.add("academic");
-      } else {
-        academicLabel.textContent = "Personal";
-        academicLabel.classList.add("personal");
-      }
-      
-      // Make sure academic label is visible (might be hidden if toggled before)
-      academicLabel.style.display = '';
-      
-      // Set up hover effect for date label
-      academicLabel.addEventListener('mouseenter', () => {
-        if (dateLabel) {
-          dateLabel.style.opacity = '1';
-        }
-      });
-      
-      academicLabel.addEventListener('mouseleave', () => {
-        if (dateLabel) {
-          // Use a short delay to allow moving mouse to the date label
-          setTimeout(() => {
-            if (!dateLabel.matches(':hover')) {
-              dateLabel.style.opacity = '0';
-            }
-          }, 100);
-        }
-      });
-      
-      // Allow date label to keep itself visible when hovered directly
-      if (dateLabel) {
-        dateLabel.addEventListener('mouseenter', () => {
-          dateLabel.style.opacity = '1';
-        });
-        
-        dateLabel.addEventListener('mouseleave', () => {
-          dateLabel.style.opacity = '0';
-        });
-      }
-    }
-
-    // Stack icons
-    const stackIcons = clone.querySelector(".stack-icons");
-    if (stackIcons && Array.isArray(project.stack)) {
-      stackIcons.innerHTML = "";
-      project.stack.forEach(tech => {
-        const iconSpan = document.createElement("span");
-        iconSpan.classList.add("stack-icon");
-        iconSpan.textContent = tech;
-        stackIcons.appendChild(iconSpan);
-      });
-    }
-
-    // Images badge
-    const imageIcon = clone.querySelector(".image-count-icon");
-    if (project.images && project.images.length > 0 && imageIcon) {
-      imageIcon.style.display = "flex";
-      imageIcon.querySelector(".count").textContent = project.images.length;
-    }
-    
-    // Mermaid badge
-    const mermaidIcon = clone.querySelector(".mermaid-icon");
-    if (mermaidIcon && project.mermaid && project.mermaid.trim()) {
-      mermaidIcon.style.display = "block";
-    }
-
-    // make just the corner of the card clickable, not the entire card
-    const viewButton = card.querySelector('.open-modal-btn');
-    viewButton.style.cursor = "pointer"; // Change cursor to pointer
-    viewButton.addEventListener('click', () => {
-      openProjectModal(project);
-    });
-    
-
-    // Also add the modal handler to the button specifically
-    const modalButton = clone.querySelector(".open-modal-btn");
-    if (modalButton) {
-      modalButton.style.cursor = "pointer"; // Change cursor to pointer
-      modalButton.addEventListener("click", (e) => {
-      e.stopPropagation(); // Prevent the card click event from firing
-      console.log('Button clicked for project:', project.id);
-      openProjectModal(project.id);
-      });
-    }
-
-    gallery.appendChild(clone);
+    const card = createProjectCard(project);
+    gallery.appendChild(card);
   });
 
   console.log(`Rendered ${projects.length} projects in the gallery`);
 }
 
+/**
+ * Creates a project card element from a template clone
+ * @param {Object} project - The project data
+ * @returns {Element} - The HTML element for the project card
+ */
+export function createProjectCard(project) {
+  const template = document.getElementById("projectCardTemplate");
+  if (!template) {
+    console.error("Project card template not found");
+    return document.createElement("div");
+  }
+
+  const clone = template.content.cloneNode(true);
+  const card = clone.querySelector(".project-card");
+  
+  // Set project ID
+  card.dataset.projectId = project.id;
+
+  // Set project title
+  const titleElement = clone.querySelector(".project-title");
+  titleElement.textContent = project.title;
+
+  // Set academic or personal label based on project type
+  const academicLabel = clone.querySelector(".academic-label");
+  
+  if (project.academic) {
+    academicLabel.textContent = "Academic";
+    academicLabel.classList.add("academic");
+    academicLabel.style.display = "inline-block";
+    
+    // Add date tooltip for academic projects
+    if (project.dates) {
+      academicLabel.setAttribute("data-dates", project.dates);
+      
+      // Create the date tooltip element
+      const tooltip = document.createElement("span");
+      tooltip.className = "date-tooltip";
+      tooltip.textContent = project.dates;
+      academicLabel.appendChild(tooltip);
+    }
+  } else {
+    // For non-academic projects, change to Personal
+    academicLabel.textContent = "Personal";
+    academicLabel.classList.remove("academic");
+    academicLabel.classList.add("personal");
+    academicLabel.style.display = "inline-block";
+    
+    // Also add date tooltip for personal projects if dates exist
+    if (project.dates) {
+      academicLabel.setAttribute("data-dates", project.dates);
+      
+      const tooltip = document.createElement("span");
+      tooltip.className = "date-tooltip";
+      tooltip.textContent = project.dates;
+      academicLabel.appendChild(tooltip);
+    }
+  }
+
+  // Set the short form description
+  const shortFormElement = clone.querySelector(".short-form-truncated");
+  if (shortFormElement) {
+    shortFormElement.textContent = project.shortForm || "";
+  }
+
+  // Handle date label if present
+  const dateLabel = clone.querySelector(".date-label");
+  if (dateLabel) {
+    // Set the date content
+    dateLabel.textContent = project.dates || "";
+    // Also set data-tooltip attribute for hover functionality
+    dateLabel.setAttribute('data-tooltip', project.dates || "");
+  }
+
+  // Stack icons
+  const stackIcons = clone.querySelector(".stack-icons");
+  if (stackIcons && Array.isArray(project.stack)) {
+    stackIcons.innerHTML = "";
+    project.stack.forEach(tech => {
+      const iconSpan = document.createElement("span");
+      iconSpan.classList.add("stack-icon");
+      iconSpan.textContent = tech;
+      stackIcons.appendChild(iconSpan);
+    });
+  }
+
+  // Images badge
+  const imageIcon = clone.querySelector(".image-count-icon");
+  if (project.images && project.images.length > 0 && imageIcon) {
+    imageIcon.style.display = "flex";
+    imageIcon.querySelector(".count").textContent = project.images.length;
+  }
+  
+  // Mermaid badge
+  const mermaidIcon = clone.querySelector(".mermaid-icon");
+  if (mermaidIcon && project.mermaid && project.mermaid.trim()) {
+    mermaidIcon.style.display = "block";
+  }
+
+  // make just the corner of the card clickable, not the entire card
+  const viewButton = card.querySelector('.open-modal-btn');
+  viewButton.style.cursor = "pointer"; // Change cursor to pointer
+  viewButton.addEventListener('click', () => {
+    openProjectModal(project);
+  });
+  
+
+  // Also add the modal handler to the button specifically
+  const modalButton = clone.querySelector(".open-modal-btn");
+  if (modalButton) {
+    modalButton.style.cursor = "pointer"; // Change cursor to pointer
+    modalButton.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent the card click event from firing
+    console.log('Button clicked for project:', project.id);
+    openProjectModal(project.id);
+    });
+  }
+
+  return card;
+}
 
 // Helper function to setup tooltips
 function setupTooltipEvents(element, tooltipText = null) {

@@ -4,6 +4,7 @@ import { initPagination, updateItemsPerPage } from './rsc/js/pagination.js';
 import { filterProjByTitle, filterByDate } from './rsc/js/gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
+import { initNavDrawer } from './rsc/js/nav-drawer.js';
 
 /**
  * Load partial files into the main page with improved path resolution
@@ -216,50 +217,44 @@ async function init() {
   return projects;
 }
 
-// Find all academic labels in the document
-document.querySelectorAll('.academic-label').forEach(label => {
-  // When the label is hovered over...
-  label.addEventListener('mouseenter', () => {
-    const dates = label.getAttribute('data-dates');
-    // Locate the parent project-card and its badge element
-    const projectCard = label.closest('.project-card');
-    const badge = projectCard ? projectCard.querySelector('.badge') : null;
-    if (badge && dates) {
-      // If the tooltip doesn't exist yet, create it
-      let tooltip = badge.querySelector('.tooltip-dates');
-      if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.className = 'tooltip-dates';
-        badge.appendChild(tooltip);
+// Add function to set up academic label tooltips
+function setupAcademicLabelTooltips() {
+  // Wait for a short delay to ensure elements are loaded
+  setTimeout(() => {
+    const academicLabels = document.querySelectorAll('.academic-label');
+    console.log(`Found ${academicLabels.length} academic labels for tooltips`);
+    
+    academicLabels.forEach(label => {
+      // Get dates from data attribute
+      const dates = label.dataset.dates;
+      if (dates) {
+        // Create tooltip element if it doesn't exist
+        if (!label.querySelector('.date-tooltip')) {
+          const tooltip = document.createElement('span');
+          tooltip.className = 'date-tooltip';
+          tooltip.textContent = dates;
+          label.appendChild(tooltip);
+        }
       }
-      tooltip.textContent = dates;
-      // Trigger the fade-in by adding the 'visible' class
-      tooltip.classList.add('visible');
-    }
-  });
-  
-  // When the mouse leaves the label, hide the tooltip
-  label.addEventListener('mouseleave', () => {
-    const projectCard = label.closest('.project-card');
-    const badge = projectCard ? projectCard.querySelector('.badge') : null;
-    if (badge) {
-      const tooltip = badge.querySelector('.tooltip-dates');
-      if (tooltip) {
-        tooltip.classList.remove('visible');
-      }
-    }
-  });
-});
+    });
+  }, 500);
+}
 
 // In main.js, improve the projects page initialization
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('DOM content loaded, pathname:', window.location.pathname);
+  
+  // Initialize navigation drawer
+  initNavDrawer();
   
   await Promise.all([
     loadPartial('headerContainer', 'header.html'),
     loadPartial('sidebarContainer', 'sidebar.html'),
     loadPartial('footerContainer', 'footer.html')
   ]);
+
+  // Set up academic labels with date tooltips
+  setupAcademicLabelTooltips();
 
   // Check if we're on the projects page in multiple ways to be sure
   const isProjectsPage = 
