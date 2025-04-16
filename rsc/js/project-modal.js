@@ -23,6 +23,8 @@ export function openProjectModal(projectIdOrObject, allProjects = []) {
     return;
   }
 
+  currentProject = project; // Store the current project
+
   const modal = document.getElementById('projectModal');
   if (!modal) {
     console.warn('Modal not found in DOM. Loading modal and retrying...');
@@ -78,6 +80,12 @@ export function openProjectModal(projectIdOrObject, allProjects = []) {
     }
   }
 
+  // Import dynamically needed here since project-fab.js imports this file
+  import('./project-fab.js').then(fabModule => {
+    fabModule.setupModalToggleFABs(project);
+  });
+
+  // Show images as default view
   showImagesInModal(project);
 }
 

@@ -78,10 +78,12 @@
                 <!-- filter by dropdown -->
                 <div id="projectFilters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem;">
                   <!-- Anchor for menu -->
-                  <div id="filterAnchor" style="position: relative;"></div>
-
+                  <div style="position: relative;" id="filterMenuAnchor">
+                    <md-filled-tonal-button id="filterToggleBtn">Filter Options</md-filled-tonal-button>
+                  </div>
+                  
                   <!-- Material 3 Menu for filters -->
-                  <md-menu anchor="filterAnchor" id="projectFilterMenu">
+                  <md-menu id="projectFilterMenu" anchor="filterMenuAnchor">
                     <md-menu-item type="checkbox" id="filterImages">Has Images</md-menu-item>
                     <md-menu-item type="checkbox" id="filterMermaid">Has Mermaid</md-menu-item>
                     <md-divider></md-divider>
@@ -90,6 +92,7 @@
                       <div id="stackFilterChips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
                     </div>
                   </md-menu>
+                  
                   
                   <!-- Sort By dropdown remains unchanged -->
                   <md-outlined-select label="Sort By" id="sortDropdown">

@@ -120,8 +120,6 @@ function initializeLightbox(carousel) {
       });
     }
     
-    // If you're using another lightbox library like SimpleLightbox
-    // Adjust based on the actual library you're using
     const lightboxLinks = carousel.querySelectorAll('a[data-lightbox]');
     lightboxLinks.forEach(link => {
       // Pre-fetch the image to prevent loading delay when clicking
@@ -151,6 +149,7 @@ export function showMermaidDiagramInModal(project) {
   const carousel = document.getElementById('projectImageCarousel');
   const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
   const noMermaidMsg = modalImages.querySelector('.no-mermaid');
+  const modalContent = document.querySelector('.modal-content');
 
   if (carousel) carousel.style.display = 'none';
   if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
@@ -167,12 +166,29 @@ export function showMermaidDiagramInModal(project) {
   }
 
   if (mermaidContainer) {
+    // Position the mermaid container to take up the full modal area but leave space for FABs
     mermaidContainer.innerHTML = '';
+    mermaidContainer.style.position = 'absolute';
+    mermaidContainer.style.top = '0';
+    mermaidContainer.style.left = '0';
+    mermaidContainer.style.width = '100%';
+    mermaidContainer.style.height = '100%';
+    mermaidContainer.style.zIndex = '10';
+    mermaidContainer.style.overflow = 'hidden';
+    mermaidContainer.style.paddingTop = '50px'; // Add padding to avoid overlapping with FABs
+    
+    // Create the inner mermaid container with proper styling
     const innerMermaid = document.createElement('div');
     innerMermaid.className = 'mermaid';
     innerMermaid.textContent = mermaidCode;
+    innerMermaid.style.width = '100%';
+    innerMermaid.style.height = '100%';
+    innerMermaid.style.display = 'flex';
+    innerMermaid.style.justifyContent = 'center';
+    innerMermaid.style.alignItems = 'center';
+    
     mermaidContainer.appendChild(innerMermaid);
-    mermaidContainer.style.display = 'block';
+    mermaidContainer.style.display = 'flex';
 
     renderMermaidDiagram(innerMermaid);
   }
