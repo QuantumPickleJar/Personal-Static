@@ -355,11 +355,17 @@
 </script>
 
   <script type="module">
-    // Fixed initialization for Material 3 components
+    // Fixed initialization for Material 3 components and filters
     document.addEventListener('DOMContentLoaded', () => {
-      // Wait a short time to ensure all Material components are registered
+      // Import the initializeStackFilterChips function
+      import('./rsc/js/stackIconLoader.js').then(module => {
+        // Initialize the stack filter chips
+        module.initializeStackFilterChips();
+      }).catch(err => console.error('Failed to import stackIconLoader:', err));
+      
+      // Wait a short time to ensure all components are loaded
       setTimeout(() => {
-        // Initialize the Material 3 filter dropdown
+        // Initialize the filter dropdown
         const filterMenu = document.getElementById('projectFilterMenu');
         const filterToggleBtn = document.getElementById('filterToggleBtn');
         const anchorElement = document.getElementById('filterMenuAnchor');
@@ -382,6 +388,13 @@
             console.log('Menu open state:', filterMenu.style.display);
           });
           
+          // Close menu when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!filterMenu.contains(e.target) && e.target !== filterToggleBtn) {
+              filterMenu.style.display = 'none';
+            }
+          });
+          
           // Handle checkbox items in menu
           const filterImages = document.getElementById('filterImages');
           const filterMermaid = document.getElementById('filterMermaid');
@@ -390,7 +403,13 @@
             filterImages.addEventListener('click', () => {
               filterImages.classList.toggle('selected');
               console.log('Filter by images:', filterImages.classList.contains('selected'));
-              applyFilters();
+              
+              // Call the global applyAllFilters function if it exists
+              if (window.applyAllFilters) {
+                window.applyAllFilters();
+              } else {
+                applyFilters();
+              }
             });
           }
           
@@ -398,11 +417,17 @@
             filterMermaid.addEventListener('click', () => {
               filterMermaid.classList.toggle('selected');
               console.log('Filter by mermaid:', filterMermaid.classList.contains('selected'));
-              applyFilters();
+              
+              // Call the global applyAllFilters function if it exists
+              if (window.applyAllFilters) {
+                window.applyAllFilters();
+              } else {
+                applyFilters();
+              }
             });
           }
           
-          // Function to apply all active filters
+          // Function to apply image and mermaid filters
           function applyFilters() {
             const hasImagesFilter = filterImages?.classList.contains('selected') || false;
             const hasMermaidFilter = filterMermaid?.classList.contains('selected') || false;
