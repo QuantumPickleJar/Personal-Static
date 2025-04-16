@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+  <head>
+  <script src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -20,6 +21,7 @@
   <title>Vincent's Portfolio</title>
   <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
   <!-- Updated CSS path -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
@@ -36,6 +38,117 @@
   <!-- Add Barba.js CDN -->
   <meta http-equiv="Content-Type" content="text/javascript; charset=utf-8">
   <script src="https://unpkg.com/@barba/core"></script>
+
+  <style>
+    /* CSS-only Material Menu Implementation */
+    .custom-material-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1000;
+      display: none;
+      min-width: 180px;
+      padding: 8px 0;
+      margin: 0;
+      font-size: 14px;
+      text-align: left;
+      list-style: none;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10);
+    }
+
+    .dark-theme .custom-material-menu {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .custom-menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.5;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    .custom-menu-item:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .dark-theme .custom-menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-menu-item.selected::before {
+      content: '✓';
+      margin-right: 8px;
+    }
+
+    .custom-menu-divider {
+      height: 1px;
+      margin: 8px 0;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.12);
+    }
+
+    .dark-theme .custom-menu-divider {
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .filter-menu-section {
+      padding: 10px;
+      max-width: 250px;
+    }
+    
+    .custom-material-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      text-align: center;
+      text-decoration: none;
+      background-color: #e6e6e6;
+      color: #000;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .custom-material-button:hover {
+      background-color: #d6d6d6;
+    }
+
+    .custom-material-button:active {
+      background-color: #c6c6c6;
+    }
+
+    .dark-theme .custom-material-button {
+      background-color: #3a3a3a;
+      color: #fff;
+    }
+
+    .dark-theme .custom-material-button:hover {
+      background-color: #4a4a4a;
+    }
+
+    .dark-theme .custom-material-button:active {
+      background-color: #5a5a5a;
+    }
+  </style>
 </head>
 
 <body>
@@ -77,35 +190,31 @@
  
                 <!-- filter by dropdown -->
                 <div id="projectFilters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem;">
-                  <!-- Anchor for menu -->
-                  <div style="position: relative;" id="filterMenuAnchor">
-                    <md-filled-tonal-button id="filterToggleBtn">Filter Options</md-filled-tonal-button>
+                  <!-- Anchor for menu with proper positioning -->
+                  <div id="filterMenuAnchor" style="position: relative;">
+                    <!-- Replace md-filled-tonal-button with regular button styled with CSS -->
+                    <button id="filterToggleBtn" class="custom-material-button">Filter Options</button>
+                    
+                    <!-- CSS-only menu implementation -->
+                    <div id="projectFilterMenu" class="custom-material-menu">
+                      <div id="filterImages" class="custom-menu-item" data-type="checkbox">Has Images</div>
+                      <div id="filterMermaid" class="custom-menu-item" data-type="checkbox">Has Mermaid</div>
+                      <div class="custom-menu-divider"></div>
+                      <div class="filter-menu-section">
+                        <p style="margin: 0 0 8px;">Filter by Technology:</p>
+                        <div id="stackFilterChips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                      </div>
+                    </div>
                   </div>
                   
-                  <!-- Material 3 Menu for filters -->
-                  <md-menu id="projectFilterMenu" anchor="filterMenuAnchor">
-                    <md-menu-item type="checkbox" id="filterImages">Has Images</md-menu-item>
-                    <md-menu-item type="checkbox" id="filterMermaid">Has Mermaid</md-menu-item>
-                    <md-divider></md-divider>
-                    <div style="padding: 10px; max-width: 250px;">
-                      <p style="margin: 0 0 8px;">Filter by Technology:</p>
-                      <div id="stackFilterChips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
-                    </div>
-                  </md-menu>
-                  
-                  
-                  <!-- Sort By dropdown remains unchanged -->
-                  <md-outlined-select label="Sort By" id="sortDropdown">
-                    <md-select-option value="title">
-                      <span>Title</span>
-                    </md-select-option>
-                    <md-select-option value="date">
-                      <span>Date</span>
-                    </md-select-option>
-                  </md-outlined-select>
-                  
-                  <!-- Filter toggle button -->
-                  <md-filled-tonal-button id="filterToggleBtn">Filter Options</md-filled-tonal-button>
+                  <!-- Sort By dropdown - also converted to CSS-only version -->
+                  <div style="position: relative;" class="sort-dropdown-container">
+                    <label for="sortDropdown" style="display: block; margin-bottom: 4px; font-size: 12px;">Sort By</label>
+                    <select id="sortDropdown" class="form-control">
+                      <option value="title">Title</option>
+                      <option value="date">Date</option>
+                    </select>
+                  </div>
                 </div>
                 
               </div>
@@ -246,18 +355,86 @@
 </script>
 
   <script type="module">
-    // Use CDN imports instead of bare specifiers
-    import { LitElement } from 'https://esm.sh/lit@2.8.0';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/elevated-card/elevated-card.js';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/filled-button/filled-button.js';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/menu/menu.js';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/menu/menu-item.js';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/divider/divider.js';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/filled-tonal-button/filled-tonal-button.js';
-    import 'https://cdn.jsdelivr.net/npm/@material/web/filter-chip/filter-chip.js';
+    // Fixed initialization for Material 3 components
+    document.addEventListener('DOMContentLoaded', () => {
+      // Wait a short time to ensure all Material components are registered
+      setTimeout(() => {
+        // Initialize the Material 3 filter dropdown
+        const filterMenu = document.getElementById('projectFilterMenu');
+        const filterToggleBtn = document.getElementById('filterToggleBtn');
+        const anchorElement = document.getElementById('filterMenuAnchor');
+        
+        if (filterMenu && filterToggleBtn) {
+          console.log('Setting up filter menu interaction');
+          
+          // Ensure anchor is properly set
+          if (anchorElement && filterMenu.getAttribute('anchor') !== anchorElement.id) {
+            filterMenu.setAttribute('anchor', anchorElement.id);
+          }
+          
+          // Set up the menu to open when the button is clicked
+          filterToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            console.log('Filter toggle button clicked');
+            
+            // Toggle menu's open state
+            filterMenu.style.display = filterMenu.style.display === 'none' ? 'block' : 'none';
+            console.log('Menu open state:', filterMenu.style.display);
+          });
+          
+          // Handle checkbox items in menu
+          const filterImages = document.getElementById('filterImages');
+          const filterMermaid = document.getElementById('filterMermaid');
+          
+          if (filterImages) {
+            filterImages.addEventListener('click', () => {
+              filterImages.classList.toggle('selected');
+              console.log('Filter by images:', filterImages.classList.contains('selected'));
+              applyFilters();
+            });
+          }
+          
+          if (filterMermaid) {
+            filterMermaid.addEventListener('click', () => {
+              filterMermaid.classList.toggle('selected');
+              console.log('Filter by mermaid:', filterMermaid.classList.contains('selected'));
+              applyFilters();
+            });
+          }
+          
+          // Function to apply all active filters
+          function applyFilters() {
+            const hasImagesFilter = filterImages?.classList.contains('selected') || false;
+            const hasMermaidFilter = filterMermaid?.classList.contains('selected') || false;
+            
+            // Get all project cards
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            projectCards.forEach(card => {
+              let showCard = true;
+              
+              // Check image filter
+              if (hasImagesFilter) {
+                const hasImages = card.querySelector('.image-count-icon')?.style.display !== 'none';
+                if (!hasImages) showCard = false;
+              }
+              
+              // Check mermaid filter
+              if (hasMermaidFilter && showCard) {
+                const hasMermaid = card.querySelector('.mermaid-icon')?.style.display !== 'none';
+                if (!hasMermaid) showCard = false;
+              }
+              
+              // Show or hide the card
+              card.style.display = showCard ? '' : 'none';
+            });
+          }
+        } else {
+          console.error('Filter menu or button not found in DOM');
+        }
+      }, 100); // Short delay to ensure components are loaded
+    });
   </script>
-
-  <script type="module" src="rsc/js/theme-toggle.js"></script>
 </body>
 
 </html>
