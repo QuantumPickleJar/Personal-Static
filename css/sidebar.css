@@ -1,60 +1,216 @@
 /* sidebar.css - Styles for the sidebar */
 
-/* Directly target the sidebar element */
+/* Material 3 Sidebar */
 #sidebar {
   width: 300px;
   max-width: 300px;
-  background-color: #0000a0;
-  border-right: 1px solid #ddd;
-  color: white;
-  padding: 20px;
+  background-color: var(--md-sys-color-surface-container, #f3f3f3);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding: 24px;
   height: 100%;
   box-sizing: border-box;
   overflow-wrap: break-word;
-  transition: transform 0.5s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 3px rgba(0, 0, 0, 0.08));
 }
 
-.profile-photo {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  /* margin-bottom: 10px; */
-  object-fit: cover;
-  margin-left: 10%;
-  margin-right: 10%;
+/* Dark theme support */
+body.dark-theme #sidebar {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+  border-right-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
 }
 
-.slide-left {
-  transform: translateX(-50%);
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.profile-links {
-  text-align: center;
-}
-
-/* Only target anchors that are inside .profile-links */
-.profile-links a {
-  color: pink;
-  text-align: center;
-}
-
-/* 0px – 599px (very small screens): stacked column, everything centered */
 .profile-top {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  gap: 16px;
 }
+
 .profile-photo {
-  width: 120px;       /* choose smaller mobile size if desired */
+  width: 120px;
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 8px; /* small spacing below the image */
+  border: 3px solid var(--md-sys-color-primary, #6750a4);
+  box-shadow: var(--md-sys-elevation-level1, 0 1px 3px rgba(0, 0, 0, 0.12));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-/* Hide hr lines on very small screens */
-.profile > hr {
+
+.profile-photo:hover {
+  transform: scale(1.02);
+  box-shadow: var(--md-sys-elevation-level2, 0 2px 6px rgba(0, 0, 0, 0.16));
+}
+
+.profile-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-heading h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  line-height: 1.2;
+}
+
+.profile-heading p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  font-weight: 400;
+}
+
+.profile hr {
+  width: 100%;
+  border: none;
+  height: 1px;
+  background-color: var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+  margin: 4px 0;
+}
+
+body.dark-theme .profile hr {
+  background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-details p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-details strong {
+  color: var(--md-sys-color-primary, #6750a4);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-details span {
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.profile-links {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.profile-links a {
+  color: var(--md-sys-color-primary, #6750a4);
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.profile-links a:hover {
+  color: var(--md-sys-color-on-primary-container, #21005e);
+}
+
+.profile-links a::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--md-sys-color-primary, #6750a4);
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease;
+}
+
+.profile-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Remove the dividers between links */
+.profile-links a + a::before {
   display: none;
+}
+
+/* Style the resume button */
+.mt-3 {
+  margin-top: 16px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  gap: 8px;
+}
+
+.btn-outline-primary {
+  color: var(--md-sys-color-primary, #6750a4);
+  border: 1px solid var(--md-sys-color-outline, #79747e);
+  background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #21005d);
+  border-color: var(--md-sys-color-primary, #6750a4);
+}
+
+body.dark-theme .btn-outline-primary {
+  color: var(--md-sys-color-primary, #d0bcff);
+  border-color: var(--md-sys-color-outline, #938f99);
+}
+
+body.dark-theme .btn-outline-primary:hover {
+  background-color: var(--md-sys-color-primary-container, #4f378b);
+  color: var(--md-sys-color-on-primary-container, #eaddff);
+  border-color: var(--md-sys-color-primary, #d0bcff);
+}
+
+/* Media queries for responsive design */
+/* 0px – 599px (very small screens): stacked column, everything centered */
+@media (max-width: 599px) {
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 /* 600px – 767px: now place photo left, text on the right in a row */
@@ -63,21 +219,24 @@
     flex-direction: row;
     justify-content: flex-start;
     text-align: left;
+    gap: 20px;
   }
+  
   .profile-photo {
     margin-bottom: 0;
-    margin-right: 16px; /* space between image and text */
+    width: 96px;
+    height: 96px;
   }
 }
 
-/* 768px and above: typical “desktop” layout. 
-   Let’s show the hr lines again, possibly enlarge the photo, etc. */
+/* 768px and above: typical "desktop" layout */
 @media (min-width: 768px) {
-  .profile > hr {
-    display: block; /* or inline-block */
-  }
   .profile-photo {
-    width: 200px;
-    height: 200px;
+    width: 140px;
+    height: 140px;
+  }
+  
+  .profile-heading h2 {
+    font-size: 1.75rem;
   }
 }
