@@ -148,6 +148,115 @@
     .dark-theme .custom-material-button:active {
       background-color: #5a5a5a;
     }
+    
+    /* Tech filter card styles */
+    .filter-menu-container {
+      display: flex;
+      position: relative;
+    }
+    
+    .filter-menu-main {
+      min-width: 180px;
+    }
+    
+    .tech-filter-card {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 8px;
+      width: 200px;
+      max-height: 300px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .dark-theme .tech-filter-card {
+      background-color: #333;
+    }
+    
+    .tech-filter-header {
+      padding: 12px 16px;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #f5f5f5;
+    }
+    
+    .dark-theme .tech-filter-header {
+      background-color: #444;
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .tech-filter-content {
+      padding: 8px;
+      overflow-y: auto;
+      max-height: 250px;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 6px;
+    }
+    
+    .tech-filter-card.visible {
+      display: flex;
+    }
+    
+    /* Chip styles */
+    .custom-filter-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: #e0e0e0;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    
+    .custom-filter-chip:hover {
+      background-color: #d0d0d0;
+    }
+    
+    .custom-filter-chip.selected {
+      background-color: var(--md-sys-color-primary-container, #c8e6fa);
+      color: var(--md-sys-color-on-primary-container, #001f28);
+      border-color: var(--md-sys-color-primary, #006782);
+    }
+    
+    .dark-theme .custom-filter-chip {
+      background-color: #3a3a3a;
+      color: #e0e0e0;
+    }
+    
+    .dark-theme .custom-filter-chip:hover {
+      background-color: #4a4a4a;
+    }
+    
+    .dark-theme .custom-filter-chip.selected {
+      background-color: var(--md-sys-color-primary, #5bd3fc);
+      color: var(--md-sys-color-on-primary, #003546);
+    }
+    
+    /* Selected indicator */
+    .custom-filter-chip.selected::before {
+      content: '✓';
+      margin-right: 4px;
+      font-size: 10px;
+    }
+    
+    /* Show tech filter card on hover */
+    .filter-tech-trigger:hover + .tech-filter-card,
+    .tech-filter-card:hover {
+      display: flex;
+    }
   </style>
 </head>
 
@@ -195,25 +304,27 @@
                     <!-- Replace md-filled-tonal-button with regular button styled with CSS -->
                     <button id="filterToggleBtn" class="custom-material-button">Filter Options</button>
                     
-                    <!-- CSS-only menu implementation -->
+                    <!-- CSS-only menu implementation with right-side tech filter card -->
                     <div id="projectFilterMenu" class="custom-material-menu">
-                      <div id="filterImages" class="custom-menu-item" data-type="checkbox">Has Images</div>
-                      <div id="filterMermaid" class="custom-menu-item" data-type="checkbox">Has Mermaid</div>
-                      <div class="custom-menu-divider"></div>
-                      <div class="filter-menu-section">
-                        <p style="margin: 0 0 8px;">Filter by Technology:</p>
-                        <div id="stackFilterChips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                      <div class="filter-menu-container">
+                        <!-- Main menu items -->
+                        <div class="filter-menu-main">
+                          <div id="filterImages" class="custom-menu-item" data-type="checkbox">Has Images</div>
+                          <div id="filterMermaid" class="custom-menu-item" data-type="checkbox">Has Mermaid</div>
+                          <div class="custom-menu-divider"></div>
+                          <!-- Tech filter trigger item that shows the tech filter card -->
+                          <div id="filterTechTrigger" class="custom-menu-item filter-tech-trigger">
+                            Filter by Technology <span style="margin-left: auto">▶</span>
+                          </div>
+                        </div>
+                        
+                        <!-- Right-side tech filter card with vertical scroll -->
+                        <div id="techFilterCard" class="tech-filter-card">
+                          <div class="tech-filter-header">Technologies</div>
+                          <div id="stackFilterChips" class="tech-filter-content"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <!-- Sort By dropdown - also converted to CSS-only version -->
-                  <div style="position: relative;" class="sort-dropdown-container">
-                    <label for="sortDropdown" style="display: block; margin-bottom: 4px; font-size: 12px;">Sort By</label>
-                    <select id="sortDropdown" class="form-control">
-                      <option value="title">Title</option>
-                      <option value="date">Date</option>
-                    </select>
                   </div>
                 </div>
                 
@@ -314,47 +425,6 @@
   </script>
 
   <script type="module">
-  // Ensure projects are loaded correctly regardless of base path
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      // Dynamically import with absolute path
-      const basePath = window.location.hostname.includes('github.io') ? 
-        '/Personal-Static/' : '/';
-      
-      // Import and initialize projects module
-      const projectsModule = await import(`${basePath}rsc/js/projects.js`);
-      
-      console.log('Projects module loaded successfully');
-      
-      // Get the gallery element
-      const gallery = document.getElementById('projectsGallery');
-      if (gallery) {
-        // Add loading indicator
-        gallery.innerHTML = '<div class="loading">Loading projects...</div>';
-        
-        // Load and render projects
-        const projects = await projectsModule.loadProjects();
-        console.log(`Loaded ${projects.length} projects`);
-        
-        if (projects && projects.length > 0) {
-          projectsModule.renderProjectsGallery(projects);
-        } else {
-          gallery.innerHTML = '<div class="error">No projects found.</div>';
-        }
-      } else {
-        console.error('Projects gallery element not found!');
-      }
-    } catch (err) {
-      console.error('Failed to load or initialize projects:', err);
-      const gallery = document.getElementById('projectsGallery');
-      if (gallery) {
-        gallery.innerHTML = `<div class="error">Failed to load projects: ${err.message}</div>`;
-      }
-    }
-  });
-</script>
-
-  <script type="module">
     // Fixed initialization for Material 3 components and filters
     document.addEventListener('DOMContentLoaded', () => {
       // Import the initializeStackFilterChips function
@@ -362,6 +432,34 @@
         // Initialize the stack filter chips
         module.initializeStackFilterChips();
       }).catch(err => console.error('Failed to import stackIconLoader:', err));
+      
+      // Import sorting functions
+      import('./rsc/js/gallery-sorting.js').then(module => {
+        const { filterProjByTitle, filterByDate } = module;
+        
+        // Set up sort dropdown event listener
+        const sortDropdown = document.getElementById('sortDropdown');
+        if (sortDropdown) {
+          console.log('Setting up sort dropdown listener');
+          
+          // Initialize with current value
+          sortDropdown.addEventListener('change', (e) => {
+            console.log('Sort type changed to:', e.target.value);
+            
+            // Call the appropriate sort function based on selected value
+            switch (e.target.value) {
+              case 'title':
+                filterProjByTitle();
+                break;
+              case 'date':
+                filterByDate();
+                break;
+              default:
+                console.warn('Unknown sort type:', e.target.value);
+            }
+          });
+        }
+      }).catch(err => console.error('Failed to import gallery-sorting:', err));
       
       // Wait a short time to ensure all components are loaded
       setTimeout(() => {
