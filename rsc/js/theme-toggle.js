@@ -52,6 +52,17 @@ class ThemeToggle extends LitElement {
     const isDark = e.target.selected;
     document.body.classList.toggle('dark-mode', isDark);
     
+    // Apply theme to document body (global scope)
+    this._applyThemeToBody(isDark);
+    
+    // Save user preference
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    
+    // Log message to verify toggle is working
+    console.log('Theme toggle activated, dark mode:', isDark);
+  }
+  
+  _applyThemeToBody(isDark) {
     // Enhanced color scheme for better overall look
     document.body.style.setProperty('--md-sys-color-surface', isDark ? '#1a1a1a' : '#ffffff');
     document.body.style.setProperty('--md-sys-color-on-surface', isDark ? '#ffffff' : '#000000');
@@ -119,16 +130,11 @@ class ThemeToggle extends LitElement {
           'var(--md-sys-color-primary, #6750a4)';
       });
     }
-    
-    // Save user preference
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    
-    // Log message to verify toggle is working
-    console.log('Theme toggle activated, dark mode:', isDark);
   }
   
   // Check for user's preferred theme when component is first added
   firstUpdated() {
+    // Get saved theme from localStorage
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
@@ -141,74 +147,9 @@ class ThemeToggle extends LitElement {
       switchEl.selected = shouldBeDark;
     }
     
-    // Update the body class and properties
+    // Apply theme to document body
     document.body.classList.toggle('dark-mode', shouldBeDark);
-    document.body.style.setProperty('--md-sys-color-surface', shouldBeDark ? '#1a1a1a' : '#ffffff');
-    document.body.style.setProperty('--md-sys-color-on-surface', shouldBeDark ? '#ffffff' : '#000000');
-    
-    // Improve footer text contrast in dark mode
-    document.body.style.setProperty('--md-sys-color-on-surface-variant', shouldBeDark ? '#e1e1fc' : '#49454f');
-    document.body.style.setProperty('--md-sys-color-outline', shouldBeDark ? '#938f99' : '#79747e');
-    document.body.style.setProperty('--md-sys-color-outline-variant', shouldBeDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.08)');
-    
-    // Project card specific colors for backward compatibility
-    const projectCards = document.querySelectorAll('md-elevated-card.project-card');
-    projectCards.forEach(card => {
-      if (shouldBeDark) {
-        card.style.backgroundColor = 'var(--md-sys-color-surface-container, #1d1b20)';
-        card.style.color = 'var(--md-sys-color-on-surface, #e6e0e9)';
-      } else {
-        card.style.backgroundColor = 'var(--md-sys-color-surface-container, #f9f9f9)';
-        card.style.color = 'var(--md-sys-color-on-surface, #1c1b1f)';
-      }
-    });
-    
-    // Directly target sidebar element
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-      sidebar.style.backgroundColor = shouldBeDark ? 
-        'var(--md-sys-color-surface-container, #1d1b20)' : 
-        'var(--md-sys-color-surface-container, #f3f3f3)';
-      sidebar.style.borderRightColor = shouldBeDark ? 
-        'var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1))' : 
-        'var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08))';
-    }
-    
-    // Directly target footer element and all its content
-    const footer = document.querySelector('footer');
-    if (footer) {
-      footer.style.backgroundColor = shouldBeDark ? 
-        'var(--md-sys-color-surface-container, #1d1b20)' : 
-        'var(--md-sys-color-surface-container, #f3f3f3)';
-      footer.style.borderTopColor = shouldBeDark ? 
-        'var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1))' : 
-        'var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08))';
-      
-      // Ensure all footer text has proper contrast
-      footer.style.color = shouldBeDark ? 
-        'var(--md-sys-color-on-surface, #e6e0e9)' : 
-        'var(--md-sys-color-on-surface, #1c1b1f)';
-        
-      // Target footer text elements specifically for better contrast
-      const footerParagraphs = footer.querySelectorAll('p');
-      footerParagraphs.forEach(p => {
-        p.style.color = shouldBeDark ? '#e1e1fc' : '#49454f';
-      });
-      
-      // Make footer links more visible in dark mode
-      const footerLinks = footer.querySelectorAll('a');
-      footerLinks.forEach(link => {
-        link.style.color = shouldBeDark ? '#90caf9' : '#006782';
-      });
-      
-      // Target footer sections and headings
-      const footerHeadings = footer.querySelectorAll('h3, h4');
-      footerHeadings.forEach(heading => {
-        heading.style.color = shouldBeDark ? 
-          'var(--md-sys-color-primary, #d0bcff)' : 
-          'var(--md-sys-color-primary, #6750a4)';
-      });
-    }
+    this._applyThemeToBody(shouldBeDark);
     
     console.log('Theme initialized, dark mode:', shouldBeDark);
   }
@@ -216,13 +157,51 @@ class ThemeToggle extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     console.log('Theme toggle component connected to DOM');
+    
+    // Force theme application when component connects to DOM
+    const isDark = localStorage.getItem('theme') === 'dark' || 
+                  (localStorage.getItem('theme') === null && 
+                   window.matchMedia('(prefers-color-scheme: dark)').matches);
+                   
+    document.body.classList.toggle('dark-mode', isDark);
+    this._applyThemeToBody(isDark);
+    
+    // Make sure current page knows its theme state
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
   }
 }
 
 customElements.define('theme-toggle', ThemeToggle);
 
+// Global function to apply theme (can be called from any page)
+window.applyTheme = function(isDark) {
+  document.body.classList.toggle('dark-mode', isDark);
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  
+  // Apply same style properties as in the component
+  document.body.style.setProperty('--md-sys-color-surface', isDark ? '#1a1a1a' : '#ffffff');
+  document.body.style.setProperty('--md-sys-color-on-surface', isDark ? '#ffffff' : '#000000');
+  document.body.style.setProperty('--md-sys-color-on-surface-variant', isDark ? '#e1e1fc' : '#49454f');
+  document.body.style.setProperty('--md-sys-color-outline', isDark ? '#938f99' : '#79747e');
+  document.body.style.setProperty('--md-sys-color-outline-variant', isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.08)');
+};
+
 // Add a fallback to make sure the theme toggle is always visible
 document.addEventListener('DOMContentLoaded', () => {
+  // Get theme from localStorage and apply it immediately to the document
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = savedTheme === 'dark' || (savedTheme === null && prefersDark);
+  
+  // Apply theme to document body immediately, don't wait for component
+  document.body.classList.toggle('dark-mode', isDark);
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  window.applyTheme(isDark);
+  
   // Apply theme to any elements that might exist in a partial loaded after component initialization
   const applyThemeToLoadedPartials = () => {
     const isDark = document.body.classList.contains('dark-mode');
@@ -329,6 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.toggle('dark-mode', !currentIsDark);
         fallbackToggle.innerHTML = !currentIsDark ? '☀️' : '🌙';
         localStorage.setItem('theme', !currentIsDark ? 'dark' : 'light');
+        
+        // Apply theme to entire document
+        window.applyTheme(!currentIsDark);
         
         // Apply theme to sidebar and footer
         applyThemeToLoadedPartials();
