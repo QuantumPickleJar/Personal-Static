@@ -1,5 +1,5 @@
 import * as bootstrap from 'bootstrap';
-import { initPagination } from './pagination.js';
+import { initPagination, updatePagination } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './search.js';
 import { projectsPerPage } from './perPageSettings.js';
@@ -9,12 +9,14 @@ import { createProjectCard, renderProjectsGallery } from './project-card.js';
 import { showImagesInModal, showMermaidDiagramInModal } from './project-image-display.js';
 
 export let allProjects = [];
+let filteredProjects = []; // Store filtered projects for pagination
 const MAX_STACK_CHARS = 20;
 
 document.addEventListener('DOMContentLoaded', function () {
   if (document.getElementById('projectsGallery')) {
     console.log('Projects gallery found, initializing projects');
     initializeProjects();
+    initializeSearchFunctionality(); // Initialize search functionality
 
     const urlParams = new URLSearchParams(window.location.search);
     const projectToShow = urlParams.get('showProject');
@@ -34,6 +36,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
   debugMaterialMenu();
 });
+
+/**
+ * Initialize search functionality by connecting the search input to the search.js module
+ */
+function initializeSearchFunctionality() {
+  const searchInput = document.getElementById('searchBar');
+  if (!searchInput) {
+    console.warn('Search input not found, skipping search initialization');
+    return;
+  }
+  
+  console.log('Initializing search functionality');
+  
+  searchInput.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.trim();
+    console.log('Search term:', searchTerm);
+    
+    // Filter projects based on search term
+    filteredProjects = filterProjectsBySearchTerm(allProjects, searchTerm);
+    
+    // Re-render the gallery with filtered projects
+    renderProjectsGallery(filteredProjects);
+    
+    // If pagination is initialized, update it
+    if (typeof updatePagination === 'function') {
+      updatePagination(filteredProjects.length);
+    }
+    
+    console.log(`Search results: ${filteredProjects.length} projects found`);
+  });
+  
+  console.log('Search functionality initialized');
+}
 
 export function loadProjects() {
   console.log('Loading projects...');

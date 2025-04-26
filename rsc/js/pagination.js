@@ -20,6 +20,16 @@ export function initPagination(projects, perPage) {
   renderPaginationControls();
 }
 
+/**
+ * Update pagination when filtered project count changes
+ * @param {number} projectCount - The number of projects after filtering
+ */
+export function updatePagination(projectCount) {
+  totalPages = Math.ceil(projectCount / itemsPerPage);
+  currentPage = 1; // Reset to first page when search results change
+  renderPaginationControls();
+}
+
 function renderPage(pageNumber) {
   currentPage = pageNumber;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -27,7 +37,6 @@ function renderPage(pageNumber) {
   // Use currentProjects instead of allProjects
   renderProjectsGallery(currentProjects.slice(startIndex, Math.min(endIndex, currentProjects.length)));
 }
-
 
 /** Render pagination controls into the container */
 function renderPaginationControls() {
