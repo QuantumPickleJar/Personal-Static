@@ -120,7 +120,6 @@ body.dark-mode .modal-section-heading {
 .modal-images {
   position: relative;
   width: 100%;
-  height: 375px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -134,54 +133,49 @@ body.dark-mode .modal-images {
   background-color: var(--md-sys-color-surface-variant, #49454f);
 }
 
-.modal-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
 /* Modal content views */
 .modal-images.images-view {
   max-width: 100%;
-  max-height: 375px;
+  height: 14rem; /* Default for medium screens */
+  max-height: 315px;
   overflow: hidden;
+}
+
+@media (min-width: 992px) {
+  .modal-images.images-view {
+    height: 350px;
+    max-height: 375px;
+  }
 }
 
 .modal-images.mermaid-view {
   max-width: 100%;
+  height: 375px; /* Explicit height for mermaid view */
   max-height: 375px;
-  overflow: visible;
+  overflow: visible; /* Keep this as visible for mermaid diagrams */
+  position: relative; /* Add position relative for proper rendering */
 }
 
 /* Carousel styling */
 #projectImageCarousel {
   position: relative;
   width: 100%;
-  height: 375px;
+  height: 100%; /* Make it fill the container */
+  max-height: 100%;
+}
+
+.carousel-item {
+  height: 100%; /* Make carousel items take full height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .carousel-item img {
   object-fit: contain;
   max-height: 100%;
-  height: auto;
   width: auto;
-}
-
-.carousel-control-prev,
-.carousel-control-next {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 30px;
-  height: 30px;
-  background-color: rgba(0, 0, 0, 0.6);
-  background-size: 100%;
-  background-repeat: no-repeat;
-  opacity: 0.8;
-  border-radius: 50%;
+  margin: 0 auto;
 }
 
 /* Fallback placeholder */
