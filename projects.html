@@ -257,6 +257,23 @@
     .tech-filter-card:hover {
       display: flex;
     }
+
+    /* Ensure theme-toggle is always visible */
+    theme-toggle {
+      position: fixed !important;
+      top: 1.25rem !important;
+      right: 1.25rem !important;
+      z-index: 9999 !important; /* Extremely high z-index to ensure visibility */
+      display: block !important;
+      width: auto !important;
+      height: auto !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      padding: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
   </style>
 </head>
 
@@ -407,6 +424,9 @@
   
   <!-- Include only the entry point as module -->
   <script type="module" src="main.js"></script>
+  
+  <!-- Add theme toggle script -->
+  <script type="module" src="./rsc/js/theme-toggle.js"></script>
 
   <script>
     console.log('projects.html page loaded');

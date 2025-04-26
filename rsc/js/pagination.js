@@ -12,7 +12,10 @@ export function initPagination(projects, perPage) {
   itemsPerPage = perPage || itemsPerPage;
   totalPages = Math.ceil(currentProjects.length / itemsPerPage);
   console.log('Initializing pagination:', { totalPages, itemsPerPage });
+  
+  // Always reset to page 1 when filters change
   currentPage = 1;
+  
   renderPage(currentPage);
   renderPaginationControls();
 }
