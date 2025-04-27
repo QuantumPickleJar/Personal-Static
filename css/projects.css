@@ -431,3 +431,44 @@ md-elevated-card.project-card .personal-label {
   visibility: visible;
 }
 
+/* Mobile-specific card styling */
+@media (max-width: 767px) {
+  /* Make entire card clickable */
+  .project-card {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  /* Position button at the top instead of bottom for better visibility */
+  .project-card .project-card-footer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+  }
+  
+  /* Create a transparent overlay to make entire card clickable */
+  .project-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  /* Ensure buttons are still clickable by placing them above the overlay */
+  .project-card .open-modal-btn {
+    position: relative;
+    z-index: 2;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+  }
+  
+  /* Increase spacing for the title to avoid overlap with the button */
+  .project-card .project-title {
+    padding-right: 110px;
+  }
+}
+

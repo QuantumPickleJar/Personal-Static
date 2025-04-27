@@ -8,7 +8,7 @@ class ThemeToggle extends LitElement {
       position: fixed;
       top: 1.25rem;
       right: 1.25rem;
-      z-index: 1050; /* Increased z-index to ensure visibility */
+      z-index: 990; /* Lowered z-index to go behind modal (which is 1000) */
       --switch-size: 1.2;
       display: block; /* Ensure the component is always displayed */
     }

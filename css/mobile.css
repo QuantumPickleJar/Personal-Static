@@ -9,6 +9,49 @@
     padding: 12px;
     border-radius: 16px;
     gap: 8px;
+    position: relative;  /* Important for absolute positioning of button */
+    padding-bottom: 60px; /* Add space for the button */
+    cursor: pointer; /* Show pointer cursor for the entire card */
+  }
+  
+  /* Mobile-specific button positioning */
+  .project-card-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    padding-top: 0;
+  }
+  
+  md-filled-button.open-modal-btn {
+    width: 100%; /* Make button full width on mobile */
+    --md-filled-button-container-shape: 16px;
+    font-size: 0.8125rem;
+    min-height: 36px; /* Slightly taller for better tap target */
+    padding: 0 12px;
+    z-index: 5; /* Ensure button is above other elements */
+  }
+  
+  /* Visual indication that the entire card is clickable */
+  md-elevated-card.project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    pointer-events: none; /* Don't interfere with clicks */
+    transition: background-color 0.2s;
+  }
+  
+  md-elevated-card.project-card:active::after {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Push FABs down to make room for close button in mobile view */
+  .modal-content .fab-container {
+    position: absolute;
+    top: 60px !important; /* Override any inline style */
+    right: 15px;
+    z-index: 50;
   }
   
   .contentContainer {
@@ -52,6 +95,7 @@
   .stack-icons {
     gap: 6px;
     padding-top: 10px;
+    margin-bottom: 10px; /* Add space before the button */
   }
   
   .stack-icon {
@@ -61,13 +105,6 @@
   
   .carousel-card-footer {
     padding-top: 10px;
-  }
-  
-  md-filled-button.open-modal-btn {
-    --md-filled-button-container-shape: 16px;
-    font-size: 0.8125rem;
-    min-height: 32px;
-    padding: 0 12px;
   }
   
   .project-meta {
@@ -85,6 +122,7 @@
     max-width: 100%;
     margin: 8px 0;
     padding: 10px;
+    padding-bottom: 58px; /* Adjust padding for button */
   }
   
   .project-thumbnail {
@@ -96,6 +134,13 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+  }
+  
+  /* Adjust button position for very small screens */
+  .project-card-footer {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
   }
 }
 

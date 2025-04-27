@@ -3,7 +3,7 @@ import { initPagination, updatePagination } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './search.js';
 import { projectsPerPage } from './perPageSettings.js';
-import { openProjectModal, closeModal, loadProjectModal } from './project-modal.js';
+import { openProjectModal, loadProjectModal } from './project-modal.js';
 import { setupModalToggleFABs, initializeFABs } from './project-fab.js';
 import { createProjectCard, renderProjectsGallery } from './project-card.js';
 import { showImagesInModal, showMermaidDiagramInModal } from './project-image-display.js';
@@ -18,18 +18,31 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeProjects();
     initializeSearchFunctionality(); // Initialize search functionality
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const projectToShow = urlParams.get('showProject');
-    if (projectToShow) {
-      setTimeout(() => {
-        const project = allProjects.find(p => p.id === projectToShow);
-        if (project) {
-          openProjectModal(project);
-        } else {
-          console.error(`Project with ID "${projectToShow}" not found.`);
-        }
-      }, 500);
-    }
+    // Load project modal first to ensure it's available
+    loadProjectModal().then(() => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectToShow = urlParams.get('showProject');
+      
+      if (projectToShow) {
+        console.log(`URL parameter showProject found: ${projectToShow}`);
+        // Wait for projects to load
+        setTimeout(() => {
+          loadProjects().then(projects => {
+            const project = projects.find(p => 
+              p.id === projectToShow || 
+              (p.title && p.title.replace(/\s+/g, '-').toLowerCase() === projectToShow)
+            );
+            
+            if (project) {
+              console.log(`Opening modal for project: ${project.title}`);
+              openProjectModal(project, projects);
+            } else {
+              console.error(`Project with ID "${projectToShow}" not found.`);
+            }
+          });
+        }, 300);
+      }
+    });
   } else {
     console.log('No projects gallery found, skipping initialization');
   }

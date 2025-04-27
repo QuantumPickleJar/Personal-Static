@@ -97,20 +97,24 @@ export function createProjectCard(project) {
     mermaidIcon.style.display = "block";
   }
 
-  // make just the corner of the card clickable, not the entire card
-  const viewButton = card.querySelector('.open-modal-btn');
-  viewButton.style.cursor = "pointer";
-  viewButton.addEventListener('click', () => {
-    openProjectModal(project);
+  // Make the entire card clickable on mobile devices
+  card.addEventListener('click', (e) => {
+    // Only trigger if we're on mobile AND the click wasn't on the button itself
+    if (window.matchMedia('(max-width: 768px)').matches && !e.target.closest('.open-modal-btn')) {
+      e.preventDefault();
+      console.log('Card clicked on mobile for project:', project.id || project.title);
+      openProjectModal(project);
+    }
   });
 
-  const modalButton = clone.querySelector(".open-modal-btn");
-  if (modalButton) {
-    modalButton.style.cursor = "pointer";
-    modalButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      console.log('Button clicked for project:', project.id);
-      openProjectModal(project.id);
+  // Setup the View Project button
+  const viewButton = clone.querySelector(".open-modal-btn");
+  if (viewButton) {
+    viewButton.style.cursor = "pointer";
+    viewButton.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent card click from triggering
+      console.log('Button clicked for project:', project.id || project.title);
+      openProjectModal(project);
     });
   }
 
