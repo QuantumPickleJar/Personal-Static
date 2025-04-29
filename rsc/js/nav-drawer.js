@@ -50,6 +50,17 @@ export function initNavDrawer() {
         }
       }
     });
+
+    // Close drawer if open and click is outside drawer/menu button
+    document.addEventListener('click', function(e) {
+      if (drawer.classList.contains('open')) {
+        if (!drawer.contains(e.target) && e.target !== toggleBtn) {
+          drawer.classList.remove('open');
+          const overlay = document.getElementById('drawerOverlay');
+          if (overlay) overlay.classList.remove('visible');
+        }
+      }
+    });
   }
 }
 
@@ -81,25 +92,46 @@ function createNavDrawerMarkup() {
     { text: 'Home', icon: 'home', href: 'index.html' },
     { text: 'Projects', icon: 'code', href: 'projects.html' },
     { text: 'Resources', icon: 'book', href: 'resources.html' },
-    { text: 'Profile', icon: 'person', href: 'profile.html' }
+    {
+      text: 'Profile',
+      icon: 'person',
+      dropdown: true,
+      dropdownItems: [
+        { href: 'https://github.com/QuantumPickleJar', text: 'GitHub', icon: 'code_blocks' },
+        { href: 'https://www.linkedin.com/in/vincent-morrill/', text: 'LinkedIn', icon: 'work' },
+        { href: 'mailto:contact@vincentmorrill.com', text: 'Email', icon: 'mail' }
+      ]
+    }
   ];
   
   navItems.forEach(item => {
     const li = document.createElement('li');
     li.className = 'drawer-nav-item';
-    
-    const a = document.createElement('a');
-    a.href = item.href;
-    
-    const icon = document.createElement('span');
-    icon.className = 'material-symbols-outlined';
-    icon.textContent = item.icon;
-    
-    const text = document.createTextNode(item.text);
-    
-    a.appendChild(icon);
-    a.appendChild(text);
-    li.appendChild(a);
+
+    if (item.dropdown) {
+      li.classList.add('has-dropdown');
+      const a = document.createElement('a');
+      a.href = '#';
+      a.innerHTML = `<span class="material-symbols-outlined">${item.icon}</span>${item.text}`;
+      a.addEventListener('click', e => e.preventDefault());
+      // Dropdown container
+      const dropdown = document.createElement('div');
+      dropdown.className = 'profile-dropdown';
+      item.dropdownItems.forEach(sub => {
+        const dropdownItem = document.createElement('a');
+        dropdownItem.href = sub.href;
+        dropdownItem.className = 'profile-dropdown-item';
+        dropdownItem.innerHTML = `<span class="material-symbols-outlined">${sub.icon}</span>${sub.text}`;
+        dropdown.appendChild(dropdownItem);
+      });
+      li.appendChild(a);
+      li.appendChild(dropdown);
+    } else {
+      const a = document.createElement('a');
+      a.href = item.href;
+      a.innerHTML = `<span class="material-symbols-outlined">${item.icon}</span>${item.text}`;
+      li.appendChild(a);
+    }
     navList.appendChild(li);
   });
   
@@ -212,6 +244,38 @@ function addNavDrawerStyles() {
       background-color: var(--md-sys-color-surface-variant, rgba(103, 80, 164, 0.08));
       color: var(--md-sys-color-primary, #6750A4);
       text-decoration: none;
+    }
+    
+    /* Dropdown styles */
+    .has-dropdown .profile-dropdown {
+      display: none;
+      flex-direction: column;
+      padding: 8px 16px;
+      background-color: var(--md-sys-color-surface, #FFFFFF);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: absolute;
+      left: 100%;
+      top: 0;
+      z-index: 1002;
+    }
+
+    .has-dropdown:hover .profile-dropdown {
+      display: flex;
+    }
+
+    .profile-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 16px;
+      text-decoration: none;
+      color: var(--md-sys-color-on-surface, #1c1b1f);
+      transition: background-color 0.2s ease;
+    }
+
+    .profile-dropdown-item:hover {
+      background-color: var(--md-sys-color-surface-variant, rgba(103, 80, 164, 0.08));
+      color: var(--md-sys-color-primary, #6750A4);
     }
     
     /* Backdrop overlay */

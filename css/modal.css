@@ -696,3 +696,26 @@ body.dark-mode .fab.selected {
     max-width: 100%;
   }
 }
+
+/* Make modal-top-left wider and push modal-top-right to the right on medium+ screens */
+@media (min-width: 768px) {
+  .modal-top {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .modal-top-left {
+    flex: 2.2 1 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .modal-top-right {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    margin-left: 32px;
+  }
+}
