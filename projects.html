@@ -1,4 +1,10 @@
-<!doctype html><html lang="en"><head><script src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>// Detect if we're on GitHub Pages and set the correct base path
+<!doctype html><html lang="en"><head><script src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>(function() {
+      var isGithubPages = window.location.hostname.includes('github.io');
+      if (isGithubPages) {
+        var repoName = window.location.pathname.split('/')[1];
+        document.write('<base href="/' + repoName + '/">');
+      }
+    })();</script><script>// Detect if we're on GitHub Pages and set the correct base path
     const isGitHubPages = window.location.hostname.includes('github.io');
     if (isGitHubPages) {
       const basePath = '/Personal-Static/';
