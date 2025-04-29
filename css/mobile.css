@@ -142,6 +142,11 @@
     left: 10px;
     right: 10px;
   }
+
+  #projectImageCarousel .carousel-control-prev,
+  #projectImageCarousel .carousel-control-next {
+    display: none !important;
+  }
 }
 
 /* For medium and larger screens */

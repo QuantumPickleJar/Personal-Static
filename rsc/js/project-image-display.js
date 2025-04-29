@@ -3,7 +3,8 @@
  * @description Handles displaying project images and mermaid diagrams in the modal
  */
 
-import * as bootstrap from 'bootstrap';
+// Replace bare import with a global reference
+// import * as bootstrap from 'bootstrap';
 import panzoom from 'panzoom';
 import mermaid from 'mermaid';
 import { getPlaceholderForStack } from './placeholderBuilder.js';
@@ -30,6 +31,12 @@ export function showImagesInModal(project) {
   if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
   if (mermaidContainer) mermaidContainer.style.display = 'none';
   if (noMermaidMsg) noMermaidMsg.style.display = 'none';
+  
+  // Always hide carousel controls initially
+  const prevControl = carousel ? carousel.querySelector('.carousel-control-prev') : null;
+  const nextControl = carousel ? carousel.querySelector('.carousel-control-next') : null;
+  if (prevControl) prevControl.style.display = 'none';
+  if (nextControl) nextControl.style.display = 'none';
   
   // Handle project with images
   if (project.images && project.images.length > 0 && carousel) {
@@ -76,12 +83,21 @@ export function showImagesInModal(project) {
       carousel.style.maxHeight = '375px'; // Maintain outer container height
       modalImages.style.display = 'block'; // Ensure modalImages is displayed as block
       
+      // Show carousel controls only when we have images
+      if (project.images.length > 1) {
+        if (prevControl) prevControl.style.display = 'flex';
+        if (nextControl) nextControl.style.display = 'flex';
+      }
+      
       // Properly initialize the carousel
       try {
         // Ensure any existing carousel is disposed first
-        const bootstrapCarousel = bootstrap.Carousel.getInstance(carousel);
-        if (bootstrapCarousel) bootstrapCarousel.dispose();
-        new bootstrap.Carousel(carousel, { interval: false, wrap: true });
+        const existingBs = bootstrap.Carousel.getInstance(carousel);
+        if (existingBs) existingBs.dispose();
+        // Initialize carousel with touch support
+        const bsCarousel = new bootstrap.Carousel(carousel, { interval: false, wrap: true, touch: true });
+        // Always attach custom swipe and click-drag for better UX
+        addSwipeSupport(carousel, bsCarousel);
         
         // Initialize lightbox if available
         initializeLightbox(carousel);
@@ -101,6 +117,24 @@ export function showImagesInModal(project) {
     modalImages.style.display = 'flex';
     modalImages.style.justifyContent = 'center';
     modalImages.style.alignItems = 'center';
+    
+    // Force carousel and its controls to be hidden when showing fallback image
+    if (carousel) {
+      carousel.style.display = 'none';
+      // Target the controls again to ensure they're hidden
+      const prevControl = carousel.querySelector('.carousel-control-prev');
+      const nextControl = carousel.querySelector('.carousel-control-next');
+      if (prevControl) {
+        prevControl.style.display = 'none';
+        prevControl.setAttribute('aria-hidden', 'true');
+        prevControl.style.visibility = 'hidden'; // Additional hiding
+      }
+      if (nextControl) {
+        nextControl.style.display = 'none';
+        nextControl.setAttribute('aria-hidden', 'true');
+        nextControl.style.visibility = 'hidden'; // Additional hiding
+      }
+    }
   }
 }
 
@@ -254,4 +288,59 @@ export function applyPanzoomToSvg(mermaidElement) {
       console.error("Panzoom error:", pzError);
     }
   }, 300);
+}
+
+/**
+ * Adds swipe and drag gesture support to the carousel
+ * @param {HTMLElement} carousel - The carousel element
+ * @param {Object} bsCarousel - The Bootstrap carousel instance
+ */
+function addSwipeSupport(carousel, bsCarousel) {
+  let startX = 0;
+  let endX = 0;
+
+  carousel.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  carousel.addEventListener('touchmove', (e) => {
+    endX = e.touches[0].clientX;
+  });
+
+  carousel.addEventListener('touchend', () => {
+    if (startX < endX) {
+      bsCarousel.prev();
+    } else if (startX > endX) {
+      bsCarousel.next();
+    }
+  });
+
+  let isDragging = false;
+  let dragStartX = 0;
+
+  carousel.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+  });
+
+  carousel.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      const dragEndX = e.clientX;
+      if (dragStartX < dragEndX) {
+        bsCarousel.prev();
+        isDragging = false;
+      } else if (dragStartX > dragEndX) {
+        bsCarousel.next();
+        isDragging = false;
+      }
+    }
+  });
+
+  carousel.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
+  carousel.addEventListener('mouseleave', () => {
+    isDragging = false;
+  });
 }

@@ -35,7 +35,20 @@ export function openProjectModal(projectIdOrObject, allProjects = []) {
   }
 
   console.log('Opening modal for project:', project.title);
+  
+  // Make sure display block is applied and opacity is set to 1 for visibility
   modal.style.display = 'block';
+  
+  // Force a browser reflow to ensure display changes are applied
+  void modal.offsetWidth;
+  
+  // Add a visible class to help with CSS transitions
+  modal.classList.add('modal-visible');
+  
+  // Set opacity to 1 for fade-in effect
+  setTimeout(() => {
+    modal.style.opacity = '1';
+  }, 10);
 
   document.getElementById('modalTitle').textContent = project.title;
   document.getElementById('modalDescription').innerHTML = project.description || "No description available.";
@@ -45,10 +58,7 @@ export function openProjectModal(projectIdOrObject, allProjects = []) {
     statusElement.textContent = project.status ? `Status: ${project.status}` : "";
   }
 
-  const typeElement = document.getElementById('projectType');
-  if (typeElement) {
-    typeElement.textContent = project.academic ? "Academic Project" : "Personal Project";
-  }
+  // Removed project type code as this information is already shown on project cards
 
   const datesElement = document.getElementById('projectDates');
   if (datesElement && project.dates) {
@@ -102,11 +112,16 @@ export function loadProjectModal() {
     }
 
     console.log('Loading project modal HTML');
-    const modalContainer = document.getElementById('modalContainer');
+    
+    // First check if the modalContainer exists
+    let modalContainer = document.getElementById('modalContainer');
+    
+    // If it doesn't exist, create it
     if (!modalContainer) {
-      console.error('Modal container not found');
-      reject(new Error('Modal container not found'));
-      return;
+      console.log('Modal container not found, creating one');
+      modalContainer = document.createElement('div');
+      modalContainer.id = 'modalContainer';
+      document.body.appendChild(modalContainer);
     }
 
     const basePath = window.location.hostname.includes('github.io') ? 
@@ -115,7 +130,7 @@ export function loadProjectModal() {
     fetch(`${basePath}htmlModules/project-modal.html`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Failed to load modal HTML');
+          throw new Error(`Failed to load modal HTML: ${response.status}`);
         }
         return response.text();
       })
@@ -125,7 +140,7 @@ export function loadProjectModal() {
         const closeButton = document.getElementById('closeModal');
         if (closeButton) {
           closeButton.addEventListener('click', () => {
-            document.getElementById('projectModal').style.display = 'none';
+            closeModal();
           });
         }
 
@@ -133,11 +148,19 @@ export function loadProjectModal() {
         if (modal) {
           modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-              modal.style.display = 'none';
+              closeModal();
+            }
+          });
+          
+          // Add keyboard event listener for ESC key
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+              closeModal();
             }
           });
         }
 
+        console.log('Modal HTML loaded successfully');
         resolve();
       })
       .catch(error => {
@@ -157,42 +180,49 @@ export function closeModal() {
     return;
   }
 
-  modal.style.display = 'none';
+  // Fade out first
+  modal.style.opacity = '0';
+  modal.classList.remove('modal-visible');
 
-  const fabContainer = document.querySelector('.fab-container');
-  if (fabContainer) {
-    fabContainer.remove();
-  }
-
-  const modalTitle = document.getElementById('modalTitle');
-  const modalDescription = document.getElementById('modalDescription');
-  const modalStack = document.getElementById('modalStack');
-
-  if (modalTitle) modalTitle.innerText = '';
-  if (modalDescription) modalDescription.innerText = '';
-  if (modalStack) modalStack.innerHTML = '';
-
-  const carousel = document.getElementById('projectImageCarousel');
-  if (carousel) {
-    const carouselInner = carousel.querySelector('.carousel-inner');
-    if (carouselInner) carouselInner.innerHTML = '';
-    carousel.style.display = 'none';
-  }
-
-  const modalImages = document.getElementById('modalImages');
-  if (modalImages) {
-    const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
-    if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
-
-    const mermaidContainer = modalImages.querySelector('.mermaid-container');
-    if (mermaidContainer) {
-      mermaidContainer.style.display = 'none';
-      mermaidContainer.innerHTML = '';
+  // Then hide after animation completes
+  setTimeout(() => {
+    modal.style.display = 'none';
+    
+    const fabContainer = document.querySelector('.fab-container');
+    if (fabContainer) {
+      fabContainer.remove();
     }
 
-    const noMermaidMsg = modalImages.querySelector('.no-mermaid');
-    if (noMermaidMsg) noMermaidMsg.style.display = 'none';
-  }
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalStack = document.getElementById('modalStack');
+
+    if (modalTitle) modalTitle.innerText = '';
+    if (modalDescription) modalDescription.innerText = '';
+    if (modalStack) modalStack.innerHTML = '';
+
+    const carousel = document.getElementById('projectImageCarousel');
+    if (carousel) {
+      const carouselInner = carousel.querySelector('.carousel-inner');
+      if (carouselInner) carouselInner.innerHTML = '';
+      carousel.style.display = 'none';
+    }
+
+    const modalImages = document.getElementById('modalImages');
+    if (modalImages) {
+      const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
+      if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
+
+      const mermaidContainer = modalImages.querySelector('.mermaid-container');
+      if (mermaidContainer) {
+        mermaidContainer.style.display = 'none';
+        mermaidContainer.innerHTML = '';
+      }
+
+      const noMermaidMsg = modalImages.querySelector('.no-mermaid');
+      if (noMermaidMsg) noMermaidMsg.style.display = 'none';
+    }
+  }, 300); // Match this with your CSS transition time
 }
 
 /**
@@ -219,3 +249,16 @@ export function initializeModalEventListeners() {
     }
   });
 }
+
+// Ensure the modal is loaded when this file is imported
+document.addEventListener('DOMContentLoaded', () => {
+  // Load modal HTML on page load to ensure it's ready
+  setTimeout(() => {
+    loadProjectModal().then(() => {
+      console.log('Modal pre-loaded and ready');
+      initializeModalEventListeners();
+    }).catch(err => {
+      console.error('Failed to pre-load modal:', err);
+    });
+  }, 500);
+});

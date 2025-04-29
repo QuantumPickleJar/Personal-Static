@@ -1,12 +1,16 @@
-import * as bootstrap from 'bootstrap';
+// Replace bare import with a global reference
+// import * as bootstrap from 'bootstrap';
 import { initPagination, updatePagination } from './pagination.js';
 import { filterProjByTitle, filterByDate } from './gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './search.js';
 import { projectsPerPage } from './perPageSettings.js';
-import { openProjectModal, loadProjectModal } from './project-modal.js';
+import { openProjectModal, loadProjectModal, closeModal } from './project-modal.js';
 import { setupModalToggleFABs, initializeFABs } from './project-fab.js';
 import { createProjectCard, renderProjectsGallery } from './project-card.js';
 import { showImagesInModal, showMermaidDiagramInModal } from './project-image-display.js';
+
+// Use the globally available bootstrap object instead
+// This will be available if Bootstrap is included via CDN in your HTML
 
 export let allProjects = [];
 let filteredProjects = []; // Store filtered projects for pagination
@@ -63,21 +67,8 @@ function initializeSearchFunctionality() {
   console.log('Initializing search functionality');
   
   searchInput.addEventListener('input', function(e) {
-    const searchTerm = e.target.value.trim();
-    console.log('Search term:', searchTerm);
-    
-    // Filter projects based on search term
-    filteredProjects = filterProjectsBySearchTerm(allProjects, searchTerm);
-    
-    // Re-render the gallery with filtered projects
-    renderProjectsGallery(filteredProjects);
-    
-    // If pagination is initialized, update it
-    if (typeof updatePagination === 'function') {
-      updatePagination(filteredProjects.length);
-    }
-    
-    console.log(`Search results: ${filteredProjects.length} projects found`);
+    console.log('Search term:', e.target.value.trim());
+    applyAllFilters();
   });
   
   console.log('Search functionality initialized');
@@ -400,44 +391,62 @@ setTimeout(() => {
       const filterMermaid = document.getElementById('filterMermaid');
       
       if (filterImages) {
-        filterImages.addEventListener('change', applyFilters);
+        filterImages.addEventListener('change', applyAllFilters);
       }
       
       if (filterMermaid) {
-        filterMermaid.addEventListener('change', applyFilters);
-      }
-      
-      function applyFilters() {
-        const hasImagesFilter = filterImages?.selected || false;
-        const hasMermaidFilter = filterMermaid?.selected || false;
-        
-        console.log('Applying filters:', { hasImagesFilter, hasMermaidFilter });
-        
-        // Get all project cards
-        const projectCards = document.querySelectorAll('.project-card');
-        
-        projectCards.forEach(card => {
-          let showCard = true;
-          
-          // Check image filter
-          if (hasImagesFilter) {
-            const hasImages = card.querySelector('.image-count-icon')?.style.display !== 'none';
-            if (!hasImages) showCard = false;
-          }
-          
-          // Check mermaid filter
-          if (hasMermaidFilter && showCard) {
-            const hasMermaid = card.querySelector('.mermaid-icon')?.style.display !== 'none';
-            if (!hasMermaid) showCard = false;
-          }
-          
-          // Show or hide the card
-          card.style.display = showCard ? '' : 'none';
-        });
+        filterMermaid.addEventListener('change', applyAllFilters);
       }
     });
   }
 }, 2000);
+
+/**
+ * Unified filter function: applies search, images, Mermaid, and technology chip filters.
+ */
+export function applyAllFilters() {
+  const filterImages = document.getElementById('filterImages');
+  const filterMermaid = document.getElementById('filterMermaid');
+  const searchBar = document.getElementById('searchBar');
+  // Get selected tech chips
+  const selectedTechs = Array.from(
+    document.querySelectorAll('.custom-filter-chip.selected')
+  ).map(chip => chip.dataset.tech);
+
+  const hasImagesFilter = filterImages?.classList?.contains('selected') || false;
+  const hasMermaidFilter = filterMermaid?.classList?.contains('selected') || false;
+  const searchTerm = searchBar && searchBar.value.trim() ? searchBar.value.trim() : '';
+
+  let filtered = [...allProjects];
+
+  // 1. Search filter
+  if (searchTerm) {
+    filtered = filterProjectsBySearchTerm(filtered, searchTerm);
+  }
+  // 2. Images filter
+  if (hasImagesFilter) {
+    filtered = filtered.filter(p => p.images && p.images.length > 0);
+  }
+  // 3. Mermaid filter
+  if (hasMermaidFilter) {
+    filtered = filtered.filter(p => p.mermaid && p.mermaid.trim().length > 0);
+  }
+  // 4. Technology chips filter
+  if (selectedTechs.length > 0) {
+    filtered = filtered.filter(p => Array.isArray(p.stack) && selectedTechs.some(tech => p.stack.some(projectTech => projectTech.toLowerCase().includes(tech.toLowerCase()))));
+  }
+
+  filteredProjects = filtered;
+  renderProjectsGallery(filteredProjects);
+  if (typeof updatePagination === 'function') {
+    updatePagination(filteredProjects.length);
+  } else if (typeof initPagination === 'function') {
+    initPagination(filteredProjects, projectsPerPage);
+  }
+}
+
+// Make function globally available
+window.applyAllFilters = applyAllFilters;
 
 export { renderProjectsGallery };
 

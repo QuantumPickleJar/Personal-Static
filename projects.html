@@ -78,11 +78,12 @@
       position: absolute;
       top: 100%;
       left: 0;
-      z-index: 1000;
+      z-index: 1200; /* Increased z-index to ensure visibility */
       display: none;
       min-width: 180px;
       padding: 8px 0;
       margin: 0;
+      margin-top: 4px; /* Add a small margin to position below button */
       font-size: 14px;
       text-align: left;
       list-style: none;
@@ -90,7 +91,11 @@
       background-clip: padding-box;
       border: 0;
       border-radius: 8px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.10);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      visibility: visible; /* Ensure visibility */
+      opacity: 1; /* Ensure opacity */
+      pointer-events: auto; /* Ensure clickability */
+      transform: none; /* Ensure no transform is applied */
     }
 
     .dark-theme .custom-material-menu {
@@ -350,7 +355,7 @@
                 <!-- filter by dropdown -->
                 <div id="projectFilters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem;">
                   <!-- Anchor for menu with proper positioning -->
-                  <div id="filterMenuAnchor" style="position: relative;">
+                  <div id="filterMenuAnchor" style="position: relative; display: inline-block;">
                     <!-- Replace md-filled-tonal-button with regular button styled with CSS -->
                     <button id="filterToggleBtn" class="custom-material-button">Filter Options</button>
                     
@@ -534,6 +539,11 @@
             e.stopPropagation(); // Prevent event bubbling
             console.log('Filter toggle button clicked');
             
+            // Position the menu relative to the button
+            const buttonRect = filterToggleBtn.getBoundingClientRect();
+            filterMenu.style.top = `${buttonRect.height}px`;
+            filterMenu.style.left = '0px';
+            
             // Toggle menu's open state
             filterMenu.style.display = filterMenu.style.display === 'none' ? 'block' : 'none';
             console.log('Menu open state:', filterMenu.style.display);
@@ -554,12 +564,8 @@
             filterImages.addEventListener('click', () => {
               filterImages.classList.toggle('selected');
               console.log('Filter by images:', filterImages.classList.contains('selected'));
-              
-              // Call the global applyAllFilters function if it exists
               if (window.applyAllFilters) {
                 window.applyAllFilters();
-              } else {
-                applyFilters();
               }
             });
           }
@@ -568,41 +574,9 @@
             filterMermaid.addEventListener('click', () => {
               filterMermaid.classList.toggle('selected');
               console.log('Filter by mermaid:', filterMermaid.classList.contains('selected'));
-              
-              // Call the global applyAllFilters function if it exists
               if (window.applyAllFilters) {
                 window.applyAllFilters();
-              } else {
-                applyFilters();
               }
-            });
-          }
-          
-          // Function to apply image and mermaid filters
-          function applyFilters() {
-            const hasImagesFilter = filterImages?.classList.contains('selected') || false;
-            const hasMermaidFilter = filterMermaid?.classList.contains('selected') || false;
-            
-            // Get all project cards
-            const projectCards = document.querySelectorAll('.project-card');
-            
-            projectCards.forEach(card => {
-              let showCard = true;
-              
-              // Check image filter
-              if (hasImagesFilter) {
-                const hasImages = card.querySelector('.image-count-icon')?.style.display !== 'none';
-                if (!hasImages) showCard = false;
-              }
-              
-              // Check mermaid filter
-              if (hasMermaidFilter && showCard) {
-                const hasMermaid = card.querySelector('.mermaid-icon')?.style.display !== 'none';
-                if (!hasMermaid) showCard = false;
-              }
-              
-              // Show or hide the card
-              card.style.display = showCard ? '' : 'none';
             });
           }
         } else {

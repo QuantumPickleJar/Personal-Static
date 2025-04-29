@@ -8,7 +8,11 @@ import { renderOneStackIcon } from './stackIconLoader.js';
 import { openProjectModal } from './project-modal.js';
 import { setupBadges, setupStackIcons } from './placeholderBuilder.js';
 
-const MAX_STACK_CHARS = 20; // Maximum characters in stack display before showing "more" link
+// Store reference to all projects for modal functionality
+let allProjectsData = [];
+
+// Maximum characters in stack display before showing "more" link
+const MAX_STACK_CHARS = 20;
 
 /**
  * Creates a project card element from a template clone
@@ -103,7 +107,7 @@ export function createProjectCard(project) {
     if (window.matchMedia('(max-width: 768px)').matches && !e.target.closest('.open-modal-btn')) {
       e.preventDefault();
       console.log('Card clicked on mobile for project:', project.id || project.title);
-      openProjectModal(project);
+      openProjectModal(project, allProjectsData);
     }
   });
 
@@ -114,7 +118,7 @@ export function createProjectCard(project) {
     viewButton.addEventListener('click', (e) => {
       e.stopPropagation(); // Prevent card click from triggering
       console.log('Button clicked for project:', project.id || project.title);
-      openProjectModal(project);
+      openProjectModal(project, allProjectsData);
     });
   }
 
@@ -131,6 +135,9 @@ export function renderProjectsGallery(projects) {
     console.error("Projects gallery element not found");
     return;
   }
+
+  // Store all projects data for modal functionality
+  allProjectsData = [...projects];
 
   gallery.innerHTML = ""; // Clear existing content
 
