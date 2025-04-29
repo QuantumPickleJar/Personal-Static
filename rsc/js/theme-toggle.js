@@ -1,0 +1,38 @@
+import{LitElement,html,css}from"https://esm.sh/lit@2.8.0";import"https://esm.sh/@material/web/switch/switch.js";class ThemeToggle extends LitElement{static styles=css`
+    :host {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      z-index: 990; /* Lowered z-index to go behind modal (which is 1000) */
+      --switch-size: 1.2;
+      display: block; /* Ensure the component is always displayed */
+    }
+    
+    md-switch {
+      transform: scale(var(--switch-size));
+      margin: 4px;
+      background-color: rgba(255, 255, 255, 0.9); /* Add semi-transparent background */
+      border-radius: 24px; /* Rounded edges */
+      padding: 2px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow for visibility */
+    }
+    
+    span[slot="on-icon"],
+    span[slot="off-icon"] {
+      font-size: 16px;
+      padding: 2px;
+    }
+    
+    @media (max-width: 768px) {
+      :host {
+        top: 0.75rem;
+        right: 0.75rem;
+        --switch-size: 1;
+      }
+    }
+  `;render(){return html`
+      <md-switch @input=${this.toggleTheme} icons>
+        <span slot="on-icon">🌙</span>
+        <span slot="off-icon">☀️</span>
+      </md-switch>
+    `}toggleTheme(e){if(!e||!e.target)return;const o=e.target.selected;document.body.classList.toggle("dark-mode",o),this._applyThemeToBody(o),localStorage.setItem("theme",o?"dark":"light"),console.log("Theme toggle activated, dark mode:",o)}_applyThemeToBody(e){document.body.style.setProperty("--md-sys-color-surface",e?"#1a1a1a":"#ffffff"),document.body.style.setProperty("--md-sys-color-on-surface",e?"#ffffff":"#000000"),document.body.style.setProperty("--md-sys-color-on-surface-variant",e?"#e1e1fc":"#49454f"),document.body.style.setProperty("--md-sys-color-outline",e?"#938f99":"#79747e"),document.body.style.setProperty("--md-sys-color-outline-variant",e?"rgba(255, 255, 255, 0.2)":"rgba(0, 0, 0, 0.08)"),document.querySelectorAll("md-elevated-card.project-card").forEach((o=>{e?(o.style.backgroundColor="var(--md-sys-color-surface-container, #1d1b20)",o.style.color="var(--md-sys-color-on-surface, #e6e0e9)"):(o.style.backgroundColor="var(--md-sys-color-surface-container, #f9f9f9)",o.style.color="var(--md-sys-color-on-surface, #1c1b1f)")}));const o=document.getElementById("sidebar");o&&(o.style.backgroundColor=e?"var(--md-sys-color-surface-container, #1d1b20)":"var(--md-sys-color-surface-container, #f3f3f3)",o.style.borderRightColor=e?"var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1))":"var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08))");const t=document.querySelector("footer");t&&(t.style.backgroundColor=e?"var(--md-sys-color-surface-container, #1d1b20)":"var(--md-sys-color-surface-container, #f3f3f3)",t.style.borderTopColor=e?"var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1))":"var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08))",t.style.color=e?"var(--md-sys-color-on-surface, #e6e0e9)":"var(--md-sys-color-on-surface, #1c1b1f)",t.querySelectorAll("p").forEach((o=>{o.style.color=e?"#e1e1fc":"#49454f"})),t.querySelectorAll("a").forEach((o=>{o.style.color=e?"#90caf9":"#006782"})),t.querySelectorAll("h3, h4").forEach((o=>{o.style.color=e?"var(--md-sys-color-primary, #d0bcff)":"var(--md-sys-color-primary, #6750a4)"})))}firstUpdated(){const e=localStorage.getItem("theme"),o=window.matchMedia("(prefers-color-scheme: dark)").matches,t="dark"===e||null===e&&o,r=this.shadowRoot.querySelector("md-switch");r&&(r.selected=t),document.body.classList.toggle("dark-mode",t),this._applyThemeToBody(t),console.log("Theme initialized, dark mode:",t)}connectedCallback(){super.connectedCallback(),console.log("Theme toggle component connected to DOM");const e="dark"===localStorage.getItem("theme")||null===localStorage.getItem("theme")&&window.matchMedia("(prefers-color-scheme: dark)").matches;document.body.classList.toggle("dark-mode",e),this._applyThemeToBody(e),e?document.documentElement.setAttribute("data-theme","dark"):document.documentElement.setAttribute("data-theme","light")}}customElements.define("theme-toggle",ThemeToggle),window.applyTheme=function(e){document.body.classList.toggle("dark-mode",e),document.documentElement.setAttribute("data-theme",e?"dark":"light"),document.body.style.setProperty("--md-sys-color-surface",e?"#1a1a1a":"#ffffff"),document.body.style.setProperty("--md-sys-color-on-surface",e?"#ffffff":"#000000"),document.body.style.setProperty("--md-sys-color-on-surface-variant",e?"#e1e1fc":"#49454f"),document.body.style.setProperty("--md-sys-color-outline",e?"#938f99":"#79747e"),document.body.style.setProperty("--md-sys-color-outline-variant",e?"rgba(255, 255, 255, 0.2)":"rgba(0, 0, 0, 0.08)")},document.addEventListener("DOMContentLoaded",(()=>{const e=localStorage.getItem("theme"),o=window.matchMedia("(prefers-color-scheme: dark)").matches,t="dark"===e||null===e&&o;document.body.classList.toggle("dark-mode",t),document.documentElement.setAttribute("data-theme",t?"dark":"light"),window.applyTheme(t);const r=()=>{const e=document.body.classList.contains("dark-mode"),o=document.getElementById("sidebar");o&&(o.style.backgroundColor=e?"var(--md-sys-color-surface-container, #1d1b20)":"var(--md-sys-color-surface-container, #f3f3f3)",o.style.borderRightColor=e?"var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1))":"var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08))");const t=document.querySelector("footer");t&&(t.style.backgroundColor=e?"var(--md-sys-color-surface-container, #1d1b20)":"var(--md-sys-color-surface-container, #f3f3f3)",t.style.borderTopColor=e?"var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1))":"var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08))",t.style.color=e?"var(--md-sys-color-on-surface, #e6e0e9)":"var(--md-sys-color-on-surface, #1c1b1f)",t.querySelectorAll("p").forEach((o=>{o.style.color=e?"#e1e1fc":"#49454f"})),t.querySelectorAll("a").forEach((o=>{o.style.color=e?"#90caf9":"#006782"})),t.querySelectorAll("h3, h4").forEach((o=>{o.style.color=e?"var(--md-sys-color-primary, #d0bcff)":"var(--md-sys-color-primary, #6750a4)"})))};new MutationObserver((e=>{e.forEach((e=>{if(e.addedNodes.length){const o=Array.from(e.addedNodes).find((e=>"FOOTER"===e.nodeName||e.querySelector&&e.querySelector("footer"))),t=Array.from(e.addedNodes).find((e=>"sidebar"===e.id||e.querySelector&&e.querySelector("#sidebar")));(o||t)&&(console.log("Footer or sidebar loaded, applying theme"),r())}}))})).observe(document.body,{childList:!0,subtree:!0}),setTimeout((()=>{const e=document.querySelector("theme-toggle");if(!e||"none"===getComputedStyle(e).display){console.log("Theme toggle not found or hidden, creating fallback");const e=document.createElement("div");e.id="fallback-theme-toggle",e.style.cssText="\n        position: fixed;\n        top: 1.25rem;\n        right: 1.25rem;\n        z-index: 1100;\n        background: rgba(255, 255, 255, 0.9);\n        border-radius: 20px;\n        padding: 8px;\n        cursor: pointer;\n        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);\n      ";const o=document.body.classList.contains("dark-mode");e.innerHTML=o?"☀️":"🌙",e.addEventListener("click",(()=>{const o=document.body.classList.contains("dark-mode");document.body.classList.toggle("dark-mode",!o),e.innerHTML=o?"🌙":"☀️",localStorage.setItem("theme",o?"light":"dark"),window.applyTheme(!o),r()})),document.body.appendChild(e)}r()}),1e3)}));
