@@ -65,12 +65,34 @@ export function showImagesInModal(project) {
     return img;
   });
 
+  // If there are no images, show the placeholder instead of the slider
+  if (!images.length) {
+    modalImages.innerHTML = '';
+    const placeholderDiv = document.createElement('div');
+    placeholderDiv.className = 'fallback-placeholder';
+    placeholderDiv.style.display = 'flex';
+    placeholderDiv.style.justifyContent = 'center';
+    placeholderDiv.style.alignItems = 'center';
+    placeholderDiv.style.width = '250px';
+    placeholderDiv.style.height = '250px';
+    placeholderDiv.style.margin = '0 auto';
+    const img = document.createElement('img');
+    img.src = getPlaceholderForStack(project);
+    img.alt = 'Project placeholder';
+    img.style.maxHeight = '100%';
+    img.style.width = 'auto';
+    img.style.borderRadius = '50%';
+    placeholderDiv.appendChild(img);
+    modalImages.appendChild(placeholderDiv);
+    return;
+  }
+
   slider.appendChild(imagesWrapper);
 
   // Add arrows
   const prevBtn = document.createElement('button');
   prevBtn.className = 'carousel-arrow simple-prev';
-  prevBtn.innerHTML = '&#8592;';
+  prevBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#fff"/><path d="M14.7 17.3a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 0-1.4l4-4a1 1 0 1 1 1.4 1.4L11.42 12l3.3 3.3a1 1 0 0 1 0 1.4z" fill="#6750A4"/></svg>`;
   prevBtn.style.position = 'absolute';
   prevBtn.style.left = '10px';
   prevBtn.style.top = '50%';
@@ -86,7 +108,7 @@ export function showImagesInModal(project) {
 
   const nextBtn = document.createElement('button');
   nextBtn.className = 'carousel-arrow simple-next';
-  nextBtn.innerHTML = '&#8594;';
+  nextBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#fff"/><path d="M9.3 6.7a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 1 1-1.4-1.4L12.58 12l-3.3-3.3a1 1 0 0 1 0-1.4z" fill="#6750A4"/></svg>`;
   nextBtn.style.position = 'absolute';
   nextBtn.style.right = '10px';
   nextBtn.style.top = '50%';
@@ -102,6 +124,12 @@ export function showImagesInModal(project) {
 
   slider.appendChild(prevBtn);
   slider.appendChild(nextBtn);
+
+  // Hide arrows if no images or only one image
+  if (!images.length || images.length === 1) {
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+  }
 
   // Add slider to modal
   modalImages.innerHTML = '';

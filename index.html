@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Removed <base> tag for robust relative path handling -->
+  <!-- Dynamic base path for GitHub Pages -->
+  <script>
+    (function() {
+      var isGithubPages = window.location.hostname.includes('github.io');
+      if (isGithubPages) {
+        var repoName = window.location.pathname.split('/')[1];
+        document.write('<base href="/' + repoName + '/">');
+      }
+    })();
+  </script>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vincent Morrill — Portfolio</title>

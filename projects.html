@@ -6,6 +6,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Dynamic base path for GitHub Pages -->
+  <script>
+    (function() {
+      var isGithubPages = window.location.hostname.includes('github.io');
+      if (isGithubPages) {
+        var repoName = window.location.pathname.split('/')[1];
+        document.write('<base href="/' + repoName + '/">');
+      }
+    })();
+  </script>
+
   <!-- Add this script to dynamically set the correct base -->
   <script>
     // Detect if we're on GitHub Pages and set the correct base path
