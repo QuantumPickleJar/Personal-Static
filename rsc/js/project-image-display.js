@@ -3,174 +3,130 @@
  * @description Handles displaying project images and mermaid diagrams in the modal
  */
 
-// Replace bare import with a global reference
-// import * as bootstrap from 'bootstrap';
 import panzoom from 'panzoom';
 import mermaid from 'mermaid';
 import { getPlaceholderForStack } from './placeholderBuilder.js';
 import { parseMermaidCode } from './json-parser.js';
 
 /**
- * Display project images in the modal
+ * Display project images in the modal (simple horizontal slider version)
  * @param {Object} project - The project object
  */
 export function showImagesInModal(project) {
   const modalImages = document.getElementById('modalImages');
-  
-  // Reset views - hide all containers first
   modalImages.classList.remove('mermaid-view');
   modalImages.classList.add('images-view');
-  
-  const carousel = document.getElementById('projectImageCarousel');
-  const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
-  const mermaidContainer = document.getElementById('mermaidContainer');
-  const noMermaidMsg = modalImages.querySelector('.no-mermaid');
-  
-  // Hide all elements (with null checks)
-  if (carousel) carousel.style.display = 'none';
-  if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
-  if (mermaidContainer) mermaidContainer.style.display = 'none';
-  if (noMermaidMsg) noMermaidMsg.style.display = 'none';
-  
-  // Always hide carousel controls initially
-  const prevControl = carousel ? carousel.querySelector('.carousel-control-prev') : null;
-  const nextControl = carousel ? carousel.querySelector('.carousel-control-next') : null;
-  if (prevControl) prevControl.style.display = 'none';
-  if (nextControl) nextControl.style.display = 'none';
-  
-  // Handle project with images
-  if (project.images && project.images.length > 0 && carousel) {
-    const carouselInner = carousel.querySelector('.carousel-inner');
-    if (carouselInner) {
-      carouselInner.innerHTML = '';
-      
-      const template = document.getElementById('carouselItemTemplate');
-      
-      project.images.forEach((imgSrc, index) => {
-        const carouselItem = template.content.cloneNode(true).querySelector('.carousel-item');
-        if (index === 0) carouselItem.classList.add('active');
-        
-        const img = carouselItem.querySelector('img');
-        const anchor = carouselItem.querySelector('a');
-        
-        const finalSrc = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
-          ? imgSrc
-          : imgSrc.includes('/')
-            ? `rsc/images/${imgSrc}`
-            : `rsc/images/recipes/${imgSrc}`;
-            
-        anchor.href = finalSrc;
-        // Add these attributes for simple link behavior
-        anchor.target = '_blank';
-        anchor.rel = 'noopener';
-        
-        // Remove data-lightbox attribute if not using a lightbox library
-        anchor.removeAttribute('data-lightbox');
-        
-        img.src = finalSrc;
-        img.alt = `Project image ${index + 1}`;
-        
-        // Ensure the image has proper styling
-        img.style.maxHeight = '350px'; // Set max height
-        img.style.width = 'auto';      // Allow width to adjust proportionally
-        img.style.margin = '0 auto';   // Center the image
-        img.style.objectFit = 'contain'; // Ensure the image is fully visible
-        
-        carouselInner.appendChild(carouselItem);
-      });
-      
-      carousel.style.display = 'block';
-      carousel.style.maxHeight = '375px'; // Maintain outer container height
-      modalImages.style.display = 'block'; // Ensure modalImages is displayed as block
-      
-      // Show carousel controls only when we have images
-      if (project.images.length > 1) {
-        if (prevControl) prevControl.style.display = 'flex';
-        if (nextControl) nextControl.style.display = 'flex';
-      }
-      
-      // Properly initialize the carousel
-      try {
-        // Ensure any existing carousel is disposed first
-        const existingBs = bootstrap.Carousel.getInstance(carousel);
-        if (existingBs) existingBs.dispose();
-        // Initialize carousel with touch support
-        const bsCarousel = new bootstrap.Carousel(carousel, { interval: false, wrap: true, touch: true });
-        // Always attach custom swipe and click-drag for better UX
-        addSwipeSupport(carousel, bsCarousel);
-        
-        // Initialize lightbox if available
-        initializeLightbox(carousel);
-      } catch (e) {
-        console.warn('Error initializing carousel or lightbox:', e);
-      }
-    }
-  } else {
-    // Show fallback placeholder
-    const placeholderImg = fallbackPlaceholder.querySelector('img');
-    if (placeholderImg) {
-      placeholderImg.src = getPlaceholderForStack(project);
-      placeholderImg.style.maxHeight = '350px';
-      placeholderImg.style.width = 'auto';
-    }
-    fallbackPlaceholder.style.display = 'block';
-    modalImages.style.display = 'flex';
-    modalImages.style.justifyContent = 'center';
-    modalImages.style.alignItems = 'center';
-    
-    // Force carousel and its controls to be hidden when showing fallback image
-    if (carousel) {
-      carousel.style.display = 'none';
-      // Target the controls again to ensure they're hidden
-      const prevControl = carousel.querySelector('.carousel-control-prev');
-      const nextControl = carousel.querySelector('.carousel-control-next');
-      if (prevControl) {
-        prevControl.style.display = 'none';
-        prevControl.setAttribute('aria-hidden', 'true');
-        prevControl.style.visibility = 'hidden'; // Additional hiding
-      }
-      if (nextControl) {
-        nextControl.style.display = 'none';
-        nextControl.setAttribute('aria-hidden', 'true');
-        nextControl.style.visibility = 'hidden'; // Additional hiding
-      }
-    }
-  }
-}
 
-/**
- * Initialize lightbox functionality for carousel images
- * @param {HTMLElement} carousel - The carousel element
- */
-function initializeLightbox(carousel) {
-  setTimeout(() => {
-    // If you're using lightbox2
-    if (window.lightbox) {
-      window.lightbox.option({
-        'resizeDuration': 200,
-        'wrapAround': true,
-        'alwaysShowNavOnTouchDevices': true,
-        'disableScrolling': true
-      });
+  // Remove any previous slider
+  let slider = document.getElementById('simpleImageSlider');
+  if (slider) slider.remove();
+
+  // Remove fallback/mermaid containers
+  const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
+  if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
+  const mermaidContainer = document.getElementById('mermaidContainer');
+  if (mermaidContainer) mermaidContainer.style.display = 'none';
+  const noMermaidMsg = modalImages.querySelector('.no-mermaid');
+  if (noMermaidMsg) noMermaidMsg.style.display = 'none';
+
+  // Create slider container
+  slider = document.createElement('div');
+  slider.id = 'simpleImageSlider';
+  slider.style.display = 'flex';
+  slider.style.overflow = 'hidden';
+  slider.style.width = '100%';
+  slider.style.position = 'relative';
+  slider.style.alignItems = 'center';
+  slider.style.justifyContent = 'center';
+  slider.style.height = '350px';
+
+  // Images wrapper (for sliding)
+  const imagesWrapper = document.createElement('div');
+  imagesWrapper.className = 'slider-images-wrapper';
+  imagesWrapper.style.display = 'flex';
+  imagesWrapper.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+  imagesWrapper.style.height = '100%';
+
+  // Add images
+  const images = (project.images || []).map((imgSrc, idx) => {
+    const img = document.createElement('img');
+    img.src = imgSrc.startsWith('rsc/') || imgSrc.startsWith('http')
+      ? imgSrc
+      : imgSrc.includes('/')
+        ? `rsc/images/${imgSrc}`
+        : `rsc/images/recipes/${imgSrc}`;
+    img.alt = `Project image ${idx + 1}`;
+    img.style.maxHeight = '100%';
+    img.style.width = 'auto';
+    img.style.flex = '0 0 100%';
+    img.style.objectFit = 'contain';
+    img.style.margin = '0 auto';
+    imagesWrapper.appendChild(img);
+    return img;
+  });
+
+  slider.appendChild(imagesWrapper);
+
+  // Add arrows
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'carousel-arrow simple-prev';
+  prevBtn.innerHTML = '&#8592;';
+  prevBtn.style.position = 'absolute';
+  prevBtn.style.left = '10px';
+  prevBtn.style.top = '50%';
+  prevBtn.style.transform = 'translateY(-50%)';
+  prevBtn.style.zIndex = '10';
+  prevBtn.style.background = 'rgba(255,255,255,0.8)';
+  prevBtn.style.border = 'none';
+  prevBtn.style.borderRadius = '50%';
+  prevBtn.style.width = '40px';
+  prevBtn.style.height = '40px';
+  prevBtn.style.fontSize = '1.5rem';
+  prevBtn.style.cursor = 'pointer';
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'carousel-arrow simple-next';
+  nextBtn.innerHTML = '&#8594;';
+  nextBtn.style.position = 'absolute';
+  nextBtn.style.right = '10px';
+  nextBtn.style.top = '50%';
+  nextBtn.style.transform = 'translateY(-50%)';
+  nextBtn.style.zIndex = '10';
+  nextBtn.style.background = 'rgba(255,255,255,0.8)';
+  nextBtn.style.border = 'none';
+  nextBtn.style.borderRadius = '50%';
+  nextBtn.style.width = '40px';
+  nextBtn.style.height = '40px';
+  nextBtn.style.fontSize = '1.5rem';
+  nextBtn.style.cursor = 'pointer';
+
+  slider.appendChild(prevBtn);
+  slider.appendChild(nextBtn);
+
+  // Add slider to modal
+  modalImages.innerHTML = '';
+  modalImages.appendChild(slider);
+
+  // Slider logic
+  let currentIdx = 0;
+  function updateSlider() {
+    imagesWrapper.style.transform = `translateX(-${currentIdx * 100}%)`;
+    prevBtn.disabled = currentIdx === 0;
+    nextBtn.disabled = currentIdx === images.length - 1;
+  }
+  prevBtn.onclick = () => {
+    if (currentIdx > 0) {
+      currentIdx--;
+      updateSlider();
     }
-    
-    const lightboxLinks = carousel.querySelectorAll('a[data-lightbox]');
-    lightboxLinks.forEach(link => {
-      // Pre-fetch the image to prevent loading delay when clicking
-      const img = new Image();
-      img.src = link.href;
-      
-      // Make sure the link opens properly
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        // If you're not using lightbox2, you may need to initialize your
-        // specific lightbox library here
-        if (!window.lightbox) {
-          window.open(link.href, '_blank');
-        }
-      });
-    });
-  }, 200);
+  };
+  nextBtn.onclick = () => {
+    if (currentIdx < images.length - 1) {
+      currentIdx++;
+      updateSlider();
+    }
+  };
+  updateSlider();
 }
 
 /**
@@ -180,12 +136,9 @@ function initializeLightbox(carousel) {
 export function showMermaidDiagramInModal(project) {
   const modalImages = document.getElementById('modalImages');
   const mermaidContainer = document.getElementById('mermaidContainer');
-  const carousel = document.getElementById('projectImageCarousel');
   const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
   const noMermaidMsg = modalImages.querySelector('.no-mermaid');
-  const modalContent = document.querySelector('.modal-content');
 
-  if (carousel) carousel.style.display = 'none';
   if (fallbackPlaceholder) fallbackPlaceholder.style.display = 'none';
 
   modalImages.classList.remove('images-view');
@@ -200,7 +153,6 @@ export function showMermaidDiagramInModal(project) {
   }
 
   if (mermaidContainer) {
-    // Position the mermaid container to take up the full modal area but leave space for FABs
     mermaidContainer.innerHTML = '';
     mermaidContainer.style.position = 'absolute';
     mermaidContainer.style.top = '0';
@@ -209,9 +161,8 @@ export function showMermaidDiagramInModal(project) {
     mermaidContainer.style.height = '100%';
     mermaidContainer.style.zIndex = '10';
     mermaidContainer.style.overflow = 'hidden';
-    mermaidContainer.style.paddingTop = '50px'; // Add padding to avoid overlapping with FABs
-    
-    // Create the inner mermaid container with proper styling
+    mermaidContainer.style.paddingTop = '50px';
+
     const innerMermaid = document.createElement('div');
     innerMermaid.className = 'mermaid';
     innerMermaid.textContent = mermaidCode;
@@ -220,7 +171,7 @@ export function showMermaidDiagramInModal(project) {
     innerMermaid.style.display = 'flex';
     innerMermaid.style.justifyContent = 'center';
     innerMermaid.style.alignItems = 'center';
-    
+
     mermaidContainer.appendChild(innerMermaid);
     mermaidContainer.style.display = 'flex';
 
@@ -238,7 +189,7 @@ export function renderMermaidDiagram(mermaidElement) {
       if (window.mermaid) {
         window.mermaid.initialize({ 
           startOnLoad: false,
-          securityLevel: 'loose' // This helps with SVG rendering
+          securityLevel: 'loose'
         });
 
         window.mermaid.init(undefined, mermaidElement).then(() => {
@@ -288,59 +239,4 @@ export function applyPanzoomToSvg(mermaidElement) {
       console.error("Panzoom error:", pzError);
     }
   }, 300);
-}
-
-/**
- * Adds swipe and drag gesture support to the carousel
- * @param {HTMLElement} carousel - The carousel element
- * @param {Object} bsCarousel - The Bootstrap carousel instance
- */
-function addSwipeSupport(carousel, bsCarousel) {
-  let startX = 0;
-  let endX = 0;
-
-  carousel.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-  });
-
-  carousel.addEventListener('touchmove', (e) => {
-    endX = e.touches[0].clientX;
-  });
-
-  carousel.addEventListener('touchend', () => {
-    if (startX < endX) {
-      bsCarousel.prev();
-    } else if (startX > endX) {
-      bsCarousel.next();
-    }
-  });
-
-  let isDragging = false;
-  let dragStartX = 0;
-
-  carousel.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    dragStartX = e.clientX;
-  });
-
-  carousel.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-      const dragEndX = e.clientX;
-      if (dragStartX < dragEndX) {
-        bsCarousel.prev();
-        isDragging = false;
-      } else if (dragStartX > dragEndX) {
-        bsCarousel.next();
-        isDragging = false;
-      }
-    }
-  });
-
-  carousel.addEventListener('mouseup', () => {
-    isDragging = false;
-  });
-
-  carousel.addEventListener('mouseleave', () => {
-    isDragging = false;
-  });
 }

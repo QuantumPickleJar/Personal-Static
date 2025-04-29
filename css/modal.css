@@ -204,6 +204,51 @@ body.dark-mode .modal-images {
   margin: 0 auto;
 }
 
+/* Carousel arrow buttons */
+#projectImageCarousel .carousel-control-prev,
+#projectImageCarousel .carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001; /* Increased z-index to ensure arrows are above images and overlays */
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.85); /* Slightly more opaque for visibility */
+  border-radius: 50%;
+  opacity: 1;
+  display: flex !important; /* Always use flex when visible */
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  color: #333;
+  pointer-events: auto;
+}
+
+#projectImageCarousel .carousel-control-prev {
+  left: 10px;
+}
+
+#projectImageCarousel .carousel-control-next {
+  right: 10px;
+}
+
+#projectImageCarousel .carousel-control-prev-icon,
+#projectImageCarousel .carousel-control-next-icon {
+  filter: drop-shadow(0 0 2px #333);
+}
+
+@media (max-width: 400px) {
+  #projectImageCarousel .carousel-control-prev,
+  #projectImageCarousel .carousel-control-next {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    left: 2px;
+    right: 2px;
+  }
+}
+
 /* Fallback placeholder */
 .fallback-placeholder {
   width: 250px;
