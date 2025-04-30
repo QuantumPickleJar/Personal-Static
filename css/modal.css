@@ -779,3 +779,31 @@ body.dark-mode .fab.selected {
     z-index: 10;
   }
 }
+
+/* Adjust FABs for smallest screens */
+@media (max-width: 400px) {
+  .fab-container {
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    position: static !important;
+    margin: 8px 0 0 0;
+    width: 100%;
+  }
+  .modal-top-right-upper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .modal-section-heading {
+    order: 1;
+    margin-bottom: 0.5rem;
+  }
+  .fab-container {
+    order: 2;
+  }
+  #modalStack {
+    order: 3;
+  }
+}

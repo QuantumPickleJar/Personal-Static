@@ -472,3 +472,24 @@ md-elevated-card.project-card .personal-label {
   }
 }
 
+/* Custom styling for the MWC filter options button */
+md-filled-tonal-button#filterToggleBtn {
+  margin-right: 1rem;
+  min-width: 160px;
+  font-size: 1rem;
+  --md-filled-tonal-button-container-color: var(--md-sys-color-primary, #6750A4);
+  --md-filled-tonal-button-label-text-color: #fff;
+  border-radius: 24px;
+  box-shadow: 0 2px 8px rgba(103,80,164,0.08);
+  letter-spacing: 0.03em;
+  font-weight: 500;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-bottom: 0.5rem;
+}
+
+md-filled-tonal-button#filterToggleBtn:hover {
+  --md-filled-tonal-button-container-color: var(--md-sys-color-primary-container, #eaddff);
+  --md-filled-tonal-button-label-text-color: var(--md-sys-color-primary, #6750A4);
+  box-shadow: 0 4px 16px rgba(103,80,164,0.15);
+}
+
