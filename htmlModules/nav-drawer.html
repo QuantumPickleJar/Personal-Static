@@ -142,12 +142,14 @@
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
+    pointer-events: none; /* Allow clicks through when hidden */
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   
   #drawerOverlay.visible {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto; /* Capture clicks when visible */
   }
   
   /* Dark mode adjustments */

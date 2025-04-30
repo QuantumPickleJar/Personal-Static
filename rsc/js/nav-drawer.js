@@ -6,62 +6,33 @@
  */
 export function initNavDrawer() {
   console.log('Initializing navigation drawer');
-  
-  // Create the markup if it doesn't exist
+
+  // Create markup if it doesn't exist
   if (!document.getElementById('menuToggle')) {
     createNavDrawerMarkup();
   }
-  
-  // Set up event listeners
+
   const drawer = document.getElementById('mainDrawer');
-  const toggleBtn = document.getElementById('menuToggle');
 
-  if (drawer && toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
+  // Delegate clicks on body for toggle and outside clicks
+  document.body.addEventListener('click', function(e) {
+    const toggle = e.target.closest('#menuToggle');
+    const inDrawer = e.target.closest('#mainDrawer');
+    if (toggle) {
+      // Toggle drawer open/close
       drawer.classList.toggle('open');
-      
-      // Add overlay when drawer is open
-      let overlay = document.getElementById('drawerOverlay');
-      if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'drawerOverlay';
-        document.body.appendChild(overlay);
-        
-        overlay.addEventListener('click', () => {
-          drawer.classList.remove('open');
-          overlay.classList.remove('visible');
-        });
-      }
-      
-      if (drawer.classList.contains('open')) {
-        overlay.classList.add('visible');
-      } else {
-        overlay.classList.remove('visible');
-      }
-    });
-    
-    // Close drawer with ESC key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && drawer.classList.contains('open')) {
-        drawer.classList.remove('open');
-        const overlay = document.getElementById('drawerOverlay');
-        if (overlay) {
-          overlay.classList.remove('visible');
-        }
-      }
-    });
+    } else if (drawer.classList.contains('open') && !inDrawer) {
+      // Click outside drawer - close it
+      drawer.classList.remove('open');
+    }
+  });
 
-    // Close drawer if open and click is outside drawer/menu button
-    document.addEventListener('click', function(e) {
-      if (drawer.classList.contains('open')) {
-        if (!drawer.contains(e.target) && e.target !== toggleBtn) {
-          drawer.classList.remove('open');
-          const overlay = document.getElementById('drawerOverlay');
-          if (overlay) overlay.classList.remove('visible');
-        }
-      }
-    });
-  }
+  // Close drawer on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) {
+      drawer.classList.remove('open');
+    }
+  });
 }
 
 /**
