@@ -58,19 +58,16 @@ document.addEventListener('DOMContentLoaded', function () {
  * Initialize search functionality by connecting the search input to the search.js module
  */
 function initializeSearchFunctionality() {
-  const searchInput = document.getElementById('searchBar');
+  // Use querySelector for MWC text field
+  const searchInput = document.querySelector('md-outlined-text-field#searchBar');
   if (!searchInput) {
     console.warn('Search input not found, skipping search initialization');
     return;
   }
-  
-  console.log('Initializing search functionality');
-  
+  console.log('Initializing search functionality (MWC)');
   searchInput.addEventListener('input', function(e) {
-    console.log('Search term:', e.target.value.trim());
     applyAllFilters();
   });
-  
   console.log('Search functionality initialized');
 }
 
@@ -198,242 +195,99 @@ export function debugMaterialMenu() {
   console.groupEnd();
 }
 
-// New Material3 Menu Initializer and Debugger for Jekyll environment
-export function initializeMaterialMenu() {
-  console.log('Manual Material 3 initialization starting...');
-  
-  // Get the elements
-  const filterMenu = document.getElementById('projectFilterMenu');
-  const filterToggleBtn = document.getElementById('filterToggleBtn');
-  const anchorElement = document.getElementById('filterMenuAnchor');
-  
-  if (!filterMenu || !filterToggleBtn) {
-    console.error('Required menu elements not found in DOM');
-    return;
-  }
-  
-  console.log('Setting up manual Material3 menu implementation');
-  
-  // Add a class for CSS styling
-  filterMenu.classList.add('md-menu-custom');
-  
-  // Hide the menu initially
-  filterMenu.style.position = 'absolute';
-  filterMenu.style.zIndex = '1000';
-  filterMenu.style.backgroundColor = 'var(--md-sys-color-surface, #fff)';
-  filterMenu.style.borderRadius = '4px';
-  filterMenu.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-  filterMenu.style.overflow = 'hidden';
-  filterMenu.style.display = 'none';
-  
-  // Create a custom open property
-  let isMenuOpen = false;
-  Object.defineProperty(filterMenu, 'open', {
-    get: function() { return isMenuOpen; },
-    set: function(value) {
-      isMenuOpen = value;
-      if (value) {
-        showMenu();
-      } else {
-        hideMenu();
-      }
-    }
+// Setup filter dropdown and search functionality for plain HTML controls
+console.log('[FilterDropdown] Initializing filter dropdown logic');
+const searchInput = document.getElementById('searchBar');
+if (searchInput) {
+  console.log('[FilterDropdown] Search input found');
+  searchInput.addEventListener('input', () => {
+    console.log('[FilterDropdown] Search input event');
+    applyAllFilters();
   });
-  
-  // Position the menu relative to the anchor
-  function positionMenu() {
-    if (!anchorElement) return;
-    
-    const anchorRect = anchorElement.getBoundingClientRect();
-    filterMenu.style.top = `${anchorRect.bottom + window.scrollY}px`;
-    filterMenu.style.left = `${anchorRect.left + window.scrollX}px`;
-    filterMenu.style.minWidth = `${anchorRect.width}px`;
-  }
-  
-  // Show menu function
-  function showMenu() {
-    positionMenu();
-    filterMenu.style.display = 'block';
-    console.log('Menu shown');
-    
-    // Add a click outside listener
-    setTimeout(() => {
-      document.addEventListener('click', outsideClickHandler);
-    }, 10);
-  }
-  
-  // Hide menu function
-  function hideMenu() {
-    filterMenu.style.display = 'none';
-    console.log('Menu hidden');
-    document.removeEventListener('click', outsideClickHandler);
-  }
-  
-  // Click outside to close
-  function outsideClickHandler(e) {
-    if (!filterMenu.contains(e.target) && e.target !== filterToggleBtn) {
-      filterMenu.open = false;
-    }
-  }
-  
-  // Toggle button click handler
-  filterToggleBtn.addEventListener('click', (e) => {
+} else {
+  console.warn('[FilterDropdown] Search input NOT found');
+}
+
+const filterToggleBtn = document.getElementById('filterToggleBtn');
+const filterDropdown = document.getElementById('filterDropdown');
+console.log('[FilterDropdown] filterToggleBtn:', filterToggleBtn);
+console.log('[FilterDropdown] filterDropdown:', filterDropdown);
+if (filterToggleBtn && filterDropdown) {
+  filterToggleBtn.addEventListener('click', function(e) {
+    console.log('[FilterDropdown] Filter button clicked');
     e.stopPropagation();
-    console.log('Filter toggle button clicked');
-    filterMenu.open = !filterMenu.open;
+    filterDropdown.classList.toggle('show');
+    const isExpanded = filterDropdown.classList.contains('show');
+    filterToggleBtn.setAttribute('aria-expanded', isExpanded);
+    console.log('[FilterDropdown] Dropdown show state:', isExpanded);
+    // Debug: force style for visibility
+    if (isExpanded) {
+      filterDropdown.style.opacity = '1';
+      filterDropdown.style.pointerEvents = 'auto';
+      filterDropdown.style.background = '#fff';
+      filterDropdown.style.zIndex = '9999';
+    } else {
+      filterDropdown.style.opacity = '';
+      filterDropdown.style.pointerEvents = '';
+      filterDropdown.style.background = '';
+      filterDropdown.style.zIndex = '';
+    }
+    // Log computed style and rect
+    const cs = window.getComputedStyle(filterDropdown);
+    console.log('[FilterDropdown] Computed display:', cs.display, 'opacity:', cs.opacity, 'pointerEvents:', cs.pointerEvents);
+    console.log('[FilterDropdown] Bounding rect:', filterDropdown.getBoundingClientRect());
   });
-  
-  // Add click event to menu items
-  const menuItems = filterMenu.querySelectorAll('md-menu-item');
-  menuItems.forEach(item => {
-    if (item.getAttribute('type') === 'checkbox') {
-      item.selected = false;
-      
-      // Add a class for styling
-      item.classList.add('md-menu-item-custom');
-      
-      // Override the selected property
-      Object.defineProperty(item, 'selected', {
-        get: function() { 
-          return this.hasAttribute('selected'); 
-        },
-        set: function(value) {
-          if (value) {
-            this.setAttribute('selected', '');
-            this.classList.add('selected');
-          } else {
-            this.removeAttribute('selected');
-            this.classList.remove('selected');
-          }
-        }
-      });
-      
-      // Setup click handler
-      item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        item.selected = !item.selected;
-        console.log(`${item.id} clicked, selected:`, item.selected);
-        // Dispatch a change event that your filter logic can listen for
-        item.dispatchEvent(new CustomEvent('change'));
-      });
+  document.addEventListener('click', function(e) {
+    if (filterDropdown.classList.contains('show') &&
+        !filterDropdown.contains(e.target) &&
+        !filterToggleBtn.contains(e.target)) {
+      console.log('[FilterDropdown] Click outside, hiding dropdown');
+      filterDropdown.classList.remove('show');
+      filterToggleBtn.setAttribute('aria-expanded', 'false');
     }
   });
-  
-  console.log('Manual Material 3 menu initialization complete');
-  
-  // Add some basic styles
-  const style = document.createElement('style');
-  style.textContent = `
-    .md-menu-custom {
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .md-menu-item-custom {
-      padding: 12px 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
-    .md-menu-item-custom:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-    .md-menu-item-custom.selected::before {
-      content: '✓';
-      margin-right: 8px;
-    }
-  `;
-  document.head.appendChild(style);
-  
-  return {
-    menu: filterMenu,
-    button: filterToggleBtn,
-    open: () => { filterMenu.open = true; },
-    close: () => { filterMenu.open = false; },
-    toggle: () => { filterMenu.open = !filterMenu.open; }
-  };
+} else {
+  if (!filterToggleBtn) console.warn('[FilterDropdown] filterToggleBtn NOT found');
+  if (!filterDropdown) console.warn('[FilterDropdown] filterDropdown NOT found');
 }
 
-// Call this at the top-level (not inside DOMContentLoaded)
-debugMaterialRegistration();
-
-/**
- * Debug Material Web Components registration.
- * This runs outside of DOMContentLoaded to catch when components are registered
- */
-export function debugMaterialRegistration() {
-  // Check if the script is loaded
-  const scripts = Array.from(document.scripts).map(s => s.src || s.type);
-  console.log('Loaded scripts:', scripts);
-
-  // Check registration timing
-  if (customElements.get('md-menu')) {
-    console.log('md-menu custom element is registered at', new Date().toISOString());
-  } else {
-    console.warn('md-menu custom element is NOT registered at', new Date().toISOString());
-    // Try again after a delay
-    setTimeout(debugMaterialRegistration, 1000);
-  }
-}
-
-// Check if Material components are defined after a reasonable delay
-setTimeout(() => {
-  const materialComponentsRegistered = !!customElements.get('md-menu');
-  
-  if (!materialComponentsRegistered) {
-    console.warn('Material components still not registered after 2s, initializing polyfill');
-    
-    // Add this to DOMContentLoaded to ensure elements exist
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize our manual implementation
-      const menuController = initializeMaterialMenu();
-      
-      // Set up event listeners for filtering
-      const filterImages = document.getElementById('filterImages');
-      const filterMermaid = document.getElementById('filterMermaid');
-      
-      if (filterImages) {
-        filterImages.addEventListener('change', applyAllFilters);
-      }
-      
-      if (filterMermaid) {
-        filterMermaid.addEventListener('change', applyAllFilters);
-      }
-    });
-  }
-}, 2000);
+// Checkbox filter listeners
+const filterImages = document.getElementById('filterImages');
+const filterMermaid = document.getElementById('filterMermaid');
+if (filterImages) filterImages.addEventListener('change', () => applyAllFilters());
+if (filterMermaid) filterMermaid.addEventListener('change', () => applyAllFilters());
 
 /**
  * Unified filter function: applies search, images, Mermaid, and technology chip filters.
  */
 export function applyAllFilters() {
+  const searchBar = document.getElementById('searchBar');
   const filterImages = document.getElementById('filterImages');
   const filterMermaid = document.getElementById('filterMermaid');
-  const searchBar = document.getElementById('searchBar');
-  // Get selected tech chips
+  
+  const searchTerm = searchBar && searchBar.value ? searchBar.value.trim() : '';
+  const hasImagesFilter = filterImages && filterImages.checked;
+  const hasMermaidFilter = filterMermaid && filterMermaid.checked;
+
   const selectedTechs = Array.from(
     document.querySelectorAll('.custom-filter-chip.selected')
   ).map(chip => chip.dataset.tech);
 
-  const hasImagesFilter = filterImages?.classList?.contains('selected') || false;
-  const hasMermaidFilter = filterMermaid?.classList?.contains('selected') || false;
-  const searchTerm = searchBar && searchBar.value.trim() ? searchBar.value.trim() : '';
-
   let filtered = [...allProjects];
 
-  // 1. Search filter
   if (searchTerm) {
     filtered = filterProjectsBySearchTerm(filtered, searchTerm);
   }
-  // 2. Images filter
   if (hasImagesFilter) {
     filtered = filtered.filter(p => p.images && p.images.length > 0);
   }
-  // 3. Mermaid filter
   if (hasMermaidFilter) {
     filtered = filtered.filter(p => p.mermaid && p.mermaid.trim().length > 0);
   }
-  // 4. Technology chips filter
   if (selectedTechs.length > 0) {
-    filtered = filtered.filter(p => Array.isArray(p.stack) && selectedTechs.some(tech => p.stack.some(projectTech => projectTech.toLowerCase().includes(tech.toLowerCase()))));
+    filtered = filtered.filter(p => Array.isArray(p.stack) &&
+      selectedTechs.some(tech => p.stack.some(pt => pt.toLowerCase().includes(tech.toLowerCase())))
+    );
   }
 
   filteredProjects = filtered;

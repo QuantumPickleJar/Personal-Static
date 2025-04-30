@@ -346,32 +346,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    // Filtering dropdown event listener
-    const filterDropdown = document.getElementById('filterDropdown');
-    if (filterDropdown) {
-      filterDropdown.addEventListener('change', (e) => {
-        const value = e.target.value;
-        switch (value) {
-          case 'title':
-            filterProjByTitle();
-            break;
-          case 'date':
-            filterByDate();
-            break;
-          case 'status':
-            console.log('Filter by status not implemented.');
-            break;
-          default:
-            break;
-        }
-      });
-    }
-    
     renderPerPageDropdown();
     window.addEventListener('resize', () => {
       renderPerPageDropdown();
       updateItemsPerPage(projectsPerPage);
     });
+
+    /* Removed filterDropdown change listener block to avoid conflict with custom filter menu */
+    
   }
 });
 

@@ -112,6 +112,24 @@
     margin-bottom: 6px;
     font-size: 0.6875rem;
   }
+
+  /* Search bar fixes for mobile */
+  md-outlined-text-field#searchBar {
+    width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+
+  #advancedSearchContainer {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  #advancedSearchContainer > div {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 
 /* For very small screens (max-width: 400px) force single-column project cards */
@@ -199,6 +217,18 @@
   #mainContent {
     flex: 1; /* Ensure mainContent takes remaining space */
     width: 100%; /* Ensure mainContent takes full width */
+  }
+
+  /* Search bar fixes for desktop */
+  md-outlined-text-field#searchBar {
+    min-width: 280px;
+    width: auto;
+    flex: 1;
+  }
+  
+  #advancedSearchContainer > div:first-child {
+    flex: 1;
+    max-width: 500px;
   }
 }
 

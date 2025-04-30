@@ -30,22 +30,16 @@
   </script>
 
   <title>Vincent's Portfolio</title>
-  <!-- Material Icons -->
+  <!-- Material Icons (MWC) -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
-  <!-- Updated CSS path -->
+  <!-- Bootstrap Icons fallback -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
-  <script type="module">
-  // Dynamically import with absolute path
-  const basePath = window.location.hostname.includes('github.io') ? 
-    '/Personal-Static/' : '/';
-  
-  import(`${basePath}rsc/js/projects.js`)
-    .catch(err => console.error('Failed to load projects module:', err));
-</script>
+  <!-- Explicitly load the projects module for search/filter/pagination logic -->
+  <script type="module" src="rsc/js/projects.js"></script>
   <!-- Add Barba.js CDN -->
   <meta http-equiv="Content-Type" content="text/javascript; charset=utf-8">
   <script src="https://unpkg.com/@barba/core"></script>
@@ -82,6 +76,129 @@
       --md-sys-color-surface-container-high: #2b2930;
       background-color: var(--md-sys-color-surface);
       color: var(--md-sys-color-on-surface);
+    }
+
+    /* Enhanced styling for the search bar - consolidated styles */
+    #searchBar, md-outlined-text-field#searchBar {
+      width: 100%;
+      min-width: 280px;
+      max-width: 100%;
+      flex: 1;
+      margin: 0;
+      padding: 8px 0;
+      border-radius: 8px;
+      background-color: var(--md-sys-color-surface, #ffffff);
+      color: var(--md-sys-color-on-surface, #1c1b1f);
+      transition: all 0.3s ease;
+      --md-outlined-text-field-container-shape: 18px;
+      --md-outlined-text-field-outline-color: var(--md-sys-color-outline, #79747e);
+      --md-outlined-text-field-hover-outline-color: var(--md-sys-color-primary, #6750a4);
+      --md-outlined-text-field-focus-outline-color: var(--md-sys-color-primary, #6750a4);
+      --md-outlined-text-field-label-text-color: var(--md-sys-color-on-surface-variant, #49454e);
+      font-family: inherit;
+    }
+
+    #searchBar:focus-within, md-outlined-text-field#searchBar:focus-within {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-color: var(--md-sys-color-primary, #6750a4);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #searchBar {
+        min-width: 100%;
+        margin-bottom: 16px;
+      }
+    }
+
+    /* Ensure search bar has proper dimensions */
+    #advancedSearchContainer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background-color: var(--md-sys-color-surface-variant, #e7e0eb);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    body.dark-mode #advancedSearchContainer {
+      background-color: var(--md-sys-color-surface-container-high, #2b2930);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Adjust the search and filters column */
+    #advancedSearchContainer > div {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Material Design filter button improved styling */
+    md-filled-tonal-button#filterToggleBtn {
+      --md-filled-tonal-button-container-color: var(--md-sys-color-secondary-container, #e8def8);
+      --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-secondary-container, #1d192b);
+      --md-filled-tonal-button-container-shape: 20px;
+      font-size: 0.9rem;
+      height: 40px;
+      min-width: 160px;
+      padding: 0 12px;
+      margin: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    /* Update filter button to match search bar height */
+    md-filled-tonal-button#filterToggleBtn {
+      height: 40px;
+      min-width: 130px;
+      margin: 0;
+    }
+
+    md-filled-tonal-button#filterToggleBtn:hover {
+      --md-filled-tonal-button-container-color: var(--md-sys-color-primary);
+      --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-primary);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode md-filled-tonal-button#filterToggleBtn {
+      --md-filled-tonal-button-container-color: var(--md-sys-color-secondary-container, #4a4458);
+      --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-secondary-container, #e8def8);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #advancedSearchContainer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      md-outlined-text-field#searchBar {
+        width: 100%;
+        min-width: 100% !important;
+        margin-bottom: 10px;
+      }
+      
+      #advancedSearchContainer > div {
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      
+      md-filled-tonal-button#filterToggleBtn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    /* Better spacing for the search and filter group */
+    #advancedSearchContainer .d-flex {
+      gap: 12px;
     }
 
     /* CSS-only Material Menu Implementation */
@@ -213,7 +330,7 @@
       left: 100%;
       top: 0;
       margin-left: 8px;
-      width: 200px;
+      width: 280px; /* Increased width for better visibility */
       max-height: 300px;
       background-color: #fff;
       border-radius: 8px;
@@ -221,9 +338,10 @@
       display: none;
       flex-direction: column;
       overflow: hidden;
+      z-index: 1500; /* Higher z-index to ensure visibility above pagination */
     }
     
-    .dark-theme .tech-filter-card {
+    body.dark-mode .tech-filter-card {
       background-color: #333;
     }
     
@@ -234,7 +352,7 @@
       background-color: #f5f5f5;
     }
     
-    .dark-theme .tech-filter-header {
+    body.dark-mode .tech-filter-header {
       background-color: #444;
       border-bottom-color: rgba(255, 255, 255, 0.1);
     }
@@ -323,6 +441,209 @@
       padding: 4px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
+
+    /* Search bar and filter section styling */
+    #advancedSearchContainer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background-color: var(--md-sys-color-surface-variant, #e7e0eb);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    body.dark-mode #advancedSearchContainer {
+      background-color: var(--md-sys-color-surface-variant, #49454f);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Search and filter group */
+    .search-filters-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    @media (max-width: 768px) {
+      #advancedSearchContainer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem;
+      }
+      
+      .search-filters-group {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      
+      md-outlined-text-field#searchBar {
+        width: 100%;
+        min-width: 0;
+      }
+      
+      #inlinePaginationContainer {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* New filter dropdown menu styles */
+    #filterMenuContainer {
+      position: relative;
+    }
+
+    .filter-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1500;
+      width: 240px;
+      margin-top: 8px;
+      padding: 0;
+      background-color: var(--md-sys-color-surface, #ffffff);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: block; /* Always block, control visibility with opacity */
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .filter-dropdown-menu.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .filter-menu-header {
+      padding: 12px 16px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+    }
+
+    .filter-menu-item {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .filter-menu-item:hover {
+      background-color: var(--md-sys-color-surface-variant, rgba(103, 80, 164, 0.08));
+    }
+
+    .filter-menu-divider {
+      height: 1px;
+      background-color: var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+      margin: 4px 0;
+    }
+
+    .tech-filter-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    /* Updated tech filter submenu positioning */
+    .filter-tech-trigger {
+      position: relative;
+    }
+
+    .tech-filter-card {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 2px;
+      width: 280px;
+      max-height: 350px;
+      background-color: var(--md-sys-color-surface, #ffffff);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      z-index: 1600;
+    }
+
+    /* Show tech filter card on hover */
+    .filter-tech-trigger:hover .tech-filter-card,
+    .tech-filter-card:hover {
+      display: flex;
+    }
+
+    /* Dark mode styles for filter menu */
+    body.dark-mode .filter-dropdown-menu,
+    body.dark-mode .tech-filter-card {
+      background-color: var(--md-sys-color-surface-container-high, #2b2930);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode .filter-menu-header {
+      border-bottom-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+    }
+
+    body.dark-mode .filter-menu-divider {
+      background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+    }
+
+    body.dark-mode .filter-menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Mobile styles for filter menu */
+    @media (max-width: 768px) {
+      .filter-dropdown-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+      }
+      
+      .tech-filter-card {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin-left: 0;
+        width: 90%;
+        max-width: 350px;
+      }
+    }
+
+    /* Ensure search bar is always visible */
+    #searchBar, md-outlined-text-field#searchBar, .search-bar-fallback {
+      display: block !important;
+      visibility: visible !important;
+      min-width: 220px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 1rem auto;
+    }
+    .search-bar-fallback {
+      padding: 0.5em 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    /* Fallback for icons if MWC fails */
+    .icon-fallback {
+      font-family: 'bootstrap-icons' !important;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      letter-spacing: normal;
+      display: inline-block;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
   </style>
 </head>
 
@@ -357,43 +678,35 @@
             </div>
 
             <div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3">
-              <div class="d-flex align-items-center gap-2">
-                <div>
-                  <label for="searchBar" class="visually-hidden">Search Projects:</label>
-                  <input type="text" id="searchBar" placeholder="Search Projects..." class="form-control">
-                </div>
- 
-                <!-- filter by dropdown -->
-                <div id="projectFilters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1rem;">
-                  <!-- Anchor for menu with proper positioning -->
-                  <div id="filterMenuAnchor" style="position: relative; display: inline-block;">
-                    <!-- Replace md-filled-tonal-button with regular button styled with CSS -->
-                    <button id="filterToggleBtn" class="custom-material-button">Filter Options</button>
-                    
-                    <!-- CSS-only menu implementation with right-side tech filter card -->
-                    <div id="projectFilterMenu" class="custom-material-menu">
-                      <div class="filter-menu-container">
-                        <!-- Main menu items -->
-                        <div class="filter-menu-main">
-                          <div id="filterImages" class="custom-menu-item" data-type="checkbox">Has Images</div>
-                          <div id="filterMermaid" class="custom-menu-item" data-type="checkbox">Has Mermaid</div>
-                          <div class="custom-menu-divider"></div>
-                          <!-- Tech filter trigger item that shows the tech filter card -->
-                          <div id="filterTechTrigger" class="custom-menu-item filter-tech-trigger">
-                            Filter by Technology <span style="margin-left: auto">▶</span>
-                          </div>
-                        </div>
-                        
-                        <!-- Right-side tech filter card with vertical scroll -->
-                        <div id="techFilterCard" class="tech-filter-card">
-                          <div class="tech-filter-header">Technologies</div>
-                          <div id="stackFilterChips" class="tech-filter-content"></div>
-                        </div>
+              <div class="d-flex align-items-center gap-2 flex-grow-1">
+                <!-- Plain search input fallback -->
+                <input id="searchBar" class="search-bar-fallback" type="text" placeholder="Search Projects" style="flex-grow:1; max-width:500px; min-width:220px; margin:0;" />
+                <div style="position: relative; display: inline-block;">
+                  <!-- Filter menu button with icon -->
+                  <button id="filterToggleBtn" aria-label="Filter Options" style="min-width:40px; width:40px; height:40px; padding:0; display:flex; align-items:center; justify-content:center; border:none; background:transparent; cursor:pointer;">
+                    <span class="material-symbols-outlined" style="font-size:28px;">filter_list</span>
+                  </button>
+                  <!-- Filter dropdown menu with checkboxes -->
+                  <div id="filterDropdown" class="filter-dropdown-menu">
+                    <div class="filter-menu-header">Filter Options</div>
+                    <div class="filter-menu-item">
+                      <input type="checkbox" id="filterImages" /> <label for="filterImages">Has Images</label>
+                    </div>
+                    <div class="filter-menu-item">
+                      <input type="checkbox" id="filterMermaid" /> <label for="filterMermaid">Has Mermaid</label>
+                    </div>
+                    <div class="filter-menu-divider"></div>
+                    <div class="filter-menu-item filter-tech-trigger" style="position:relative;">
+                      <span>Filter by Technology</span>
+                      <span class="material-symbols-outlined" style="font-size:20px; margin-left:8px;">chevron_right</span>
+                      <!-- Tech filter submenu -->
+                      <div id="techFilterCard" class="tech-filter-card">
+                        <div class="tech-filter-header">Technologies</div>
+                        <div id="stackFilterChips" class="tech-filter-content"></div>
                       </div>
                     </div>
                   </div>
                 </div>
-                
               </div>
               <!-- Inline pagination for larger screens -->
               <div id="inlinePaginationContainer"></div>
@@ -490,110 +803,48 @@
           document.getElementById('navDrawerContainer').innerHTML = html;
         })
         .catch(error => console.error('Error loading nav drawer:', error));
+        
+      // Explicitly force Material Web Components to refresh/upgrade
+      if (window.customElements) {
+        console.log('Force upgrading Material Web Components...');
+        // Give components time to load
+        setTimeout(() => {
+          // Force component upgrades
+          const searchBar = document.getElementById('searchBar');
+          if (searchBar) {
+            console.log('Search bar found, ensuring upgrade');
+            // Force reflow to ensure component renders
+            void searchBar.offsetWidth;
+          } else {
+            console.error('Search bar element not found in DOM');
+          }
+          
+          // Ensure menu is properly set up
+          const filterMenu = document.getElementById('projectFilterMenu');
+          if (filterMenu && typeof filterMenu.show === 'function') {
+            console.log('Filter menu ready');
+          }
+        }, 300);
+      }
     });
   </script>
-
-  <script type="module">
-    // Fixed initialization for Material 3 components and filters
-    document.addEventListener('DOMContentLoaded', () => {
-      // Import the initializeStackFilterChips function
-      import('./rsc/js/stackIconLoader.js').then(module => {
-        // Initialize the stack filter chips
-        module.initializeStackFilterChips();
-      }).catch(err => console.error('Failed to import stackIconLoader:', err));
-      
-      // Import sorting functions
-      import('./rsc/js/gallery-sorting.js').then(module => {
-        const { filterProjByTitle, filterByDate } = module;
-        
-        // Set up sort dropdown event listener
-        const sortDropdown = document.getElementById('sortDropdown');
-        if (sortDropdown) {
-          console.log('Setting up sort dropdown listener');
-          
-          // Initialize with current value
-          sortDropdown.addEventListener('change', (e) => {
-            console.log('Sort type changed to:', e.target.value);
-            
-            // Call the appropriate sort function based on selected value
-            switch (e.target.value) {
-              case 'title':
-                filterProjByTitle();
-                break;
-              case 'date':
-                filterByDate();
-                break;
-              default:
-                console.warn('Unknown sort type:', e.target.value);
-            }
-          });
-        }
-      }).catch(err => console.error('Failed to import gallery-sorting:', err));
-      
-      // Wait a short time to ensure all components are loaded
-      setTimeout(() => {
-        // Initialize the filter dropdown
-        const filterMenu = document.getElementById('projectFilterMenu');
-        const filterToggleBtn = document.getElementById('filterToggleBtn');
-        const anchorElement = document.getElementById('filterMenuAnchor');
-        
-        if (filterMenu && filterToggleBtn) {
-          console.log('Setting up filter menu interaction');
-          
-          // Ensure anchor is properly set
-          if (anchorElement && filterMenu.getAttribute('anchor') !== anchorElement.id) {
-            filterMenu.setAttribute('anchor', anchorElement.id);
+  <script>
+    // Patch: Ensure filter dropdown toggles on click
+    document.addEventListener('DOMContentLoaded', function() {
+      var filterBtn = document.getElementById('filterToggleBtn');
+      var filterDropdown = document.getElementById('filterDropdown');
+      if (filterBtn && filterDropdown) {
+        filterBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          filterDropdown.classList.toggle('show');
+        });
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!filterDropdown.contains(e.target) && !filterBtn.contains(e.target)) {
+            filterDropdown.classList.remove('show');
           }
-          
-          // Set up the menu to open when the button is clicked
-          filterToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent event bubbling
-            console.log('Filter toggle button clicked');
-            
-            // Position the menu relative to the button
-            const buttonRect = filterToggleBtn.getBoundingClientRect();
-            filterMenu.style.top = `${buttonRect.height}px`;
-            filterMenu.style.left = '0px';
-            
-            // Toggle menu's open state
-            filterMenu.style.display = filterMenu.style.display === 'none' ? 'block' : 'none';
-            console.log('Menu open state:', filterMenu.style.display);
-          });
-          
-          // Close menu when clicking outside
-          document.addEventListener('click', (e) => {
-            if (!filterMenu.contains(e.target) && e.target !== filterToggleBtn) {
-              filterMenu.style.display = 'none';
-            }
-          });
-          
-          // Handle checkbox items in menu
-          const filterImages = document.getElementById('filterImages');
-          const filterMermaid = document.getElementById('filterMermaid');
-          
-          if (filterImages) {
-            filterImages.addEventListener('click', () => {
-              filterImages.classList.toggle('selected');
-              console.log('Filter by images:', filterImages.classList.contains('selected'));
-              if (window.applyAllFilters) {
-                window.applyAllFilters();
-              }
-            });
-          }
-          
-          if (filterMermaid) {
-            filterMermaid.addEventListener('click', () => {
-              filterMermaid.classList.toggle('selected');
-              console.log('Filter by mermaid:', filterMermaid.classList.contains('selected'));
-              if (window.applyAllFilters) {
-                window.applyAllFilters();
-              }
-            });
-          }
-        } else {
-          console.error('Filter menu or button not found in DOM');
-        }
-      }, 100); // Short delay to ensure components are loaded
+        });
+      }
     });
   </script>
 </body>
