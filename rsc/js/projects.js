@@ -8,6 +8,7 @@ import { openProjectModal, loadProjectModal, closeModal } from './project-modal.
 import { setupModalToggleFABs, initializeFABs } from './project-fab.js';
 import { createProjectCard, renderProjectsGallery } from './project-card.js';
 import { showImagesInModal, showMermaidDiagramInModal } from './project-image-display.js';
+import FilterMenu from './filter-menu.js';
 
 // Use the globally available bootstrap object instead
 // This will be available if Bootstrap is included via CDN in your HTML
@@ -59,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
  */
 function initializeSearchFunctionality() {
   // Use querySelector for MWC text field
-  const searchInput = document.querySelector('md-outlined-text-field#searchBar');
+  const searchInput = document.querySelector('md-outlined-text-field#searchBar') || 
+                      document.querySelector('#searchBar');
   if (!searchInput) {
     console.warn('Search input not found, skipping search initialization');
     return;
@@ -69,6 +71,47 @@ function initializeSearchFunctionality() {
     applyAllFilters();
   });
   console.log('Search functionality initialized');
+  
+  // Initialize the custom filter menu
+  initializeFilterMenu();
+}
+
+/**
+ * Initialize the custom filter-menu web component
+ */
+function initializeFilterMenu() {
+  const filterMenu = document.getElementById('projectFilter');
+  if (!filterMenu) {
+    console.warn('Filter menu element not found, skipping filter menu initialization');
+    return;
+  }
+  
+  console.log('Initializing filter menu custom element');
+  
+  // Listen for filter change events
+  filterMenu.addEventListener('filterChanged', function(e) {
+    console.log('Filter changed:', e.detail);
+    applyAllFilters();
+  });
+  
+  // When projects are loaded, populate tech filters
+  loadProjects().then(projects => {
+    // Extract all unique tech values from stack arrays
+    const allTechs = new Set();
+    projects.forEach(project => {
+      if (Array.isArray(project.stack)) {
+        project.stack.forEach(tech => allTechs.add(tech));
+      }
+    });
+    
+    // Convert Set to Array and sort alphabetically
+    const techsArray = Array.from(allTechs).sort();
+    
+    // Set tech filters in the custom element
+    filterMenu.setTechFilters(techsArray);
+    
+    console.log(`Filter menu initialized with ${techsArray.length} tech options`);
+  });
 }
 
 export function loadProjects() {
@@ -195,83 +238,33 @@ export function debugMaterialMenu() {
   console.groupEnd();
 }
 
-// Setup filter dropdown and search functionality for plain HTML controls
-console.log('[FilterDropdown] Initializing filter dropdown logic');
-const searchInput = document.getElementById('searchBar');
-if (searchInput) {
-  console.log('[FilterDropdown] Search input found');
-  searchInput.addEventListener('input', () => {
-    console.log('[FilterDropdown] Search input event');
-    applyAllFilters();
-  });
-} else {
-  console.warn('[FilterDropdown] Search input NOT found');
-}
-
-const filterToggleBtn = document.getElementById('filterToggleBtn');
-const filterDropdown = document.getElementById('filterDropdown');
-console.log('[FilterDropdown] filterToggleBtn:', filterToggleBtn);
-console.log('[FilterDropdown] filterDropdown:', filterDropdown);
-if (filterToggleBtn && filterDropdown) {
-  filterToggleBtn.addEventListener('click', function(e) {
-    console.log('[FilterDropdown] Filter button clicked');
-    e.stopPropagation();
-    filterDropdown.classList.toggle('show');
-    const isExpanded = filterDropdown.classList.contains('show');
-    filterToggleBtn.setAttribute('aria-expanded', isExpanded);
-    console.log('[FilterDropdown] Dropdown show state:', isExpanded);
-    // Debug: force style for visibility
-    if (isExpanded) {
-      filterDropdown.style.opacity = '1';
-      filterDropdown.style.pointerEvents = 'auto';
-      filterDropdown.style.background = '#fff';
-      filterDropdown.style.zIndex = '9999';
-    } else {
-      filterDropdown.style.opacity = '';
-      filterDropdown.style.pointerEvents = '';
-      filterDropdown.style.background = '';
-      filterDropdown.style.zIndex = '';
-    }
-    // Log computed style and rect
-    const cs = window.getComputedStyle(filterDropdown);
-    console.log('[FilterDropdown] Computed display:', cs.display, 'opacity:', cs.opacity, 'pointerEvents:', cs.pointerEvents);
-    console.log('[FilterDropdown] Bounding rect:', filterDropdown.getBoundingClientRect());
-  });
-  document.addEventListener('click', function(e) {
-    if (filterDropdown.classList.contains('show') &&
-        !filterDropdown.contains(e.target) &&
-        !filterToggleBtn.contains(e.target)) {
-      console.log('[FilterDropdown] Click outside, hiding dropdown');
-      filterDropdown.classList.remove('show');
-      filterToggleBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-} else {
-  if (!filterToggleBtn) console.warn('[FilterDropdown] filterToggleBtn NOT found');
-  if (!filterDropdown) console.warn('[FilterDropdown] filterDropdown NOT found');
-}
-
-// Checkbox filter listeners
-const filterImages = document.getElementById('filterImages');
-const filterMermaid = document.getElementById('filterMermaid');
-if (filterImages) filterImages.addEventListener('change', () => applyAllFilters());
-if (filterMermaid) filterMermaid.addEventListener('change', () => applyAllFilters());
-
 /**
  * Unified filter function: applies search, images, Mermaid, and technology chip filters.
  */
 export function applyAllFilters() {
   const searchBar = document.getElementById('searchBar');
-  const filterImages = document.getElementById('filterImages');
-  const filterMermaid = document.getElementById('filterMermaid');
+  const filterMenu = document.getElementById('projectFilter');
   
   const searchTerm = searchBar && searchBar.value ? searchBar.value.trim() : '';
-  const hasImagesFilter = filterImages && filterImages.checked;
-  const hasMermaidFilter = filterMermaid && filterMermaid.checked;
-
-  const selectedTechs = Array.from(
-    document.querySelectorAll('.custom-filter-chip.selected')
-  ).map(chip => chip.dataset.tech);
+  let hasImagesFilter = false;
+  let hasMermaidFilter = false;
+  let selectedTechs = [];
+  
+  // Get filter values from the custom element if available
+  if (filterMenu) {
+    hasImagesFilter = filterMenu.hasImages;
+    hasMermaidFilter = filterMenu.hasMermaid;
+    selectedTechs = filterMenu.techFilters;
+  } else {
+    // Fallback to old filter elements if custom element is not available
+    const filterImages = document.getElementById('filterImages');
+    const filterMermaid = document.getElementById('filterMermaid');
+    hasImagesFilter = filterImages && filterImages.checked;
+    hasMermaidFilter = filterMermaid && filterMermaid.checked;
+    selectedTechs = Array.from(
+      document.querySelectorAll('.custom-filter-chip.selected')
+    ).map(chip => chip.dataset.tech);
+  }
 
   let filtered = [...allProjects];
 
