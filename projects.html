@@ -677,36 +677,12 @@
               <div id="perPageContainer" class="per-page-container"></div>
             </div>
 
-            <div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3">
+            <div id="advancedSearchContainer">
               <div class="d-flex align-items-center gap-2 flex-grow-1">
                 <!-- Plain search input fallback -->
-                <input id="searchBar" class="search-bar-fallback" type="text" placeholder="Search Projects" style="flex-grow:1; max-width:500px; min-width:220px; margin:0;" />
-                <div style="position: relative; display: inline-block;">
-                  <!-- Filter menu button with icon -->
-                  <button id="filterToggleBtn" aria-label="Filter Options" style="min-width:40px; width:40px; height:40px; padding:0; display:flex; align-items:center; justify-content:center; border:none; background:transparent; cursor:pointer;">
-                    <span class="material-symbols-outlined" style="font-size:28px;">filter_list</span>
-                  </button>
-                  <!-- Filter dropdown menu with checkboxes -->
-                  <div id="filterDropdown" class="filter-dropdown-menu">
-                    <div class="filter-menu-header">Filter Options</div>
-                    <div class="filter-menu-item">
-                      <input type="checkbox" id="filterImages" /> <label for="filterImages">Has Images</label>
-                    </div>
-                    <div class="filter-menu-item">
-                      <input type="checkbox" id="filterMermaid" /> <label for="filterMermaid">Has Mermaid</label>
-                    </div>
-                    <div class="filter-menu-divider"></div>
-                    <div class="filter-menu-item filter-tech-trigger" style="position:relative;">
-                      <span>Filter by Technology</span>
-                      <span class="material-symbols-outlined" style="font-size:20px; margin-left:8px;">chevron_right</span>
-                      <!-- Tech filter submenu -->
-                      <div id="techFilterCard" class="tech-filter-card">
-                        <div class="tech-filter-header">Technologies</div>
-                        <div id="stackFilterChips" class="tech-filter-content"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <input id="searchBar" class="search-bar-fallback" type="text" placeholder="Search Projects" />
+                <!-- New filter-menu custom element -->
+                <filter-menu id="projectFilter"></filter-menu>
               </div>
               <!-- Inline pagination for larger screens -->
               <div id="inlinePaginationContainer"></div>
@@ -759,15 +735,9 @@
             <img src="./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram" />
           </div>
         </div>
-    
-        <!-- <img class="project-thumbnail" src="" alt="Project Thumbnail" /> -->
-    
         <div class="project-title"></div>
-    
         <span class="short-form-truncated"></span>
-    
-        <div class="stack-icons"></div>
-    
+        <div class="stack-icons"></div>    
         <div class="carousel-card-footer">
           <md-filled-button class="open-modal-btn">View Project</md-filled-button>
         </div>
