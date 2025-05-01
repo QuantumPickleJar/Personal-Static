@@ -178,6 +178,11 @@ body.dark-mode .modal-images {
   max-height: 375px;
   overflow: visible; /* Keep this as visible for mermaid diagrams */
   position: relative; /* Add position relative for proper rendering */
+  background-color: var(--md-sys-color-surface, #fff);
+}
+
+body.dark-mode .modal-images.mermaid-view {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
 }
 
 /* Carousel styling */

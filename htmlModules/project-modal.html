@@ -10,6 +10,7 @@
         <h4 id="modalTitle"></h4>
         <!-- Main image area (carousel or just a grid) -->
         <div id="modalImages" class="modal-images images-view">
+          <div id="imageArea"></div>
           <!-- Image carousel view template -->
           <div id="projectImageCarousel" class="carousel slide" style="display: none;">
             <div class="carousel-inner">
@@ -24,17 +25,14 @@
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-          
           <!-- Fallback placeholder template -->
           <div class="fallback-placeholder" style="display: none; width: 250px; height: 250px;">
             <img src="" alt="Project placeholder">
           </div>
-          
           <!-- Mermaid container template -->
           <div id="mermaidContainer" class="mermaid" style="display: none; overflow: visible;">
             <!-- Mermaid diagram will be rendered here -->
           </div>
-          
           <!-- No mermaid template -->
           <div class="no-mermaid" style="display: none;">
             No Mermaid Diagram Available
