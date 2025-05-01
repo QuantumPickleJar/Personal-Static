@@ -735,25 +735,24 @@ body.dark-mode .tech-filter-header {
     max-width: 350px;
   }
 
-  /* Override search-filters-group to stay inline */
-  .search-filters-group {
+  /* advancedSearchContainer: keep search+filter inline */
+  #advancedSearchContainer .search-filters-group {
     flex-direction: row !important;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
   }
-  
-  /* Adjust search bar width to make room for filter */
-  .search-bar-fallback, md-outlined-text-field#searchBar {
-    flex: 0.8 !important; /* Take 80% of the container width */
-    min-width: auto !important;
-    margin-bottom: 0 !important;
-  }
-  
-  /* Make filter menu more compact in mobile view */
-  filter-menu {
+  /* Prevent search bar from taking full width */
+  #advancedSearchContainer .search-filters-group #searchBar,
+  #advancedSearchContainer .search-filters-group .search-bar-fallback {
     width: auto !important;
-    flex: 0.15 !important; /* Take 15% of the container width */
+    flex: 1 0 auto !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+  /* Keep filter menu next to search bar */
+  #advancedSearchContainer .search-filters-group filter-menu {
+    flex: 0 0 auto !important;
+    margin-left: 8px !important;
   }
 }
 

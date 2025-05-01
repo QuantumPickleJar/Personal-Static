@@ -655,87 +655,69 @@ body.dark-mode .fab.selected {
   .modal-content {
     width: 95%;
     margin: 2vh auto;
-    padding: 12px;
+    padding: 15px;
     max-height: 96vh;
-    max-width: 100%; /* Override the max-width for small screens */
   }
   
-  /* Stack content vertically on small screens */
+  /* Ensure modal-top stays in row direction even on small screens */
   .modal-top {
-    flex-direction: column !important;
-    gap: 15px;
+    flex-direction: row !important; /* Force horizontal layout on all screens */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    gap: 10px; /* Reduce gap on small screens */
+    align-items: flex-start;
+    width: 100%;
   }
   
   .modal-top-left,
   .modal-top-right {
-    flex: 1 1 auto;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
+    min-width: 0; /* Allow elements to shrink below their content size */
   }
   
-  /* Reduce image height on small screens */
-  .modal-images.images-view {
-    height: 12rem;
+  .modal-top-left {
+    flex: 2; /* Adjust ratio for better small screen layout */
+    max-width: 65%; /* Increase slightly for content */
+  }
+  
+  .modal-top-right {
+    flex: 1; /* Adjust ratio for better small screen layout */
+    min-width: 120px; /* Reduce minimum width on small screens */
+    max-width: 35%; /* Adjust for better space utilization */
   }
   
   /* Optimize modal stack display for small screens */
   #modalStack {
-    max-height: 180px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 5px;
-    align-items: flex-start;
+    max-height: 250px; /* Reduce slightly for better fit */
   }
   
   .stack-item-container {
-    padding: 4px 6px;
-    margin-bottom: 0;
-    flex: 0 0 auto;
+    padding: 4px 6px; /* Smaller padding on mobile */
   }
   
-  #modalTitle {
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-  }
-  
-  .modal-section-heading {
-    font-size: 0.9rem;
-  }
-  
-  /* Adjust FAB container to be more compact */
-  .fab-container {
-    top: 8px;
-    right: 8px;
-    gap: 8px;
-  }
-  
-  .fab {
-    width: 40px;
-    height: 40px;
+  .stack-label {
+    font-size: 0.8rem; /* Slightly smaller font size */
   }
 }
 
 /* Extra small screen adjustments */
 @media (max-width: 480px) {
   .modal-content {
-    padding: 10px;
-    width: 100%;
-    margin: 0;
-    border-radius: 0;
-    height: 100vh;
-    max-height: 100vh;
+    padding: 12px;
+    width: 98%;
   }
   
   .modal-top {
-    gap: 10px;
+    gap: 8px; /* Further reduce gap for very small screens */
   }
   
-  /* Make image area smaller on very small screens */
-  .modal-images.images-view {
-    height: 10rem;
+  .modal-top-left {
+    flex: 3;
+    max-width: 68%;
+  }
+  
+  .modal-top-right {
+    flex: 2;
+    min-width: 100px; /* Ensure minimum width even on very small screens */
+    max-width: 32%;
   }
   
   .stack-item-container {
@@ -743,20 +725,58 @@ body.dark-mode .fab.selected {
   }
   
   .stack-image {
-    width: 20px;
+    width: 20px; /* Slightly smaller icons */
     height: 20px;
   }
   
-  .modal-bottom {
-    margin-top: 10px;
-    max-height: 200px;
+  /* Ensure mermaid expanded view still works on small screens */
+  .modal-top.mermaid-expanded {
+    /* Override row direction for mermaid view */
+    flex-direction: column-reverse !important; 
   }
   
-  /* Shrink close button slightly */
-  .close-button {
+  .modal-top.mermaid-expanded .modal-top-left,
+  .modal-top.mermaid-expanded .modal-top-right {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Make modal-top-left wider and push modal-top-right to the right on medium+ screens */
+@media (min-width: 768px) {
+  .modal-top {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .modal-top-left {
+    flex: 2.2 1 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .modal-top-right {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    margin-left: 16px; /* Reduced from 32px for more space */
+    margin-right: 0;   /* Remove extra right margin */
+    padding-right: 8px; /* Reduced padding to avoid FAB overlap */
+    max-width: 220px; /* Limit width */
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+  }
+  .modal-top-right-upper {
+    width: 100%;
+    padding-right: 0; /* Remove extra padding */
+  }
+  .fab-container {
+    right: 0; /* Adjust FAB position */
     top: 10px;
-    right: 10px;
-    font-size: 20px;
+    z-index: 10;
   }
 }
 
