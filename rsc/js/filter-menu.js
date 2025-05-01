@@ -335,6 +335,8 @@ class FilterMenu extends HTMLElement {
           .filter-dropdown-menu {
             width: 100%;
             min-width: 200px;
+            left: auto !important;
+            right: 0 !important;
           }
           
           .tech-filter-card {

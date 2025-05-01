@@ -98,3 +98,36 @@ export function updateItemsPerPage(newPerPage) {
   renderPage(1);
   renderPaginationControls();
 }
+
+export function renderPerPageDropdown() {
+  const howToContainer = document.getElementById('how-to');
+  if (window.innerWidth < 768) {
+    // On small screens, auto-set projects per page to 4 and hide dropdown
+    updateItemsPerPage(4);
+    const perPageContainer = document.getElementById('perPageContainer');
+    if (perPageContainer) perPageContainer.style.display = 'none';
+    return;
+  }
+  if (howToContainer) {
+    const perPageContainer = document.getElementById('perPageContainer') || (() => {
+      const div = document.createElement('div');
+      div.id = 'perPageContainer';
+      howToContainer.appendChild(div);
+      return div;
+    })();
+    perPageContainer.style.display = '';
+    const options = generatePerPageOptions();
+    perPageContainer.innerHTML = `
+      <label for="perPageSelect">Projects per page: </label>
+      <select id="perPageSelect">
+        ${options}
+      </select>
+    `;
+    const perPageSelect = document.getElementById('perPageSelect');
+    perPageSelect.value = projectsPerPage;
+    perPageSelect.addEventListener('change', (e) => {
+      const newPerPage = parseInt(e.target.value, 10);
+      updateItemsPerPage(newPerPage);
+    });
+  }
+}
