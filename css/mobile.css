@@ -161,9 +161,17 @@
     right: 10px;
   }
 
+  /* Make carousel arrows smaller but still visible on small screens */
   #projectImageCarousel .carousel-control-prev,
-  #projectImageCarousel .carousel-control-next {
-    display: none !important;
+  #projectImageCarousel .carousel-control-next,
+  #simpleImageSlider .carousel-arrow {
+    width: 30px;
+    height: 30px;
+    opacity: 0.9;
+  }
+  
+  #simpleImageSlider .carousel-arrow {
+    display: flex !important; /* Ensure these are always shown */
   }
 }
 

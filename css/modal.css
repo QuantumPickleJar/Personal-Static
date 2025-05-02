@@ -163,6 +163,14 @@ body.dark-mode .modal-images {
   overflow-y: auto !important; /* Force auto scrolling with !important */
   display: flex;
   flex-direction: column; /* Ensure proper flow for scrollable content */
+  position: relative; /* Ensure proper positioning context */
+}
+
+.modal-images.images-view #imageArea {
+  position: relative;
+  z-index: 5; /* Lower z-index than carousel arrows */
+  width: 100%;
+  height: 100%;
 }
 
 @media (min-width: 992px) {
@@ -253,6 +261,94 @@ body.dark-mode .modal-images.mermaid-view {
     right: 2px;
   }
 }
+
+/* --- Carousel arrows for #simpleImageSlider (patch) --- */
+#simpleImageSlider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; /* Higher than container but lower than arrows */
+  overflow: visible !important; /* Allow arrows to be visible outside container */
+}
+
+#simpleImageSlider .carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  background: rgba(255,255,255,0.9); /* More opaque for better visibility */
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3); /* Enhanced shadow for visibility */
+  opacity: 0.9; /* Slight transparency */
+  transition: all 0.2s ease; /* Smooth transitions */
+}
+
+/* Hover effects for better user experience */
+#simpleImageSlider .carousel-arrow:hover {
+  background: rgba(255,255,255,1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* Active state when clicking */
+#simpleImageSlider .carousel-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Dark mode styling for arrows */
+body.dark-mode #simpleImageSlider .carousel-arrow {
+  background: rgba(60, 60, 60, 0.9);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+
+body.dark-mode #simpleImageSlider .carousel-arrow:hover {
+  background: rgba(80, 80, 80, 1);
+}
+
+body.dark-mode #simpleImageSlider .carousel-arrow svg circle {
+  fill: #333; /* Darker background for svg in dark mode */
+}
+
+body.dark-mode #simpleImageSlider .carousel-arrow svg path {
+  fill: #d0bcff; /* Use primary color for the arrow in dark mode */
+}
+
+#simpleImageSlider .simple-prev {
+  left: 10px;
+}
+
+#simpleImageSlider .simple-next {
+  right: 10px;
+}
+
+@media (max-width: 600px) {
+  #simpleImageSlider .carousel-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+  #simpleImageSlider .simple-prev {
+    left: 2px;
+  }
+  #simpleImageSlider .simple-next {
+    right: 2px;
+  }
+}
+/* --- End carousel arrow patch --- */
 
 /* Fallback placeholder */
 .fallback-placeholder {
