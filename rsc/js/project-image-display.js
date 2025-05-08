@@ -4,7 +4,7 @@
  */
 
 import panzoom from 'panzoom';
-import mermaid from 'mermaid';
+// Remove the mermaid import since we're using the global instance
 import { getPlaceholderForStack } from './placeholderBuilder.js';
 import { parseMermaidCode } from './json-parser.js';
 
@@ -162,6 +162,7 @@ export function showImagesInModal(project) {
  * @param {Object} project - The project object
  */
 export function showMermaidDiagramInModal(project) {
+  console.log('showMermaidDiagramInModal called with project:', project.title);
   const modalImages = document.getElementById('modalImages');
   const mermaidContainer = document.getElementById('mermaidContainer');
   const fallbackPlaceholder = modalImages.querySelector('.fallback-placeholder');
@@ -174,13 +175,17 @@ export function showMermaidDiagramInModal(project) {
   modalImages.style.display = 'block';
 
   const mermaidCode = parseMermaidCode(project);
+  console.log('Parsed mermaid code:', mermaidCode ? `${mermaidCode.slice(0, 50)}...` : 'None');
+  
   if (!mermaidCode || !mermaidCode.trim()) {
+    console.log('No mermaid code found, showing no-mermaid message');
     if (mermaidContainer) mermaidContainer.style.display = 'none';
     if (noMermaidMsg) noMermaidMsg.style.display = 'block';
     return;
   }
 
   if (mermaidContainer) {
+    console.log('Found mermaid container, setting up for rendering');
     mermaidContainer.innerHTML = '';
     mermaidContainer.style.position = 'absolute';
     mermaidContainer.style.top = '0';
@@ -203,7 +208,10 @@ export function showMermaidDiagramInModal(project) {
     mermaidContainer.appendChild(innerMermaid);
     mermaidContainer.style.display = 'flex';
 
+    console.log('Calling renderMermaidDiagram with innerMermaid element');
     renderMermaidDiagram(innerMermaid);
+  } else {
+    console.error('mermaidContainer not found in DOM!');
   }
 }
 
@@ -212,12 +220,15 @@ export function showMermaidDiagramInModal(project) {
  * @param {HTMLElement} mermaidElement - The element containing the mermaid code
  */
 export function renderMermaidDiagram(mermaidElement) {
+  console.log('renderMermaidDiagram called with element:', mermaidElement);
+  console.log('mermaidElement content:', mermaidElement.textContent);
+  
   setTimeout(() => {
     try {
       // Ensure mermaid is properly initialized
-      if (typeof mermaid !== 'undefined') {
-        // First make sure mermaid is initialized only once
-        mermaid.initialize({ 
+      if (typeof window.mermaid !== 'undefined') {
+        console.log('Mermaid is defined globally. Initializing with theme:', document.body.classList.contains('dark-mode') ? 'dark' : 'default');
+        window.mermaid.initialize({ 
           startOnLoad: false,
           securityLevel: 'loose',
           theme: document.body.classList.contains('dark-mode') ? 'dark' : 'default'
@@ -226,42 +237,56 @@ export function renderMermaidDiagram(mermaidElement) {
         // Log the mermaid code for debugging
         console.log("Attempting to render mermaid diagram");
         
-        // Use either the imported mermaid or window.mermaid (whichever is available)
-        const mermaidInstance = mermaid || window.mermaid;
+        // Use the global mermaid instance
+        const mermaidInstance = window.mermaid;
         
         if (mermaidInstance && typeof mermaidInstance.render === 'function') {
-          // Modern mermaid API uses render instead of init
+          console.log('Using mermaid.render() function');
           const id = `mermaid-${Date.now()}`;
           mermaidElement.id = id;
+
+          // Read the diagram code from the element's text content
+          const diagramCode = mermaidElement.textContent || '';
+          console.log('Diagram code to render:', diagramCode);
           
-          mermaidInstance.render(id)
-            .then(result => {
-              console.log("Mermaid diagram rendered successfully");
-              mermaidElement.innerHTML = result.svg;
-              applyPanzoomToSvg(mermaidElement);
-            })
-            .catch(error => {
-              console.error("Mermaid rendering error:", error);
-              mermaidElement.textContent = "Error rendering diagram. Check your mermaid syntax.";
-              mermaidElement.style.color = "red";
-            });
+          // Call render (may return a promise or synchronous result)
+          const renderResult = mermaidInstance.render(id, diagramCode);
+          console.log('Render result:', renderResult);
+          
+          if (renderResult && typeof renderResult.then === 'function') {
+            // Promise-based render
+            console.log('Promise-based render detected');
+            renderResult
+              .then(result => {
+                console.log('Mermaid render successful:', result);
+                mermaidElement.innerHTML = result.svg;
+                applyPanzoomToSvg(mermaidElement);
+              })
+              .catch(error => {
+                console.error('Mermaid rendering error:', error);
+                mermaidElement.textContent = 'Error rendering diagram. Check your mermaid syntax.';
+                mermaidElement.style.color = 'red';
+              });
+          } else if (renderResult && typeof renderResult.svg === 'string') {
+            // Synchronous render
+            console.log('Synchronous render successful');
+            mermaidElement.innerHTML = renderResult.svg;
+            applyPanzoomToSvg(mermaidElement);
+          } else {
+            console.error('Mermaid render did not return expected result:', renderResult);
+          }
         } else if (mermaidInstance && typeof mermaidInstance.init === 'function') {
-          // Fallback to older mermaid API
-          mermaidInstance.init(undefined, mermaidElement)
-            .then(() => {
-              console.log("Mermaid diagram rendered successfully using init");
-              applyPanzoomToSvg(mermaidElement);
-            })
-            .catch(error => {
-              console.error("Mermaid initialization error:", error);
-              mermaidElement.textContent = "Error rendering diagram. Check your mermaid syntax.";
-              mermaidElement.style.color = "red";
-            });
+          // Fallback to older mermaid API (synchronous init)
+          console.log('Falling back to mermaid.init() function');
+          mermaidInstance.init(undefined, mermaidElement);
+          console.log("Mermaid diagram rendered with init");
+          applyPanzoomToSvg(mermaidElement);
         } else {
+          console.error('Neither mermaid.render nor mermaid.init is available');
           throw new Error("Mermaid API not available");
         }
       } else {
-        console.error("Mermaid library not available");
+        console.error("Mermaid library not available, attempting to load from CDN");
         
         // Try loading mermaid from CDN as a fallback
         const script = document.createElement('script');
@@ -271,6 +296,7 @@ export function renderMermaidDiagram(mermaidElement) {
           renderMermaidDiagram(mermaidElement);
         };
         script.onerror = () => {
+          console.error("Failed to load mermaid from CDN");
           mermaidElement.textContent = "Failed to load Mermaid library.";
           mermaidElement.style.color = "red";
         };

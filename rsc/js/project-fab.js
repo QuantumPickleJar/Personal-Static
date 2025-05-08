@@ -51,6 +51,28 @@ export function setupModalToggleFABs(project) {
   const modalTopRightUpper = document.querySelector('.modal-top-right-upper');
   const modalStack = document.getElementById('modalStack');
 
+  // Save original styles of elements when the modal is first opened
+  // This will be used to restore the state when toggling back from mermaid view
+  const originalStyles = {
+    modalTop: {
+      className: modalTop ? modalTop.className : '',
+      style: modalTop ? { ...modalTop.style } : {}
+    },
+    modalImages: {
+      className: modalImages ? modalImages.className : '',
+      style: modalImages ? { ...modalImages.style } : {}
+    },
+    modalBottom: {
+      style: modalBottom ? { ...modalBottom.style } : {}
+    },
+    modalTitle: {
+      style: modalTitle ? { ...modalTitle.style } : {}
+    },
+    modalStack: {
+      style: modalStack ? { ...modalStack.style } : {}
+    }
+  };
+
   // Set up event handlers for toggling between views
   mermaidFab.addEventListener('click', () => {
     if (currentView === 'images' && !mermaidFab.disabled) {
@@ -159,24 +181,53 @@ export function setupModalToggleFABs(project) {
 
   imagesFab.addEventListener('click', () => {
     if (currentView === 'mermaid') {
+      console.log('Images FAB clicked, switching from mermaid to image view');
+      
       // Hide mermaid container
       const mermaidContainer = document.getElementById('mermaidContainer');
       if (mermaidContainer) {
         mermaidContainer.style.display = 'none';
       }
 
-      // Restore UI for images view
+      // Reset the mermaid-specific classes from modal elements
       modalTop.classList.remove('mermaid-expanded');
+      
+      // Update FAB states
       imagesFab.classList.add('selected');
       mermaidFab.classList.remove('selected');
 
-      // Show the description section with animation
+      // FULL RESET: Restore all original styles from when modal was opened
+      // This ensures we get back to the original state regardless of what changed
+
+      // Restore modalTop original class and styles
+      if (modalTop) {
+        // Reset to original class list (preserving core classes)
+        modalTop.className = originalStyles.modalTop.className;
+      }
+
+      // Reset modalImages to its original state
+      if (modalImages) {
+        modalImages.className = originalStyles.modalImages.className;
+        
+        // Copy back all original styles that should be reset
+        modalImages.style.display = originalStyles.modalImages.style.display || '';
+        modalImages.style.height = originalStyles.modalImages.style.height || '';
+        modalImages.style.maxHeight = originalStyles.modalImages.style.maxHeight || '';
+        modalImages.style.overflow = originalStyles.modalImages.style.overflow || '';
+        modalImages.style.position = originalStyles.modalImages.style.position || '';
+        // Modal images should have both these styles for correct display
+        modalImages.classList.remove('mermaid-view');
+        modalImages.classList.add('images-view');
+      }
+
+      // Restore description section
       if (modalBottom) {
         modalBottom.style.transition = 'all 0.4s ease-in';
-        modalBottom.style.transform = 'translateY(0)';
+        modalBottom.style.transform = '';
         modalBottom.style.opacity = '1';
         modalBottom.style.height = 'auto';
         modalBottom.style.overflow = 'visible';
+        modalBottom.style.margin = '';
         modalBottom.style.marginTop = '20px';
         modalBottom.style.padding = '';
       }
@@ -206,12 +257,19 @@ export function setupModalToggleFABs(project) {
         modalTitle.style.opacity = '';
       }
 
+      // Restore stack heading visibility
       const stackHeading = document.querySelector('.modal-section-heading');
       if (stackHeading) {
         stackHeading.classList.remove('heading-hidden');
       }
 
-      // Show images
+      // Show carousel or placeholder that was hidden
+      const carouselElement = modalImages.querySelector('#projectImageCarousel, .fallback-placeholder');
+      if (carouselElement) {
+        carouselElement.style.display = '';
+      }
+
+      // Show images and update current view state - with delay for animation
       setTimeout(() => {
         showImagesInModal(currentProject);
         currentView = 'images';
@@ -230,6 +288,10 @@ export function setupModalToggleFABs(project) {
     fabContainer.style.position = 'absolute';
     fabContainer.style.top = '10px';
     fabContainer.style.right = '10px';
+    fabContainer.style.display = 'flex'; // Ensure both FABs are displayed
+    fabContainer.style.flexDirection = 'column';
+    fabContainer.style.gap = '10px';
+    fabContainer.style.zIndex = '50';
     
     // Insert FABs into modal-top-right for proper positioning
     modalTopRight.appendChild(fabContainer);
@@ -241,6 +303,10 @@ export function setupModalToggleFABs(project) {
       fabContainer.style.position = 'absolute';
       fabContainer.style.top = '10px';
       fabContainer.style.right = '10px';
+      fabContainer.style.display = 'flex'; // Ensure both FABs are displayed 
+      fabContainer.style.flexDirection = 'column';
+      fabContainer.style.gap = '10px';
+      fabContainer.style.zIndex = '50';
       modalContent.appendChild(fabContainer);
     }
   }

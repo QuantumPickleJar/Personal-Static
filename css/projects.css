@@ -470,6 +470,79 @@ md-elevated-card.project-card .personal-label {
   .project-card .project-title {
     padding-right: 110px;
   }
+
+  /* Ensure tech icons inside project cards are visible and not cut off */
+  md-elevated-card.project-card .stack-icons {
+    margin-bottom: 1rem;  /* Push icons upwards away from bottom edge */
+  }
+  md-elevated-card.project-card .stack-icons .stack-icon {
+    padding: 2px 4px;      /* Make icon containers smaller */
+    font-size: 0.75rem;     /* Smaller font size */
+    line-height: 1;         /* Tight line height */
+  }
+
+  /* Push tech icons up within project cards to prevent cut-off */
+  md-elevated-card.project-card .stack-icons {
+    margin-top: 0.5rem;
+    margin-bottom: 0;  /* Remove bottom gap */
+    padding-bottom: 0.5rem;
+  }
+  /* Shrink individual icons for better fit */
+  md-elevated-card.project-card .stack-icons img,
+  md-elevated-card.project-card .stack-icons .stack-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 2px;
+  }
+
+  /* Show academic/personal dates statically on mobile */
+  .academic-label .date-tooltip,
+  .personal-label .date-tooltip {
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: inline-block !important;
+    margin-left: 4px;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    background: transparent !important;
+    color: var(--md-sys-color-on-surface-variant, #49454e) !important;
+    font-size: 0.8rem !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Make labels static so date text appears inline */
+  md-elevated-card.project-card.academic .academic-label,
+  md-elevated-card.project-card .personal-label {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    padding-right: 0.5rem;
+    background: transparent !important;
+    color: var(--md-sys-color-on-surface, #000) !important;
+  }
+  /* Always show date text next to label */
+  .academic-label .date-tooltip,
+  .personal-label .date-tooltip {
+    position: static !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-left: 0.25rem !important;
+    font-size: 0.75rem !important;
+    color: var(--md-sys-color-on-surface-variant, #49454e) !important;
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    pointer-events: none;
+  }
 }
 
 /* Custom styling for the MWC filter options button */
