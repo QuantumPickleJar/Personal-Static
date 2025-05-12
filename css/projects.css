@@ -543,6 +543,11 @@ md-elevated-card.project-card .personal-label {
     box-shadow: none !important;
     pointer-events: none;
   }
+
+  /* Hide stack-icons on smaller screens */
+  md-elevated-card.project-card .stack-icons {
+    display: none !important;
+  }
 }
 
 /* Custom styling for the MWC filter options button */

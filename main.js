@@ -304,11 +304,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (contactForm) {
     contactForm.addEventListener('submit', handleContactSubmit);
   }
-  // Check if current page is index.html
-  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+  // Check if current page is index.html or root (for GitHub Pages)
+  const isHomePage = (
+    window.location.pathname.endsWith('index.html') ||
+    window.location.pathname === '/' ||
+    window.location.pathname.endsWith('/Personal-Static/') ||
+    window.location.pathname === '/Personal-Static/'
+  );
+  if (isHomePage) {
     // No need to create the carousel element, just load the data
     console.log('Loading carousel data on index page');
-    
     // Import and execute the carousel code
     import('./rsc/js/front_page_carousel.js')
       .then(module => {

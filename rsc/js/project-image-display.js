@@ -443,11 +443,13 @@ export function applyPanzoomToSvg(mermaidElement) {
         svgElement.style.width = '100%';
         svgElement.style.height = 'auto';
 
+        // Constrain panzoom to the mermaidElement container
         panzoom(svgElement, {
           smoothScroll: false,
           maxZoom: 5,
           minZoom: 0.5,
-          boundsPadding: 0.1
+          bounds: true,
+          boundsPadding: 0.05,
         });
       }
     } catch (pzError) {
