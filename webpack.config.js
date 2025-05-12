@@ -46,6 +46,12 @@ module.exports = {
       filename: 'resources.html',
       chunks: ['main']
     }),
+    // Add profile.html entry so it's served by webpack-dev-server
+    new HtmlWebpackPlugin({
+      template: './profile.html',
+      filename: 'profile.html',
+      chunks: ['main']
+    }),
 
     // Copy static assets/folders into dist
     new CopyWebpackPlugin({

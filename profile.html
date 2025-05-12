@@ -1,9 +1,9 @@
 <html lang="en">
 <head>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Experience</title>
-  <script src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Base and global styles -->
@@ -21,6 +21,13 @@
       }
     })();
   </script>
+<!-- 
+  <script type="module">
+  import '@material/web/expansionpanel/expansion-panel.js';
+  import '@material/web/expansionpanel/expansion-panel-header.js';
+  import '@material/web/expansionpanel/expansion-panel-content.js';
+</script> -->
+
 
   <!-- Add Material Design 3 vars for dark mode consistency -->
   <style>
@@ -84,12 +91,12 @@
 <!-- Navigation Drawer will be injected by HTML module -->
 <div id="navDrawerContainer"></div>
 
-<theme-toggle></theme-toggle>
+<!-- Header partial will be injected here -->
+<div id="headerContainer"></div>
 
-<div id="barba-wrapper">
-      <div id="headerContainer"></div>
-
-
+<!-- Theme Toggle: ensure it is always visible and positioned in the upper right -->
+<theme-toggle id="themeToggle"></theme-toggle>
+<!-- TODO: wrap experience-page in barba contianer -->
 <main id="experience-page">
   <!-- Page Content -->
   <div class="page-content">
@@ -115,7 +122,7 @@
 
       <!-- Single expansion panel; duplicate per-school -->
       <mwc-expansion-panel>
-        <mwc-expansion-panel-header>
+        <mwc-expansion-panel-header slot="header">
           <div class="edu-header">
             <img
               src="rsc/images/icons/uwo-logo-circle.png"
@@ -128,7 +135,7 @@
           </div>
         </mwc-expansion-panel-header>
 
-        <mwc-expansion-panel-content>
+        <mwc-expansion-panel-content slot="content">
           <div class="edu-details">
             <img
               src="rsc/images/icons/uwo-overhead-shot.jpg"
@@ -161,7 +168,7 @@
 
       <!-- Repeat this panel for each role -->
       <mwc-expansion-panel>
-        <mwc-expansion-panel-header>
+        <mwc-expansion-panel-header slot="header">
           <div class="work-header">
             <img
               src="rsc/images/icons/applied-systems-logo-small.png"
@@ -174,7 +181,7 @@
           </div>
         </mwc-expansion-panel-header>
 
-        <mwc-expansion-panel-content>
+        <mwc-expansion-panel-content slot="content">
           <div class="work-details">
             <h4>Software Engineer Intern</h4>
             <p><em>June – August 2024</em></p>
@@ -205,18 +212,48 @@
     </section>
   </div>
 </main>
-</div>
 
+<!-- Footer partial will be injected here -->
 <div id="footerContainer"></div>
 
-<!-- Inject the navigation drawer HTML module -->
+<!-- Robust nav drawer injection: ensures scripts run after injection -->
 <script>
-  // Fetch and inject the nav drawer HTML into the container
-  fetch('htmlModules/nav-drawer.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('navDrawerContainer').innerHTML = html;
-    });
+  // Utility to fetch and inject nav-drawer.html, then execute its scripts
+  function injectNavDrawer() {
+    fetch('htmlModules/nav-drawer.html')
+      .then(res => res.text())
+      .then(html => {
+        const container = document.getElementById('navDrawerContainer');
+        container.innerHTML = html;
+        // Find and execute any <script> tags in the injected HTML
+        container.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+          oldScript.remove();
+        });
+      });
+  }
+  document.addEventListener('DOMContentLoaded', injectNavDrawer);
+
+  // Utility to load a partial into a container
+  async function loadPartial(containerId, partialPath) {
+    const basePath = window.location.hostname.includes('github.io') ? '/Personal-Static/' : '/';
+    const url = basePath + 'partials/' + partialPath;
+    const res = await fetch(url);
+    document.getElementById(containerId).innerHTML = await res.text();
+  }
+
+  // Load header and footer dynamically
+  loadPartial('headerContainer', 'header.html');
+  loadPartial('footerContainer', 'footer.html');
 </script>
+
+<!-- Load custom theme-toggle component -->
+<script type="module" src="rsc/js/theme-toggle.js"></script>
 </body>
 </html>
