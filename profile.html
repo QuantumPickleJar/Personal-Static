@@ -1,1 +1,259 @@
-<base href="/Personal-Static/">
+<html lang="en">
+<head>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Experience</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Base and global styles -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Make sure the profile.css is loaded -->
+  <link rel="stylesheet" href="css/profile.css">
+
+  <!-- Dynamic base path for GitHub Pages -->
+  <script>
+    (function() {
+      var isGithubPages = window.location.hostname.includes('github.io');
+      if (isGithubPages) {
+        var repoName = window.location.pathname.split('/')[1];
+        document.write('<base href="/' + repoName + '/">');
+      }
+    })();
+  </script>
+<!-- 
+  <script type="module">
+  import '@material/web/expansionpanel/expansion-panel.js';
+  import '@material/web/expansionpanel/expansion-panel-header.js';
+  import '@material/web/expansionpanel/expansion-panel-content.js';
+</script> -->
+
+
+  <!-- Add Material Design 3 vars for dark mode consistency -->
+  <style>
+    /* Material Design 3 CSS variables for light mode */
+    :root {
+      --md-sys-color-primary: #6750a4;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #eaddff;
+      --md-sys-color-on-primary-container: #21005d;
+      --md-sys-color-surface: #fdf8fd;
+      --md-sys-color-on-surface: #1c1b1f;
+      --md-sys-color-surface-variant: #e7e0eb;
+      --md-sys-color-on-surface-variant: #49454e;
+      --md-sys-color-outline: #79747e;
+      --md-sys-color-outline-variant: rgba(0, 0, 0, 0.08);
+      --md-sys-color-surface-container: #f3f3f3;
+    }
+    
+    /* Material Design 3 CSS variables for dark mode */
+    body.dark-mode {
+      --md-sys-color-primary: #d0bcff;
+      --md-sys-color-on-primary: #381e72;
+      --md-sys-color-primary-container: #4f378b;
+      --md-sys-color-on-primary-container: #eaddff;
+      --md-sys-color-surface: #1c1b1f;
+      --md-sys-color-on-surface: #e6e0e9;
+      --md-sys-color-surface-variant: #49454f;
+      --md-sys-color-on-surface-variant: #cac4d0;
+      --md-sys-color-outline: #938f99;
+      --md-sys-color-outline-variant: rgba(255, 255, 255, 0.1);
+      --md-sys-color-surface-container: #1d1b20;
+      --md-sys-color-surface-container-high: #2b2930;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+    }
+
+    /* Ensure theme-toggle is always visible */
+    theme-toggle {
+      position: fixed !important;
+      top: 1.25rem !important;
+      right: 1.25rem !important;
+      z-index: 9999 !important;
+      display: block !important;
+      width: auto !important;
+      height: auto !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      background: rgba(255, 255, 255, 0.8) !important;
+      border-radius: 20px !important;
+      padding: 4px !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    body.dark-mode theme-toggle {
+      background: rgba(30, 30, 30, 0.8) !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation Drawer will be injected by HTML module -->
+<div id="navDrawerContainer"></div>
+
+<!-- Header partial will be injected here -->
+<div id="headerContainer"></div>
+
+<!-- Theme Toggle: ensure it is always visible and positioned in the upper right -->
+<theme-toggle id="themeToggle"></theme-toggle>
+<!-- TODO: wrap experience-page in barba contianer -->
+<main id="experience-page">
+  <!-- Page Content -->
+  <div class="page-content">
+    <!-- About Me -->
+    <section class="about-me">
+      <mwc-card class="about-card">
+        <div class="card-content">
+          <h3>About Me</h3>
+          <div class="scrollable-text" id="aboutText">
+            <!--
+              Paste your up-to-2000-char bio here.
+              Make this div scrollable via CSS if it overflows.
+            -->
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. …
+          </div>
+        </div>
+      </mwc-card>
+    </section>
+
+    <!-- Education Accordion -->
+    <section class="education">
+      <h3>Education</h3>
+
+      <!-- Single expansion panel; duplicate per-school -->
+      <mwc-expansion-panel>
+        <mwc-expansion-panel-header slot="header">
+          <div class="edu-header">
+            <img
+              src="rsc/images/icons/uwo-logo-circle.png"
+              alt="UWO logo"
+              class="edu-logo"/>
+            <div class="edu-summary">
+              <strong>University of Wisconsin – Oshkosh</strong><br/>
+              B.S. in Software Development (2021 – 2025)
+            </div>
+          </div>
+        </mwc-expansion-panel-header>
+
+        <mwc-expansion-panel-content slot="content">
+          <div class="edu-details">
+            <img
+              src="rsc/images/icons/uwo-overhead-shot.jpg"
+              alt="UWO campus"
+              class="edu-photo"/>
+            <div class="edu-text">
+              <h4>University of Wisconsin – Oshkosh</h4>
+              <p><em>B.S. in Software Development, 2021 – 2025</em></p>
+              <ul>
+                <li>Version control with Git</li>
+                <li>RESTful API design in .NET Core</li>
+                <li>Containerization &amp; Agile workflows</li>
+              </ul>
+              <p>
+                At UWO, I completed a comprehensive curriculum focused on
+                software engineering, database systems, and full-stack
+                development. My coursework included projects in C#, Java,
+                Python, and modern web technologies—emphasizing both
+                object-oriented programming and secure coding practices.
+              </p>
+            </div>
+          </div>
+        </mwc-expansion-panel-content>
+      </mwc-expansion-panel>
+    </section>
+
+    <!-- Work Experience Accordion -->
+    <section class="work-experience">
+      <h3>Work Experience</h3>
+
+      <!-- Repeat this panel for each role -->
+      <mwc-expansion-panel>
+        <mwc-expansion-panel-header slot="header">
+          <div class="work-header">
+            <img
+              src="rsc/images/icons/applied-systems-logo-small.png"
+              alt="Applied Systems logo"
+              class="work-logo"/>
+            <div class="work-summary">
+              <strong>Applied Systems</strong><br/>
+              Software Engineer Intern (Summer 2024)
+            </div>
+          </div>
+        </mwc-expansion-panel-header>
+
+        <mwc-expansion-panel-content slot="content">
+          <div class="work-details">
+            <h4>Software Engineer Intern</h4>
+            <p><em>June – August 2024</em></p>
+            <h5>Responsibilities</h5>
+            <ul>
+              <li>Enhanced internal REST API endpoints in .NET Core.</li>
+              <li>Built Angular 7 dashboards for client analytics.</li>
+              <li>Maintained version control workflows using GitKraken.</li>
+            </ul>
+            <h5>Achievements</h5>
+            <ul>
+              <li>Reduced page-load time by 30% through lazy-loading modules.</li>
+              <li>Automated nightly integration tests with a custom Node.js script.</li>
+            </ul>
+            <h5>Tech Stack</h5>
+            <div class="chips">
+              <span class="chip">.NET 6</span>
+              <span class="chip">Docker Compose</span>
+              <span class="chip">GitLab</span>
+              <span class="chip">MermaidJS</span>
+            </div>
+          </div>
+        </mwc-expansion-panel-content>
+      </mwc-expansion-panel>
+
+      <!-- …other roles here… -->
+
+    </section>
+  </div>
+</main>
+
+<!-- Footer partial will be injected here -->
+<div id="footerContainer"></div>
+
+<!-- Robust nav drawer injection: ensures scripts run after injection -->
+<script>
+  // Utility to fetch and inject nav-drawer.html, then execute its scripts
+  function injectNavDrawer() {
+    fetch('htmlModules/nav-drawer.html')
+      .then(res => res.text())
+      .then(html => {
+        const container = document.getElementById('navDrawerContainer');
+        container.innerHTML = html;
+        // Find and execute any <script> tags in the injected HTML
+        container.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+          oldScript.remove();
+        });
+      });
+  }
+  document.addEventListener('DOMContentLoaded', injectNavDrawer);
+
+  // Utility to load a partial into a container
+  async function loadPartial(containerId, partialPath) {
+    const basePath = window.location.hostname.includes('github.io') ? '/Personal-Static/' : '/';
+    const url = basePath + 'partials/' + partialPath;
+    const res = await fetch(url);
+    document.getElementById(containerId).innerHTML = await res.text();
+  }
+
+  // Load header and footer dynamically
+  loadPartial('headerContainer', 'header.html');
+  loadPartial('footerContainer', 'footer.html');
+</script>
+
+<!-- Load custom theme-toggle component -->
+<script type="module" src="rsc/js/theme-toggle.js"></script>
+</body>
+</html>
