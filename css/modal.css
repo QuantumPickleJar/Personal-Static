@@ -17,11 +17,6 @@
   opacity: 0;
 }
 
-.modal:target { 
-  display: block; 
-  opacity: 1;
-}
-
 /* support JS-controlled open state */
 .modal.open {
   display: block;
