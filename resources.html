@@ -9,7 +9,7 @@
       --md-sys-color-primary: #6750a4;
       --md-sys-color-on-primary: #ffffff;
       --md-sys-color-primary-container: #eaddff;
-      --md-sys-color-on-primary-container: #21005d;
+      --md-ssys-color-on-primary-container: #21005d;
       --md-sys-color-surface: #fdf8fd;
       --md-sys-color-on-surface: #1c1b1f;
       --md-sys-color-surface-variant: #e7e0eb;
@@ -56,7 +56,7 @@
 
     body.dark-mode theme-toggle {
       background: rgba(30, 30, 30, 0.8) !important;
-    }</style><script defer="defer" src="main.bundle.js"></script></head><body><div id="navDrawerContainer"></div><theme-toggle></theme-toggle><div class="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="resources"><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><section id="booksSection" class="section-books"><h1 class="section-title">Books I've Been Reading Recently</h1><div id="booksContainer" class="books-container"><div class="loading">Loading books...</div></div></section><hr class="section-divider"/><section id="bookmarksSection" class="section-bookmarks"><h1 class="section-title">Bookmarks</h1><div class="bookmark-controls"><label for="bookmarkCategory" class="bookmark-label">Choose a category:</label> <select id="bookmarkCategory" class="bookmark-select"></select></div><div id="bookmarksContainer" class="bookmarks-container"></div></section></main></div></div><div id="footerContainer"></div></div></div><script>// DOMContentLoaded listener that handles everything
+    }</style><script defer="defer" src="main.bundle.js"></script></head><body><div id="navDrawerContainer"></div><theme-toggle></theme-toggle><div class="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="resources"><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><section id="booksSection" class="section-books"><h1 class="section-title">Books I've Been Reading Recently</h1><div id="booksContainer" class="books-container"><div class="loading">Loading books...</div></div></section><hr class="section-divider"/><section id="bookmarksSection" class="section-bookmarks"><h1 class="section-title">Bookmarks</h1><div class="bookmark-controls"><label for="bookmarkCategory" class="bookmark-label">Choose a category:</label> <select id="bookmarkCategory" class="bookmark-select"></select></div><div id="bookmarksContainer" class="bookmarks-container"></div></section><div id="resumeModal" class="modal"><div class="modal-content"><span class="close-modal">&times;</span><div id="loadingIndicator">Loading Resume...</div><canvas id="resumeCanvas" style="display:none"></canvas><div id="fallbackMessage" style="display:none"><p>Unable to load resume. <a href="rsc/docs/resume.pdf" target="_blank">Download PDF</a></p></div><button id="zoomInBtn">Zoom In</button> <button id="zoomOutBtn">Zoom Out</button></div></div></main></div></div><div id="footerContainer"></div></div></div><script>// DOMContentLoaded listener that handles everything
     document.addEventListener('DOMContentLoaded', async function() {
       console.log('Resources page DOM loaded');
       
@@ -202,4 +202,84 @@
         document.getElementById('navDrawerContainer').innerHTML = html;
       })
       .catch(error => console.error('Error loading nav drawer:', error));
-  });</script></body></html>
+  });</script><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script><script>(function() {
+          let isRendering = false;
+          let pendingScale = null;
+          let pdfDoc = null, page = null, renderTask = null, scale = 1;
+          const modal = document.getElementById('resumeModal');
+          const canvas = document.getElementById('resumeCanvas');
+          const ctx = canvas.getContext('2d');
+          const loadingEl = document.getElementById('loadingIndicator');
+          const fallbackEl = document.getElementById('fallbackMessage');
+
+          async function initPdf() {
+            loadingEl.style.display = '';
+            fallbackEl.style.display = 'none';
+            if (!pdfDoc) {
+              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js';
+              try {
+                pdfDoc = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
+                page = await pdfDoc.getPage(1);
+              } catch (err) {
+                loadingEl.style.display = 'none';
+                fallbackEl.style.display = '';
+                throw err;
+              }
+            }
+          }
+
+          async function renderPage() {
+            if (isRendering) return;
+            isRendering = true;
+            loadingEl.style.display = '';
+            if (!page) return;
+            const viewport = page.getViewport({ scale });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            if (renderTask) {
+              renderTask.cancel();
+              try { await renderTask.promise; } catch {};
+            }
+            renderTask = page.render({ canvasContext: ctx, viewport });
+            try {
+              await renderTask.promise;
+              canvas.style.display = '';
+            } catch {
+              fallbackEl.style.display = '';
+            } finally {
+              loadingEl.style.display = 'none';
+              renderTask = null;
+              isRendering = false;
+              if (pendingScale !== null) {
+                scale = pendingScale;
+                pendingScale = null;
+                queueRenderPage();
+              }
+            }
+          }
+
+          function queueRenderPage() {
+            if (isRendering) {
+              pendingScale = scale;
+            } else {
+              renderPage();
+            }
+          }
+
+          document.body.addEventListener('click', async e => {
+            if (e.target.id === 'viewResumeBtn') {
+              modal.style.display = 'flex';
+              scale = 1;
+              await initPdf();
+              queueRenderPage();
+            } else if (e.target.id === 'zoomInBtn') {
+              scale = Math.min(scale + 0.25, 3);
+              queueRenderPage();
+            } else if (e.target.id === 'zoomOutBtn') {
+              scale = Math.max(scale - 0.25, 0.5);
+              queueRenderPage();
+            } else if (e.target.classList.contains('close-modal') || e.target === modal) {
+              modal.style.display = 'none';
+            }
+          });
+        })();</script></body></html>

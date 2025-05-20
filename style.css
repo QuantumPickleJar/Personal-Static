@@ -15,6 +15,7 @@
 /* Project gallery and card styles */
 @import './css/projects.css';
 
+
 /* Modal styles */
 @import './css/modal.css';
 
@@ -25,6 +26,8 @@
 @import './css/loading.css';
 
 @import './css/resources-page.css';
+
+@import './css/profile.css';
 
 /* Mobile-specific styles */
 @import './css/mobile.css';
