@@ -38,6 +38,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/modal.css">
   <!-- Explicitly load the projects module for search/filter/pagination logic -->
   <script type="module" src="rsc/js/projects.js"></script>
   <!-- Add Barba.js CDN -->
@@ -671,8 +672,9 @@
             <!-- New row for how-to and projects per page dropdown -->
             <div id="how-to" class="how-to d-flex align-items-center justify-content-between flex-wrap">
               <p class="mb-0">
-                Below are projects that have enough of a footprint to warrant a listing here.<br>
-                <strong>Mouseover</strong> descriptions that are truncated, and click to see more info
+                Below are a curated list some of my feats of code that I've mustered over the years.<br>
+                <!-- Click <strong>View Project</strong> to see more information about the project -->
+                 Click on a project's card to view more information about it.
               </p>
               <div id="perPageContainer" class="per-page-container"></div>
             </div>
@@ -700,6 +702,16 @@
 
       <!-- Footer partial -->
       <div id="footerContainer"></div>
+
+      <!-- PDF Viewer Modal -->
+      <div class="modal" id="pdfModal">
+        <div class="modal-content">
+          <a href="#" class="close-button">&times;</a>
+          <object id="pdfViewer" data="rsc/docs/resume.pdf" type="application/pdf" width="100%" height="80vh">
+            <p>Unable to display PDF. <a href="rsc/docs/resume.pdf" target="_blank">Download PDF</a>.</p>
+          </object>
+        </div>
+      </div>
 
       <!-- Modal for expanded project details -->
       <div id="modalContainer"></div>

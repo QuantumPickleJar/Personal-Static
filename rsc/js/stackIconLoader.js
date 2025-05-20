@@ -69,6 +69,8 @@ export function renderOneStackIcon(tech) {
   } else {
     // If not found, fallback to local PNG with correct base path
     let pngPath = `${basePath}rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
+    // TODO:
+    // # debug
     console.log(`Fallback triggered for ${normalizedTech}. Attempting to load PNG from: ${pngPath}`);
     iconElement = document.createElement('img');
     iconElement.src = pngPath;
@@ -122,14 +124,15 @@ export function renderOneStackIcon(tech) {
  * Initialize stack filter chips for technology filtering
  */
 export function initializeStackFilterChips() {
-  console.log('Initializing stack filter chips');
   const chipContainer = document.getElementById('stackFilterChips');
+  // # debug
+  // console.log('Initializing stack filter chips');
   
   if (!chipContainer) {
     console.error('Stack filter chip container not found');
     return;
   }
-  
+ 
   // Clear existing chips
   chipContainer.innerHTML = '';
   

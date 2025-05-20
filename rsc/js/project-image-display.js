@@ -263,6 +263,7 @@ export function showImagesInModal(project) {
  * @param {Object} project - The project object
  */
 export function showMermaidDiagramInModal(project) {
+  // #debug
   console.log('showMermaidDiagramInModal called with project:', project.title);
 
   const modalImages = document.getElementById('modalImages');
@@ -300,16 +301,18 @@ export function showMermaidDiagramInModal(project) {
   const noMermaidMsg = modalImages.querySelector('.no-mermaid');
 
   const mermaidCode = parseMermaidCode(project);
+  // #debug
   console.log('Parsed mermaid code:', mermaidCode ? `${mermaidCode.slice(0, 50)}...` : 'None');
 
   if (!mermaidCode || !mermaidCode.trim()) {
-    console.log('No mermaid code found, showing no-mermaid message');
+    // #debug
     if (mermaidContainer) mermaidContainer.style.display = 'none';
     if (noMermaidMsg) noMermaidMsg.style.display = 'block';
     return;
   }
 
   if (mermaidContainer) {
+  // #debug
     console.log('Found mermaid container, setting up for rendering');
     mermaidContainer.style.display = 'flex';
     if (mermaidCode.trim().startsWith('<svg')) {
@@ -336,6 +339,7 @@ export function renderMermaidDiagram(mermaidElement) {
     try {
       // Ensure mermaid is properly initialized
       if (typeof window.mermaid !== 'undefined') {
+      // # debug
         console.log('Mermaid is defined globally. Initializing with theme:', document.body.classList.contains('dark-mode') ? 'dark' : 'default');
         window.mermaid.initialize({ 
           startOnLoad: false,
