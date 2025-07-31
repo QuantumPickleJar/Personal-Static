@@ -19,6 +19,7 @@ const MAX_STACK_CHARS = 20;
 
 document.addEventListener('DOMContentLoaded', function () {
   if (document.getElementById('projectsGallery')) {
+    // #debug
     console.log('Projects gallery found, initializing projects');
     initializeProjects();
     initializeSearchFunctionality(); // Initialize search functionality
@@ -29,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const projectToShow = urlParams.get('showProject');
       
       if (projectToShow) {
-        console.log(`URL parameter showProject found: ${projectToShow}`);
+        // #debug
+        // console.log(`URL parameter showProject found: ${projectToShow}`);
         // Wait for projects to load
         setTimeout(() => {
           loadProjects().then(projects => {
@@ -39,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
             );
             
             if (project) {
-              console.log(`Opening modal for project: ${project.title}`);
+              // #debug
+              // console.log(`Opening modal for project: ${project.title}`);
               openProjectModal(project, projects);
             } else {
               console.error(`Project with ID "${projectToShow}" not found.`);
@@ -49,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   } else {
-    console.log('No projects gallery found, skipping initialization');
+    // console.log('No projects gallery found, skipping initialization');
   }
 
   debugMaterialMenu();
