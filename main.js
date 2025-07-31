@@ -37,7 +37,7 @@ async function loadPartial(containerId, partialPath) {
     // Try each path until one works
     for (const path of pathsToTry) {
       try {
-        console.log(`Trying to fetch partial from: ${path}`);
+        // console.log(`Trying to fetch partial from: ${path}`);
         const fetchResponse = await fetch(path, { 
           cache: 'no-store',
           headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
@@ -56,11 +56,11 @@ async function loadPartial(containerId, partialPath) {
           }
           
           successPath = path;
-          console.log(`Success! Loaded partial from: ${path}`);
+          // console.log(`Success! Loaded partial from: ${path}`);
           break;
         }
       } catch (e) {
-        console.log(`Failed attempt with path: ${path}`);
+        console.log(`Failed to load partial attempt with path: ${path}`);
       }
     }
     
@@ -224,7 +224,7 @@ function setupAcademicLabelTooltips() {
   // Wait for a short delay to ensure elements are loaded
   setTimeout(() => {
     const academicLabels = document.querySelectorAll('.academic-label');
-    console.log(`Found ${academicLabels.length} academic labels for tooltips`);
+    // console.log(`Found ${academicLabels.length} academic labels for tooltips`);
     
     academicLabels.forEach(label => {
       // Get dates from data attribute
@@ -254,6 +254,62 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadPartial('sidebarContainer', 'sidebar.html'),
     loadPartial('footerContainer', 'footer.html')
   ]);
+  // Move PDF modal markup into mainContent so modal is child of main
+  const movedModal = document.querySelector('#sidebarContainer #pdfModal');
+  const mainContent = document.getElementById('mainContent');
+  if (movedModal && mainContent) {
+    mainContent.appendChild(movedModal);
+  }
+  // Set up PDF.js and modal handler
+  (function setupPdfModal(){
+    const loader = document.createElement('script');
+    loader.src = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';
+    loader.onload = () => {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    };
+    document.head.appendChild(loader);
+    document.body.addEventListener('click', async e => {
+      const btn = e.target.closest('#viewResumeBtn');
+      if (!btn) return;
+      e.preventDefault();
+      console.log('View Resume clicked');
+      const modal = document.getElementById('pdfModal');
+      const canvas = document.getElementById('pdfCanvas');
+      const loading = document.getElementById('loadingPdf');
+      const notice = document.getElementById('pdfjs-notice');
+      if (!modal || !canvas) return;
+      modal.classList.add('open');
+      canvas.style.display = 'none';
+      if (loading) loading.style.display = '';
+      if (notice) notice.style.display = 'none';
+      try {
+        if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js library not loaded');
+        const pdf = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
+        const page = await pdf.getPage(1);
+        const vp = page.getViewport({ scale: 1.2 });
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        canvas.style.display = '';
+        if (loading) loading.style.display = 'none';
+      } catch (err) {
+        console.error('PDF rendering error:', err);
+        if (loading) loading.style.display = 'none';
+        if (notice) notice.style.display = '';
+        // fallback open in new tab
+        window.open('rsc/docs/resume.pdf', '_blank');
+      }
+    });
+    // Close modal on backdrop or close-button
+    document.body.addEventListener('click', e => {
+      if (e.target.matches('.close-button') || e.target.id === 'pdfModal') {
+        e.preventDefault();
+        const m = document.getElementById('pdfModal');
+        if (m) m.classList.remove('open');
+      }
+    });
+  })();
 
   // Set up academic labels with date tooltips
   setupAcademicLabelTooltips();
@@ -265,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.debugProjectsPage ||
     document.getElementById('projectsGallery');
   
-  console.log('Is projects page?', isProjectsPage);
+  // console.log('Is projects page?', isProjectsPage);
   
   if (isProjectsPage) {
     console.log('Projects page detected, initializing...');
@@ -317,7 +373,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Import and execute the carousel code
     import('./rsc/js/front_page_carousel.js')
       .then(module => {
-        console.log('Front page carousel module loaded');
+        // console.log('Front page carousel module loaded');
         if (module.initCarousel) {
           module.initCarousel();
         }
@@ -366,11 +422,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener('DOMContentLoaded', () => {
   // Ensure Bootstrap is available for carousels
   if (typeof bootstrap === 'undefined' && document.getElementById('carouselContainer')) {
-    console.log('Loading Bootstrap JS dynamically');
+    // console.log('Loading Bootstrap JS dynamically');
     const bootstrapScript = document.createElement('script');
     bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
     bootstrapScript.onload = () => {
-      console.log('Bootstrap loaded, initializing carousel');
+      // console.log('Bootstrap loaded, initializing carousel');
       if (typeof initCarousel === 'function') {
         initCarousel();
       }
@@ -378,6 +434,60 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(bootstrapScript);
   }
 });
+
+// PDF Modal Delegated Listener
+// opens PDF.js canvas modal when clicking View Resume button
+if (typeof document !== 'undefined') {
+  document.body.addEventListener('click', async e => {
+    const btn = e.target.closest('#viewResumeBtn');
+    if (!btn) return;
+    e.preventDefault();
+    console.log('View Resume clicked');
+    // ensure modal elements are available
+    const modal = document.getElementById('pdfModal');
+    const canvas = document.getElementById('pdfCanvas');
+    const loading = document.getElementById('loadingPdf');
+    const notice = document.getElementById('pdfjs-notice');
+    if (!modal) {
+      console.error('PDF modal not found');
+      return;
+    }
+    modal.classList.add('open');
+    if (canvas) canvas.style.display = 'none';
+    if (loading) loading.style.display = '';
+    if (notice) notice.style.display = 'none';
+    // render PDF
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+      try {
+        const pdf = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 1.2 });
+        if (canvas) {
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+          canvas.style.display = '';
+        }
+        if (loading) loading.style.display = 'none';
+      } catch (err) {
+        console.error('PDF render error:', err);
+        if (loading) loading.style.display = 'none';
+        if (notice) notice.style.display = '';
+      }
+    } else {
+      console.warn('PDF.js library not loaded');
+    }
+  });
+  // close modal
+  document.body.addEventListener('click', e => {
+    if (e.target.matches('.close-button') || e.target.id === 'pdfModal') {
+      e.preventDefault();
+      const m = document.getElementById('pdfModal');
+      if (m) m.classList.remove('open');
+    }
+  });
+}
 
 // Contact form handler
 function handleContactSubmit(event) {

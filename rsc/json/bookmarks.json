@@ -44,5 +44,10 @@
       "title": "ESP-32 Reference",
       "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html",
       "category": "Reference"
+    },
+    {
+      "title": "Object Oriented Programming - JS",
+      "url": "https://www.freecodecamp.org/news/how-javascript-implements-oop/",
+      "category": "Reference" 
     }
   ]
