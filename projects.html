@@ -1,59 +1,676 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>// Detect if we're on GitHub Pages and set the correct base path
+<!doctype html><html lang="en"><head><script src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>(function() {
+      var isGithubPages = window.location.hostname.includes('github.io');
+      if (isGithubPages) {
+        var repoName = window.location.pathname.split('/')[1];
+        document.write('<base href="/' + repoName + '/">');
+      }
+    })();</script><script>// Detect if we're on GitHub Pages and set the correct base path
     const isGitHubPages = window.location.hostname.includes('github.io');
     if (isGitHubPages) {
       const basePath = '/Personal-Static/';
       document.write(`<base href="${basePath}">`);
     } else {
       document.write('<base href="/">');
-    }</script><title>Vincent's Portfolio</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="style.css"><script type="module">// Dynamically import with absolute path
-  const basePath = window.location.hostname.includes('github.io') ? 
-    '/Personal-Static/' : '/';
-  
-  import(`${basePath}rsc/js/projects.js`)
-    .catch(err => console.error('Failed to load projects module:', err));</script><meta http-equiv="Content-Type" content="text/javascript; charset=utf-8"><script src="https://unpkg.com/@barba/core"></script><script defer="defer" src="main.bundle.js"></script></head><body><div id="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="projects"><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><div id="how-to" class="how-to d-flex align-items-center justify-content-between flex-wrap"><p class="mb-0">Below are projects that have enough of a footprint to warrant a listing here.<br><strong>Mouseover</strong> descriptions that are truncated, and click to see more info</p><div id="perPageContainer" class="per-page-container"></div></div><div id="advancedSearchContainer" class="d-flex align-items-center gap-2 mb-3"><div class="d-flex align-items-center gap-2"><div><label for="searchBar" class="visually-hidden">Search Projects:</label> <input id="searchBar" placeholder="Search Projects..." class="form-control"></div><div style="max-width: 200px;"><select id="filterDropdown" class="form-select"><option value="">Sort Projects...</option><option value="title">Filter by Title</option><option value="date">Filter by Date</option></select></div></div><div id="inlinePaginationContainer"></div></div><div id="projectsGallery" class="projects-gallery"><div id="loadingOverlay">Loading</div></div><div id="paginationContainer"></div></main></div></div><div id="footerContainer"></div><div id="modalContainer"></div><script type="module">// Load the modal HTML
+    }</script><title>Vincent's Portfolio</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="style.css"><script type="module" src="rsc/js/projects.js"></script><meta http-equiv="Content-Type" content="text/javascript; charset=utf-8"><script src="https://unpkg.com/@barba/core"></script><style>/* Material Design 3 CSS variables for light mode */
+    :root {
+      --md-sys-color-primary: #6750a4;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #eaddff;
+      --md-sys-color-on-primary-container: #21005d;
+      --md-sys-color-surface: #fdf8fd;
+      --md-sys-color-on-surface: #1c1b1f;
+      --md-sys-color-surface-variant: #e7e0eb;
+      --md-sys-color-on-surface-variant: #49454e;
+      --md-sys-color-outline: #79747e;
+      --md-sys-color-outline-variant: rgba(0, 0, 0, 0.08);
+      --md-sys-color-surface-container: #f3f3f3;
+    }
+    
+    /* Material Design 3 CSS variables for dark mode */
+    body.dark-mode {
+      --md-sys-color-primary: #d0bcff;
+      --md-sys-color-on-primary: #381e72;
+      --md-sys-color-primary-container: #4f378b;
+      --md-sys-color-on-primary-container: #eaddff;
+      --md-sys-color-surface: #1c1b1f;
+      --md-sys-color-on-surface: #e6e0e9;
+      --md-sys-color-surface-variant: #49454f;
+      --md-sys-color-on-surface-variant: #cac4d0;
+      --md-sys-color-outline: #938f99;
+      --md-sys-color-outline-variant: rgba(255, 255, 255, 0.1);
+      --md-sys-color-surface-container: #1d1b20;
+      --md-sys-color-surface-container-high: #2b2930;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+    }
+
+    /* Enhanced styling for the search bar - consolidated styles */
+    #searchBar, md-outlined-text-field#searchBar {
+      width: 100%;
+      min-width: 280px;
+      max-width: 100%;
+      flex: 1;
+      margin: 0;
+      padding: 8px 0;
+      border-radius: 8px;
+      background-color: var(--md-sys-color-surface, #ffffff);
+      color: var(--md-sys-color-on-surface, #1c1b1f);
+      transition: all 0.3s ease;
+      --md-outlined-text-field-container-shape: 18px;
+      --md-outlined-text-field-outline-color: var(--md-sys-color-outline, #79747e);
+      --md-outlined-text-field-hover-outline-color: var(--md-sys-color-primary, #6750a4);
+      --md-outlined-text-field-focus-outline-color: var(--md-sys-color-primary, #6750a4);
+      --md-outlined-text-field-label-text-color: var(--md-sys-color-on-surface-variant, #49454e);
+      font-family: inherit;
+    }
+
+    #searchBar:focus-within, md-outlined-text-field#searchBar:focus-within {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-color: var(--md-sys-color-primary, #6750a4);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #searchBar {
+        min-width: 100%;
+        margin-bottom: 16px;
+      }
+    }
+
+    /* Ensure search bar has proper dimensions */
+    #advancedSearchContainer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 16px;
+      background-color: var(--md-sys-color-surface-variant, #e7e0eb);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    body.dark-mode #advancedSearchContainer {
+      background-color: var(--md-sys-color-surface-container-high, #2b2930);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Adjust the search and filters column */
+    #advancedSearchContainer > div {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Material Design filter button improved styling */
+    md-filled-tonal-button#filterToggleBtn {
+      --md-filled-tonal-button-container-color: var(--md-sys-color-secondary-container, #e8def8);
+      --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-secondary-container, #1d192b);
+      --md-filled-tonal-button-container-shape: 20px;
+      font-size: 0.9rem;
+      height: 40px;
+      min-width: 160px;
+      padding: 0 12px;
+      margin: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    /* Update filter button to match search bar height */
+    md-filled-tonal-button#filterToggleBtn {
+      height: 40px;
+      min-width: 130px;
+      margin: 0;
+    }
+
+    md-filled-tonal-button#filterToggleBtn:hover {
+      --md-filled-tonal-button-container-color: var(--md-sys-color-primary);
+      --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-primary);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode md-filled-tonal-button#filterToggleBtn {
+      --md-filled-tonal-button-container-color: var(--md-sys-color-secondary-container, #4a4458);
+      --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-secondary-container, #e8def8);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #advancedSearchContainer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      md-outlined-text-field#searchBar {
+        width: 100%;
+        min-width: 100% !important;
+        margin-bottom: 10px;
+      }
+      
+      #advancedSearchContainer > div {
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      
+      md-filled-tonal-button#filterToggleBtn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    /* Better spacing for the search and filter group */
+    #advancedSearchContainer .d-flex {
+      gap: 12px;
+    }
+
+    /* CSS-only Material Menu Implementation */
+    .custom-material-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1200; /* Increased z-index to ensure visibility */
+      display: none;
+      min-width: 180px;
+      padding: 8px 0;
+      margin: 0;
+      margin-top: 4px; /* Add a small margin to position below button */
+      font-size: 14px;
+      text-align: left;
+      list-style: none;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      visibility: visible; /* Ensure visibility */
+      opacity: 1; /* Ensure opacity */
+      pointer-events: auto; /* Ensure clickability */
+      transform: none; /* Ensure no transform is applied */
+    }
+
+    .dark-theme .custom-material-menu {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .custom-menu-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.5;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    .custom-menu-item:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    .dark-theme .custom-menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-menu-item.selected::before {
+      content: '✓';
+      margin-right: 8px;
+    }
+
+    .custom-menu-divider {
+      height: 1px;
+      margin: 8px 0;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.12);
+    }
+
+    .dark-theme .custom-menu-divider {
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .filter-menu-section {
+      padding: 10px;
+      max-width: 250px;
+    }
+    
+    .custom-material-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
+      text-align: center;
+      text-decoration: none;
+      background-color: #e6e6e6;
+      color: #000;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .custom-material-button:hover {
+      background-color: #d6d6d6;
+    }
+
+    .custom-material-button:active {
+      background-color: #c6c6c6;
+    }
+
+    .dark-theme .custom-material-button {
+      background-color: #3a3a3a;
+      color: #fff;
+    }
+
+    .dark-theme .custom-material-button:hover {
+      background-color: #4a4a4a;
+    }
+
+    .dark-theme .custom-material-button:active {
+      background-color: #5a5a5a;
+    }
+    
+    /* Tech filter card styles */
+    .filter-menu-container {
+      display: flex;
+      position: relative;
+    }
+    
+    .filter-menu-main {
+      min-width: 180px;
+    }
+    
+    .tech-filter-card {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 8px;
+      width: 280px; /* Increased width for better visibility */
+      max-height: 300px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1500; /* Higher z-index to ensure visibility above pagination */
+    }
+    
+    body.dark-mode .tech-filter-card {
+      background-color: #333;
+    }
+    
+    .tech-filter-header {
+      padding: 12px 16px;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #f5f5f5;
+    }
+    
+    body.dark-mode .tech-filter-header {
+      background-color: #444;
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .tech-filter-content {
+      padding: 8px;
+      overflow-y: auto;
+      max-height: 250px;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 6px;
+    }
+    
+    .tech-filter-card.visible {
+      display: flex;
+    }
+    
+    /* Chip styles */
+    .custom-filter-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: #e0e0e0;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    
+    .custom-filter-chip:hover {
+      background-color: #d0d0d0;
+    }
+    
+    .custom-filter-chip.selected {
+      background-color: var(--md-sys-color-primary-container, #c8e6fa);
+      color: var(--md-sys-color-on-primary-container, #001f28);
+      border-color: var(--md-sys-color-primary, #006782);
+    }
+    
+    .dark-theme .custom-filter-chip {
+      background-color: #3a3a3a;
+      color: #e0e0e0;
+    }
+    
+    .dark-theme .custom-filter-chip:hover {
+      background-color: #4a4a4a;
+    }
+    
+    .dark-theme .custom-filter-chip.selected {
+      background-color: var(--md-sys-color-primary, #5bd3fc);
+      color: var(--md-sys-color-on-primary, #003546);
+    }
+    
+    /* Selected indicator */
+    .custom-filter-chip.selected::before {
+      content: '✓';
+      margin-right: 4px;
+      font-size: 10px;
+    }
+    
+    /* Show tech filter card on hover */
+    .filter-tech-trigger:hover + .tech-filter-card,
+    .tech-filter-card:hover {
+      display: flex;
+    }
+
+    /* Ensure theme-toggle is always visible */
+    theme-toggle {
+      position: fixed !important;
+      top: 1.25rem !important;
+      right: 1.25rem !important;
+      z-index: 9999 !important; /* Extremely high z-index to ensure visibility */
+      display: block !important;
+      width: auto !important;
+      height: auto !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+      padding: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Search bar and filter section styling */
+    #advancedSearchContainer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background-color: var(--md-sys-color-surface-variant, #e7e0eb);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    
+    body.dark-mode #advancedSearchContainer {
+      background-color: var(--md-sys-color-surface-variant, #49454f);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Search and filter group */
+    .search-filters-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    @media (max-width: 768px) {
+      #advancedSearchContainer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.75rem;
+      }
+      
+      .search-filters-group {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      
+      md-outlined-text-field#searchBar {
+        width: 100%;
+        min-width: 0;
+      }
+      
+      #inlinePaginationContainer {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* New filter dropdown menu styles */
+    #filterMenuContainer {
+      position: relative;
+    }
+
+    .filter-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1500;
+      width: 240px;
+      margin-top: 8px;
+      padding: 0;
+      background-color: var(--md-sys-color-surface, #ffffff);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: block; /* Always block, control visibility with opacity */
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-10px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .filter-dropdown-menu.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .filter-menu-header {
+      padding: 12px 16px;
+      font-weight: 500;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+    }
+
+    .filter-menu-item {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    .filter-menu-item:hover {
+      background-color: var(--md-sys-color-surface-variant, rgba(103, 80, 164, 0.08));
+    }
+
+    .filter-menu-divider {
+      height: 1px;
+      background-color: var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
+      margin: 4px 0;
+    }
+
+    .tech-filter-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    /* Updated tech filter submenu positioning */
+    .filter-tech-trigger {
+      position: relative;
+    }
+
+    .tech-filter-card {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      margin-left: 2px;
+      width: 280px;
+      max-height: 350px;
+      background-color: var(--md-sys-color-surface, #ffffff);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      z-index: 1600;
+    }
+
+    /* Show tech filter card on hover */
+    .filter-tech-trigger:hover .tech-filter-card,
+    .tech-filter-card:hover {
+      display: flex;
+    }
+
+    /* Dark mode styles for filter menu */
+    body.dark-mode .filter-dropdown-menu,
+    body.dark-mode .tech-filter-card {
+      background-color: var(--md-sys-color-surface-container-high, #2b2930);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode .filter-menu-header {
+      border-bottom-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+    }
+
+    body.dark-mode .filter-menu-divider {
+      background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
+    }
+
+    body.dark-mode .filter-menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Mobile styles for filter menu */
+    @media (max-width: 768px) {
+      .filter-dropdown-menu {
+        width: 100%;
+        left: 0;
+        right: 0;
+      }
+      
+      .tech-filter-card {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin-left: 0;
+        width: 90%;
+        max-width: 350px;
+      }
+    }
+
+    /* Ensure search bar is always visible */
+    #searchBar, md-outlined-text-field#searchBar, .search-bar-fallback {
+      display: block !important;
+      visibility: visible !important;
+      min-width: 220px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 1rem auto;
+    }
+    .search-bar-fallback {
+      padding: 0.5em 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    /* Fallback for icons if MWC fails */
+    .icon-fallback {
+      font-family: 'bootstrap-icons' !important;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      letter-spacing: normal;
+      display: inline-block;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }</style><script defer="defer" src="main.bundle.js"></script></head><body><div id="navDrawerContainer"></div><theme-toggle></theme-toggle><div id="barba-wrapper" data-barba="wrapper"><div data-barba="container" data-barba-namespace="projects"><div id="headerContainer"></div><div class="contentContainer"><div id="sidebarContainer"></div><div id="mainContainer"><main id="mainContent"><div id="how-to" class="how-to d-flex align-items-center justify-content-between flex-wrap"><p class="mb-0">Below are a curated list some of my feats of code that I've mustered over the years.<br>Click on a project's card to view more information about it.</p><div id="perPageContainer" class="per-page-container"></div></div><div id="advancedSearchContainer"><div class="d-flex align-items-center gap-2 flex-grow-1 search-filters-group"><input id="searchBar" class="search-bar-fallback" placeholder="Search Projects"/><filter-menu id="projectFilter"></filter-menu></div><div id="inlinePaginationContainer"></div></div><div id="projectsGallery" class="projects-gallery"><div id="loadingOverlay">Loading</div></div><div id="paginationContainer"></div></main></div></div><div id="footerContainer"></div><div class="modal" id="pdfModal"><div class="modal-content"><a href="#" class="close-button">&times;</a> <object id="pdfViewer" data="rsc/docs/resume.pdf" type="application/pdf" width="100%" height="80vh"><p>Unable to display PDF. <a href="rsc/docs/resume.pdf" target="_blank">Download PDF</a>.</p></object></div></div><div id="modalContainer"></div><script type="module">// Load the modal HTML
         fetch('htmlModules/project-modal.html')
           .then(response => response.text())
           .then(html => {
             document.getElementById('modalContainer').innerHTML = html;
-          });</script></div></div><script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script><script>mermaid.initialize({ startOnLoad: false });</script><script src="transition.js"></script><script type="module" src="main.js"></script><script type="module" src="rsc/js/theme-toggle.js"></script><script>console.log('projects.html page loaded');
+
+            // Now that modal is injected, bind close button listener
+            const closeButton = document.getElementById('closeModal');
+            if (closeButton) {
+              closeButton.addEventListener('click', () => {
+                document.getElementById('projectModal').style.display = 'none';
+              });
+            }
+          });</script></div><template id="projectCardTemplate"><md-elevated-card data-project-id="" class="project-card"><div class="badge-container"><span class="academic-label"></span><div class="image-count-icon" style="display: none;"><span class="icon">&#128247;</span> <span class="count"></span></div><div class="mermaid-icon" style="display: none;"><img src="./rsc/images/stack/MermaidJS.png" alt="Has Mermaid Diagram"/></div></div><div class="project-title"></div><span class="short-form-truncated"></span><div class="stack-icons"></div><div class="carousel-card-footer"><md-filled-button class="open-modal-btn">View Project</md-filled-button></div></md-elevated-card></template></div><script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script><script>mermaid.initialize({ startOnLoad: false });</script><script src="transition.js"></script><script type="module" src="main.js"></script><script type="module" src="./rsc/js/theme-toggle.js"></script><script>console.log('projects.html page loaded');
     document.addEventListener('DOMContentLoaded', () => {
       console.log('DOM fully loaded in projects.html');
       window.debugProjectsPage = true;
-    });</script><script type="module">// Ensure projects are loaded correctly regardless of base path
-  document.addEventListener('DOMContentLoaded', async () => {
-    try {
-      // Dynamically import with absolute path
-      const basePath = window.location.hostname.includes('github.io') ? 
-        '/Personal-Static/' : '/';
       
-      // Import and initialize projects module
-      const projectsModule = await import(`${basePath}rsc/js/projects.js`);
-      
-      console.log('Projects module loaded successfully');
-      
-      // Get the gallery element
-      const gallery = document.getElementById('projectsGallery');
-      if (gallery) {
-        // Add loading indicator
-        gallery.innerHTML = '<div class="loading">Loading projects...</div>';
+      // Load nav drawer component
+      fetch('htmlModules/nav-drawer.html')
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('navDrawerContainer').innerHTML = html;
+        })
+        .catch(error => console.error('Error loading nav drawer:', error));
         
-        // Load and render projects
-        const projects = await projectsModule.loadProjects();
-        console.log(`Loaded ${projects.length} projects`);
-        
-        if (projects && projects.length > 0) {
-          projectsModule.renderProjectsGallery(projects);
-        } else {
-          gallery.innerHTML = '<div class="error">No projects found.</div>';
-        }
-      } else {
-        console.error('Projects gallery element not found!');
+      // Explicitly force Material Web Components to refresh/upgrade
+      if (window.customElements) {
+        console.log('Force upgrading Material Web Components...');
+        // Give components time to load
+        setTimeout(() => {
+          // Force component upgrades
+          const searchBar = document.getElementById('searchBar');
+          if (searchBar) {
+            console.log('Search bar found, ensuring upgrade');
+            // Force reflow to ensure component renders
+            void searchBar.offsetWidth;
+          } else {
+            console.error('Search bar element not found in DOM');
+          }
+          
+          // Ensure menu is properly set up
+          const filterMenu = document.getElementById('projectFilterMenu');
+          if (filterMenu && typeof filterMenu.show === 'function') {
+            console.log('Filter menu ready');
+          }
+        }, 300);
       }
-    } catch (err) {
-      console.error('Failed to load or initialize projects:', err);
-      const gallery = document.getElementById('projectsGallery');
-      if (gallery) {
-        gallery.innerHTML = `<div class="error">Failed to load projects: ${err.message}</div>`;
+    });</script><script>// Patch: Ensure filter dropdown toggles on click
+    document.addEventListener('DOMContentLoaded', function() {
+      var filterBtn = document.getElementById('filterToggleBtn');
+      var filterDropdown = document.getElementById('filterDropdown');
+      if (filterBtn && filterDropdown) {
+        filterBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          filterDropdown.classList.toggle('show');
+        });
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!filterDropdown.contains(e.target) && !filterBtn.contains(e.target)) {
+            filterDropdown.classList.remove('show');
+          }
+        });
       }
-    }
-  });</script></body></html>
+    });</script></body></html>

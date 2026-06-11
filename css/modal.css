@@ -4,166 +4,388 @@
 .modal {
   display: none;
   position: fixed;
-  z-index: 9999;
+  z-index: 99999 !important; /* Increased above footer */
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
+  width: 100vw; /* Ensure modal covers full viewport */
+  height: 100vh; /* Ensure modal covers full viewport */
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+/* support JS-controlled open state */
+.modal.open {
+  display: block;
+  opacity: 1;
 }
 
 .modal-content {
-  background-color: #fff;
-  margin: 2% auto;
-  width: 60%;
+  position: relative;
+  background-color: var(--md-sys-color-surface, #fff);
+  margin: 5vh auto;
+  padding: 20px;
+  border-radius: 16px;
+  width: 90%;
   max-width: 1000px;
   max-height: 90vh;
-  border-radius: 6px;
-  position: relative;
+  overflow-y: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
   display: flex;
   flex-direction: column;
+  z-index: 100000 !important; /* Increased above modal */
+}
+
+/* Override for PDF modal to avoid Bootstrap conflicts */
+#pdfModal .modal-content {
+  width: 90% !important;
+  max-width: 1000px !important;
+  height: auto !important;
+  max-height: 90vh !important;
+  margin: 5vh auto !important;
+}
+#pdfModal .modal-content object {
+  width: 100% !important;
+  height: 80vh !important;
+}
+
+/* Ensure PDF canvas scales without stretching */
+.modal-content canvas {
+  width: auto;
+  /* max-width: 100%; */
+  height: auto;
+  /* max-height: 80vh; */
+  display: block;
+  margin: 0 auto;
+}
+
+#pdfCanvas {
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  transform: none !important; /* Remove mirroring transform */
+}
+
+body.dark-mode .modal-content {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 2rem;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
   cursor: pointer;
-  z-index: 10001;
+  z-index: 10;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+body.dark-mode .close-button {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
 }
 
 /* Modal layout sections */
 .modal-top {
-  flex: 0 0 auto;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
   display: flex;
-  max-height: 375px;
-  transition: all 0.3s ease-in-out;
+  flex-wrap: nowrap;
+  min-height: 200px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  gap: 20px;
+  align-items: flex-start; /* Ensure items align at the top */
+  flex-direction: row; /* Always row by default */
 }
 
 .modal-top-left {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  max-height: 375px;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-  position: relative;
-  background-color: white;
-  z-index: 100;
+  flex: 1;
+  min-width: 0;
+  transition: all 0.3s ease;
+  max-width: 60%; /* Reduce slightly to give more space to tech stack */
 }
 
 .modal-top-right {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid #ddd;
-  padding-left: 10px;
-  overflow-y: auto;
-  max-height: 375px;
-  height: 100%;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  min-width: 180px;
+  position: relative;
+  max-width: 40%; /* Increase to allow more space */
+  max-height: none; /* Remove height restriction */
+  overflow-y: visible; /* Ensure content is always visible */
 }
 
 .modal-top-right-upper {
-  flex: 1 1 auto;
-  overflow-y: auto;
+  flex: 0.67;
+  min-height: auto;
+  overflow-y: visible;
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  margin-bottom: 15px; /* Add space between sections */
 }
 
 .modal-top-right-lower {
-  flex: 0 0 auto;
-  border-top: 1px solid #ddd;
-  padding: 8px 4px 0;
-  font-size: 0.9rem;
-  text-align: center;
+  flex: 2;
+  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 150px; /* Limit height to ensure scrolling is available when needed */
+  padding-right: 5px; /* Add padding for scrollbar */
 }
 
 .modal-bottom {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
+  margin-top: 20px;
+  max-height: 300px;  /* Add maximum height to limit and enable scrolling */
+  overflow-y: auto;   /* Enable vertical scrolling when content exceeds height */
+  padding-right: 5px; /* Add padding for scrollbar */
 }
 
 /* Modal title and headings */
 #modalTitle, h4 {
-  z-index: 1000;
-  background-color: white;
+  margin-top: 0;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding-right: 30px; /* Space for close button */
+}
+
+body.dark-mode #modalTitle, 
+body.dark-mode h4 {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
 }
 
 /* Tech Stack heading with sticky opaque background */
 .modal-section-heading {
-  background-color: white;
   position: sticky;
   top: 0;
-  z-index: 10;
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  width: 100%;
+  background-color: var(--md-sys-color-surface, #fff);
+  padding: 8px 0;
+  margin: 0 0 10px 0;
+  font-size: 1em;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-weight: 500;
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .modal-section-heading {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
 }
 
 /* Images area */
 .modal-images {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  flex: 1;
+  position: relative;
+  width: 100%;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: var(--md-sys-color-surface-variant, #f5f5f5);
+  transition: all 0.3s ease;
 }
 
-.modal-image {
-  max-width: 100px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+body.dark-mode .modal-images {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
 }
 
 /* Modal content views */
 .modal-images.images-view {
+  max-width: 100%;
+  height: 14rem; /* Default for medium screens */
+  max-height: 315px;
+  overflow-y: auto !important; /* Force auto scrolling with !important */
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  flex-direction: column; /* Ensure proper flow for scrollable content */
+  position: relative; /* Ensure proper positioning context */
+}
+
+.modal-images.images-view #imageArea {
+  position: relative;
+  z-index: 5; /* Lower z-index than carousel arrows */
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 992px) {
+  .modal-images.images-view {
+    height: 350px;
+    max-height: 375px;
+  }
 }
 
 .modal-images.mermaid-view {
   max-width: 100%;
+  height: 375px; /* Explicit height for mermaid view */
   max-height: 375px;
-  overflow: visible;
+  overflow: visible; /* Keep this as visible for mermaid diagrams */
+  position: relative; /* Add position relative for proper rendering */
+  background-color: var(--md-sys-color-surface, #fff);
+}
+
+body.dark-mode .modal-images.mermaid-view {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
 }
 
 /* Carousel styling */
 #projectImageCarousel {
   position: relative;
   width: 100%;
-  height: 375px;
+  height: 100%; /* Make it fill the container */
+  max-height: 100%;
+}
+
+.carousel-item {
+  height: 100%; /* Make carousel items take full height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px; /* Minimum height to ensure visibility */
 }
 
 .carousel-item img {
   object-fit: contain;
   max-height: 100%;
-  height: auto;
+  max-width: 100%; /* Ensure images don't overflow horizontally */
   width: auto;
+  margin: 0 auto;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
+/* Carousel arrow buttons */
+#projectImageCarousel .carousel-control-prev,
+#projectImageCarousel .carousel-control-next {
+  position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 1001; /* Increased z-index to ensure arrows are above images and overlays */
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.85); /* Slightly more opaque for visibility */
+  border-radius: 50%;
+  opacity: 1;
+  display: flex !important; /* Always use flex when visible */
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  color: #333;
+  pointer-events: auto;
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  width: 30px;
-  height: 30px;
-  background-color: rgba(0, 0, 0, 0.6);
-  background-size: 100%;
-  background-repeat: no-repeat;
-  opacity: 0.8;
-  border-radius: 50%;
+#projectImageCarousel .carousel-control-prev {
+  left: 10px;
 }
+
+#projectImageCarousel .carousel-control-next {
+  right: 10px;
+}
+
+#projectImageCarousel .carousel-control-prev-icon,
+#projectImageCarousel .carousel-control-next-icon {
+  filter: drop-shadow(0 0 2px #333);
+}
+
+@media (max-width: 400px) {
+  #projectImageCarousel .carousel-control-prev,
+  #projectImageCarousel .carousel-control-next {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    left: 2px;
+    right: 2px;
+  }
+}
+
+/* --- Carousel arrows for #simpleImageSlider (patch) --- */
+#simpleImageSlider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; /* Higher than container but lower than arrows */
+  overflow: visible !important; /* Allow arrows to be visible outside container */
+}
+
+#simpleImageSlider .carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  background: rgba(255,255,255,0.9); /* More opaque for better visibility */
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3); /* Enhanced shadow for visibility */
+  opacity: 0.9; /* Slight transparency */
+  transition: all 0.2s ease; /* Smooth transitions */
+}
+
+/* Hover effects for better user experience */
+#simpleImageSlider .carousel-arrow:hover {
+  background: rgba(255,255,255,1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* Active state when clicking */
+#simpleImageSlider .carousel-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Dark mode styling for arrows */
+body.dark-mode #simpleImageSlider .carousel-arrow {
+  background: rgba(60, 60, 60, 0.9);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+}
+
+body.dark-mode #simpleImageSlider .carousel-arrow:hover {
+  background: rgba(80, 80, 80, 1);
+}
+
+body.dark-mode #simpleImageSlider .carousel-arrow svg circle {
+  fill: #333; /* Darker background for svg in dark mode */
+}
+
+body.dark-mode #simpleImageSlider .carousel-arrow svg path {
+  fill: #d0bcff; /* Use primary color for the arrow in dark mode */
+}
+
+#simpleImageSlider .simple-prev {
+  left: 10px;
+}
+
+#simpleImageSlider .simple-next {
+  right: 10px;
+}
+
+@media (max-width: 600px) {
+  #simpleImageSlider .carousel-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+  #simpleImageSlider .simple-prev {
+    left: 2px;
+  }
+  #simpleImageSlider .simple-next {
+    right: 2px;
+  }
+}
+/* --- End carousel arrow patch --- */
 
 /* Fallback placeholder */
 .fallback-placeholder {
@@ -172,12 +394,14 @@
   margin: 0 auto;
   overflow: hidden;
   border-radius: 50%;
+  position: relative; /* Added position relative */
 }
 
 .fallback-placeholder img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  max-height: 100%; /* Ensure image doesn't exceed container */
 }
 
 .no-mermaid {
@@ -186,11 +410,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #eee;
-  color: #888;
+  background-color: var(--md-sys-color-surface-variant, #eee);
+  color: var(--md-sys-color-on-surface-variant, #888);
   font-size: 1.2rem;
   position: relative;
   filter: grayscale(100%);
+}
+
+body.dark-mode .no-mermaid {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
+  color: var(--md-sys-color-on-surface-variant, #cac4d0);
 }
 
 .no-mermaid::after {
@@ -214,59 +443,322 @@
 }
 
 #modalStack {
-  max-height: 200px;
+  max-height: 300px; /* Increase max height for more visible items */
   padding-top: 5px;
   overflow-y: auto;
+  flex-shrink: 0; /* Prevent shrinking */
+  scrollbar-width: thin; /* For Firefox */
+}
+
+/* Custom scrollbar styles for webkit browsers */
+#modalStack::-webkit-scrollbar {
+  width: 6px;
+}
+
+#modalStack::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface-container-low, #f4eff4);
+  border-radius: 8px;
+}
+
+#modalStack::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-surface-variant, #e1e1e1);
+  border-radius: 8px;
+}
+
+body.dark-mode #modalStack::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface-container-low, #1d1a1d);
+}
+
+body.dark-mode #modalStack::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
 }
 
 /* Stack item styling */
 .stack-item-container {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  position: relative;
+  gap: 8px;
+  padding: 5px 8px;
+  background-color: var(--md-sys-color-surface-container-low, #f4eff4);
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease;
+  max-width: 100%; /* Allow full width within its container */
+  width: fit-content; /* Let it size to its content */
+}
+
+body.dark-mode .stack-item-container {
+  background-color: var(--md-sys-color-surface-container-low, #1d1a1d);
+}
+
+.stack-item-container:hover {
+  background-color: var(--md-sys-color-surface-container-high, #ece6ec);
+  transform: translateY(-2px);
+}
+
+body.dark-mode .stack-item-container:hover {
+  background-color: var(--md-sys-color-surface-container-high, #2b282b);
 }
 
 .stack-image {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
-  flex-shrink: 0;
-  margin-right: 8px;
 }
 
 .stack-label {
-  font-size: 0.9rem;
-  color: #333;
-  white-space: nowrap;
-  line-height: 32px;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-on-surface-variant, #49454f);
+  flex: 1;
 }
 
-/* FAB styling & positioning */
-.fab-container {
+body.dark-mode .stack-label {
+  color: var(--md-sys-color-on-surface-variant, #cac4d0);
+}
+
+/* Description content, properly themed */
+#modalDescription {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  margin-bottom: 20px;
+  overflow-wrap: break-word; /* Ensure long words don't break layout */
+}
+
+body.dark-mode #modalDescription {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+}
+
+/* Project status styling */
+#projectStatus {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  overflow-wrap: break-word; /* Ensure long words wrap properly */
+}
+
+body.dark-mode #projectStatus {
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+}
+
+/* Custom scrollbar styles for modal sections */
+.modal-bottom::-webkit-scrollbar,
+.modal-top-right-lower::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-bottom::-webkit-scrollbar-track,
+.modal-top-right-lower::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface-container-low, #f4eff4);
+  border-radius: 8px;
+}
+
+.modal-bottom::-webkit-scrollbar-thumb,
+.modal-top-right-lower::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-surface-variant, #e1e1e1);
+  border-radius: 8px;
+}
+
+body.dark-mode .modal-bottom::-webkit-scrollbar-track,
+body.dark-mode .modal-top-right-lower::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface-container-low, #1d1a1d);
+}
+
+body.dark-mode .modal-bottom::-webkit-scrollbar-thumb,
+body.dark-mode .modal-top-right-lower::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
+}
+
+/* Animations for the modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Layout change for mermaid expanded view */
+.modal-top.mermaid-expanded {
+  flex-direction: column-reverse;
+  transition: all 0.3s ease;
+  min-height: 200px; /* Ensure minimum height is maintained */
+}
+
+.modal-top.mermaid-expanded .modal-top-left {
+  flex: none;
+  width: 100%;
+  margin-top: 15px;
+  min-height: 375px; /* Maintain same height as image view */
+}
+
+/* Mermaid diagram fullscreen expand styles */
+.mermaid-expanded #mermaidContainer {
   position: absolute;
-  top: 55px;
-  right: 60px;
-  z-index: 10001;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: var(--md-sys-color-surface, #fff);
+  border-radius: 16px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+body.dark-mode .mermaid-expanded #mermaidContainer {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+}
+
+.mermaid-expanded #mermaidContainer .mermaid {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.mermaid-expanded #mermaidContainer svg {
+  max-width: 95%;
+  max-height: 95%;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Make sure FABs stay visible and properly positioned in mermaid view */
+.mermaid-expanded .fab-container {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 60;
+  /* Ensure FABs are visible with higher contrast against mermaid diagrams */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 5px;
+}
+
+body.dark-mode .mermaid-expanded .fab-container {
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Override modal-top-right width in mermaid mode to prevent FAB displacement */
+.modal-top.mermaid-expanded .modal-top-right {
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 10px;
+  position: relative; /* Ensure positioning context is maintained */
+}
+
+/* Make sure FABs stay visible */
+.mermaid-expanded .fab-container {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 51;
+}
+
+/* Special styling for title relocation in mermaid view */
+.mermaid-expanded .relocated-title {
+  position: absolute;
+  right: 80px;
+  top: 15px;
+  font-size: 1.2rem;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  background-color: var(--md-sys-color-surface, #fff);
+  padding: 5px 10px;
+  border-radius: 8px;
+  z-index: 45;
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .mermaid-expanded .relocated-title {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Layout change for mermaid expanded view */
+.modal-top.mermaid-expanded {
+  flex-direction: column-reverse;
+  transition: all 0.3s ease;
+}
+
+.modal-top.mermaid-expanded .modal-top-left {
+  flex: none;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.modal-top.mermaid-expanded .modal-top-right {
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modal-top.mermaid-expanded .modal-top-right-upper,
+.modal-top.mermaid-expanded .modal-top-right-lower {
+  flex: 1 1 45%;
+}
+
+.heading-hidden {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* FAB styles for mermaid/images toggle */
+.fab-container {
+  position: relative;
+  top: 10px;
+  right: 10px;
+  display: flex;
   flex-direction: column;
+  gap: 10px;
+  z-index: 50;
+}
+
+/* Ensure FABs stay on top in mermaid view */
+.mermaid-expanded .fab-container {
+  z-index: 60;
 }
 
 .fab {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background-color: #f1f1f1;
+  background-color: var(--md-sys-color-surface, #f5f5f5);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
   border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
   font-size: 0.8rem;
   overflow: visible;
+}
+
+body.dark-mode .fab {
+  background-color: var(--md-sys-color-surface-container, #1d1b20);
+  color: var(--md-sys-color-on-surface, #e6e0e9);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .fab img {
@@ -276,13 +768,22 @@
 }
 
 .fab:hover {
-  background-color: #e1e1e1;
+  background-color: var(--md-sys-color-surface-variant, #e1e1e1);
   transform: scale(1.05);
 }
 
+body.dark-mode .fab:hover {
+  background-color: var(--md-sys-color-surface-variant, #49454f);
+}
+
 .fab.selected {
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--md-sys-color-primary, #007bff);
+  color: var(--md-sys-color-on-primary, #fff);
+}
+
+body.dark-mode .fab.selected {
+  background-color: var(--md-sys-color-primary, #d0bcff);
+  color: var(--md-sys-color-on-primary, #000000);
 }
 
 .fab.disabled,
@@ -305,117 +806,169 @@
   border-radius: 4px;
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-  z-index: 19999;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.fab-tooltip.show {
+.fab:hover .fab-tooltip {
   opacity: 1;
+  visibility: visible;
 }
 
-/* Mermaid container styling */
-#mermaidContainer {
-  position: relative;
-  width: 100%;
-  min-height: 300px;
-  overflow: visible !important;
-  transition: all 0.3s ease-in-out;
-  z-index: 5;
-}
-
-#mermaidContainer svg {
-  width: 100%;
-  height: auto;
-}
-
-.modal-top-left.mermaid-mode,
-.modal-images.mermaid-view {
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-/* Responsive styles */
-@media (min-width: 769px) {
-  .stack-label {
-    display: inline;
-  }
-  
-  /* Mermaid expanded layout - desktop only */
-  .mermaid-expanded .modal-top-left {
-    flex: 4; /* 80% of the space */
-  }
-
-  .mermaid-expanded .modal-top-right {
-    flex: 1; /* 20% of the space */
-    padding-left: 5px; /* Reduce left padding in expanded mode */
-  }
-  
-  /* Hide labels when in mermaid expanded view on any screen size */
-  .mermaid-expanded .stack-label {
-    display: none;
-  }
-  
-  /* Make the Tech Stack heading more compact in expanded mode */
-  .mermaid-expanded .modal-section-heading {
-    font-size: 0.8rem;
-    padding: 2px 0; 
-    margin-bottom: 5px;
-    text-align: center;
-  }
-  
-  /* Move stack icons closer to the right edge in expanded mode */
-  .mermaid-expanded .vertical-stack {
-    padding-right: 2px;
-  }
-  
-  /* Make stack icons slightly smaller in expanded mode */
-  .mermaid-expanded .stack-image {
-    width: 24px;
-    height: 24px;
-  }
-  
-  /* Tech Stack container padding adjustments */
-  .mermaid-expanded #modalStack {
-    padding-right: 2px; 
-    padding-left: 0;
-    max-height: none; /* Allow full height */
-  }
-  
-  /* Hide the Tech Stack heading completely in expanded mode */
-  .mermaid-expanded .modal-section-heading {
-    visibility: hidden;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-}
-
-@media (max-width: 768px) {
-  .stack-label {
-    display: none;
-  }
-  
-  /* Add hover tooltip for small screens */
-  .stack-item-container:hover::after {
-    content: attr(data-tech);
-    position: absolute;
-    left: 40px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    z-index: 1000;
-  }
-  
-  /* Smaller modal on mobile */
+/* Responsive modal positioning for different screen sizes */
+@media (max-width: 767px) {
   .modal-content {
-    width: 90%;
-    margin: 5% auto;
+    width: 95%;
+    margin: 2vh auto;
+    padding: 15px;
+    max-height: 96vh;
+  }
+  
+  /* Ensure modal-top stays in row direction even on small screens */
+  .modal-top {
+    flex-direction: row !important; /* Force horizontal layout on all screens */
+    flex-wrap: nowrap; /* Prevent wrapping */
+    gap: 10px; /* Reduce gap on small screens */
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .modal-top-left,
+  .modal-top-right {
+    min-width: 0; /* Allow elements to shrink below their content size */
+  }
+  
+  .modal-top-left {
+    flex: 2; /* Adjust ratio for better small screen layout */
+    max-width: 65%; /* Increase slightly for content */
+  }
+  
+  .modal-top-right {
+    flex: 1; /* Adjust ratio for better small screen layout */
+    min-width: 120px; /* Reduce minimum width on small screens */
+    max-width: 35%; /* Adjust for better space utilization */
+  }
+  
+  /* Optimize modal stack display for small screens */
+  #modalStack {
+    max-height: 250px; /* Reduce slightly for better fit */
+  }
+  
+  .stack-item-container {
+    padding: 4px 6px; /* Smaller padding on mobile */
+  }
+  
+  .stack-label {
+    font-size: 0.8rem; /* Slightly smaller font size */
+  }
+}
+
+/* Extra small screen adjustments */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 12px;
+    width: 98%;
+  }
+  
+  .modal-top {
+    gap: 8px; /* Further reduce gap for very small screens */
+  }
+  
+  .modal-top-left {
+    flex: 3;
+    max-width: 68%;
+  }
+  
+  .modal-top-right {
+    flex: 2;
+    min-width: 100px; /* Ensure minimum width even on very small screens */
+    max-width: 32%;
+  }
+  
+  .stack-item-container {
+    padding: 3px 5px;
+  }
+  
+  .stack-image {
+    width: 20px; /* Slightly smaller icons */
+    height: 20px;
+  }
+  
+  /* Ensure mermaid expanded view still works on small screens */
+  .modal-top.mermaid-expanded {
+    /* Override row direction for mermaid view */
+    flex-direction: column-reverse !important; 
+  }
+  
+  .modal-top.mermaid-expanded .modal-top-left,
+  .modal-top.mermaid-expanded .modal-top-right {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Make modal-top-left wider and push modal-top-right to the right on medium+ screens */
+@media (min-width: 768px) {
+  .modal-top {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .modal-top-left {
+    flex: 2.2 1 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .modal-top-right {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    margin-left: 16px; /* Reduced from 32px for more space */
+    margin-right: 0;   /* Remove extra right margin */
+    padding-right: 8px; /* Reduced padding to avoid FAB overlap */
+    max-width: 220px; /* Limit width */
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+  }
+  .modal-top-right-upper {
+    width: 100%;
+    padding-right: 0; /* Remove extra padding */
+  }
+  .fab-container {
+    right: 0; /* Adjust FAB position */
+    top: 10px;
+    z-index: 10;
+  }
+}
+
+/* Adjust FABs for smallest screens */
+@media (max-width: 400px) {
+  .fab-container {
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    position: static !important;
+    margin: 8px 0 0 0;
+    width: 100%;
+  }
+  .modal-top-right-upper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .modal-section-heading {
+    order: 1;
+    margin-bottom: 0.5rem;
+  }
+  .fab-container {
+    order: 2;
+  }
+  #modalStack {
+    order: 3;
   }
 }
