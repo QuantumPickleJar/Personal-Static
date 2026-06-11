@@ -8,6 +8,15 @@ import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
 import { initNavDrawer } from './rsc/js/nav-drawer.js';
 
+function applyCurrentYear(root = document) {
+  const year = new Date().getFullYear();
+  root.querySelectorAll('[data-current-year]').forEach(el => { el.textContent = String(year); });
+}
+
+function stripHtml(value) {
+  return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 /**
  * Load partial files into the main page with improved path resolution
  */
@@ -71,6 +80,7 @@ async function loadPartial(containerId, partialPath) {
     const container = document.getElementById(containerId);
     if (container) {
       container.innerHTML = html;
+      applyCurrentYear(container);
       
       // Ensure elements slide into view properly after loading
       setTimeout(() => {
@@ -107,7 +117,7 @@ export function renderProjectCard(project) {
   }
 
   // Set tooltip for the expanded text on mouseover
-  card.title = project.description || '';
+  card.title = stripHtml(project.description) || '';
 
   // Create date badge and card
   let dateBadge = '';
@@ -133,7 +143,7 @@ card.innerHTML = `
   </div>
   <!-- Card body: show shortForm instead of the duplicated Title -->
   <div class="card-body">
-    ${project.shortForm}
+    ${stripHtml(project.shortForm || project.description || '')}
   </div>
   <!-- Card footer: tech stack -->
   <div class="card-footer">
