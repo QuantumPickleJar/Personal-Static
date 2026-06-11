@@ -180,7 +180,10 @@
             
             if (response.ok) {
               const html = await response.text();
-              document.getElementById(partial.id).innerHTML = html;
+              const el = document.getElementById(partial.id);
+              el.innerHTML = html;
+              const yr = new Date().getFullYear();
+              el.querySelectorAll('[data-current-year]').forEach(n => { n.textContent = String(yr); });
             } else {
               throw new Error(`HTTP error ${response.status}`);
             }
