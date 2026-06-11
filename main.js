@@ -14,7 +14,15 @@ function applyCurrentYear(root = document) {
 }
 
 function stripHtml(value) {
-  return String(value || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const element = document.createElement('div');
+  element.innerHTML = String(value || '');
+  return (element.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
+function escapeHtml(value) {
+  const element = document.createElement('div');
+  element.textContent = String(value || '');
+  return element.innerHTML;
 }
 
 /**
@@ -108,6 +116,10 @@ async function loadPartial(containerId, partialPath) {
 export function renderProjectCard(project) {
   const card = document.createElement('div');
   card.className = 'project-card';
+  const descriptionText = stripHtml(project.description);
+  const shortText = stripHtml(project.shortForm || project.description || '');
+  const safeTitle = escapeHtml(project.title || '');
+  const safeStack = (project.stack || []).map(item => escapeHtml(item)).join(', ');
 
   // Add academic or work class based on project type
   if (project.academic) {
@@ -117,7 +129,7 @@ export function renderProjectCard(project) {
   }
 
   // Set tooltip for the expanded text on mouseover
-  card.title = stripHtml(project.description) || '';
+  card.title = descriptionText || '';
 
   // Create date badge and card
   let dateBadge = '';
@@ -127,7 +139,7 @@ export function renderProjectCard(project) {
     dateBadge = `<div class="date-badge">${project.dates.length}</div>`;
     dateCard = `
       <div class="date-card">
-        ${project.dates.map(date => `<p>${date}</p>`).join('')}
+        ${project.dates.map(date => `<p>${escapeHtml(date)}</p>`).join('')}
       </div>
     `;
   }
@@ -138,18 +150,23 @@ card.innerHTML = `
   ${dateCard}
   <!-- Card header: Title and academic info -->
   <div class="card-header">
-    ${project.title}
-    ${project.academic ? `<span class="academic-label" data-dates="${project.dates}">Academic</span>` : ''}
+    ${safeTitle}
+    ${project.academic ? '<span class="academic-label">Academic</span>' : ''}
   </div>
   <!-- Card body: show shortForm instead of the duplicated Title -->
   <div class="card-body">
-    ${stripHtml(project.shortForm || project.description || '')}
+    ${escapeHtml(shortText)}
   </div>
   <!-- Card footer: tech stack -->
   <div class="card-footer">
-    ${project.stack.join(', ')}
+    ${safeStack}
   </div>
 `;
+
+  const academicLabel = card.querySelector('.academic-label');
+  if (academicLabel) {
+    academicLabel.dataset.dates = (project.dates || []).join(', ');
+  }
 
 
   return card;

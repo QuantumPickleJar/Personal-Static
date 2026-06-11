@@ -10,6 +10,12 @@ export function initCarousel() {
   loadCarouselProjects();
 }
 
+function stripHtml(value) {
+  const element = document.createElement('div');
+  element.innerHTML = String(value || '');
+  return (element.textContent || '').replace(/\s+/g, ' ').trim();
+}
+
 let showMermaidProjects = false; // Default to showing photo projects
 
 async function loadCarouselProjects() {
@@ -505,7 +511,7 @@ async function loadCarouselProjects() {
       const cardBody = document.createElement("div");
       cardBody.classList.add("carousel-card-body");
       cardBody.textContent = project.shortForm ||
-        (project.description ? project.description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 100) + '...' : 'No description available');
+        (project.description ? stripHtml(project.description).substring(0, 100) + '...' : 'No description available');
       
       const cardFooter = document.createElement("div");
       cardFooter.classList.add("carousel-card-footer");
@@ -661,7 +667,7 @@ async function loadProjectCards() {
       
       // Use shortForm if available, otherwise take a portion of description
       const shortText = project.shortForm ||
-        (project.description ? project.description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 180) : 'No description available');
+        (project.description ? stripHtml(project.description).substring(0, 180) : 'No description available');
       
       // Set the text content - CSS will handle the truncation properly
       descriptionElement.textContent = shortText;
