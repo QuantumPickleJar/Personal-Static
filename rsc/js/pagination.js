@@ -12,8 +12,21 @@ export function initPagination(projects, perPage) {
   itemsPerPage = perPage || itemsPerPage;
   totalPages = Math.ceil(currentProjects.length / itemsPerPage);
   console.log('Initializing pagination:', { totalPages, itemsPerPage });
+  
+  // Always reset to page 1 when filters change
   currentPage = 1;
+  
   renderPage(currentPage);
+  renderPaginationControls();
+}
+
+/**
+ * Update pagination when filtered project count changes
+ * @param {number} projectCount - The number of projects after filtering
+ */
+export function updatePagination(projectCount) {
+  totalPages = Math.ceil(projectCount / itemsPerPage);
+  currentPage = 1; // Reset to first page when search results change
   renderPaginationControls();
 }
 
@@ -24,7 +37,6 @@ function renderPage(pageNumber) {
   // Use currentProjects instead of allProjects
   renderProjectsGallery(currentProjects.slice(startIndex, Math.min(endIndex, currentProjects.length)));
 }
-
 
 /** Render pagination controls into the container */
 function renderPaginationControls() {
@@ -85,4 +97,37 @@ export function updateItemsPerPage(newPerPage) {
   totalPages = Math.ceil(currentProjects.length / itemsPerPage);
   renderPage(1);
   renderPaginationControls();
+}
+
+export function renderPerPageDropdown() {
+  const howToContainer = document.getElementById('how-to');
+  if (window.innerWidth < 768) {
+    // On small screens, auto-set projects per page to 4 and hide dropdown
+    updateItemsPerPage(4);
+    const perPageContainer = document.getElementById('perPageContainer');
+    if (perPageContainer) perPageContainer.style.display = 'none';
+    return;
+  }
+  if (howToContainer) {
+    const perPageContainer = document.getElementById('perPageContainer') || (() => {
+      const div = document.createElement('div');
+      div.id = 'perPageContainer';
+      howToContainer.appendChild(div);
+      return div;
+    })();
+    perPageContainer.style.display = '';
+    const options = generatePerPageOptions();
+    perPageContainer.innerHTML = `
+      <label for="perPageSelect">Projects per page: </label>
+      <select id="perPageSelect">
+        ${options}
+      </select>
+    `;
+    const perPageSelect = document.getElementById('perPageSelect');
+    perPageSelect.value = projectsPerPage;
+    perPageSelect.addEventListener('change', (e) => {
+      const newPerPage = parseInt(e.target.value, 10);
+      updateItemsPerPage(newPerPage);
+    });
+  }
 }

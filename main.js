@@ -1,9 +1,12 @@
 import { projectsPerPage } from './rsc/js/perPageSettings.js';
-import { closeModal, loadProjects } from './rsc/js/projects.js';
+// import { closeModal, loadProjects } from './rsc/js/projects.js';
+import { closeModal } from './rsc/js/project-modal.js';
+import { loadProjects } from './rsc/js/projects.js';
 import { initPagination, updateItemsPerPage } from './rsc/js/pagination.js';
 import { filterProjByTitle, filterByDate } from './rsc/js/gallery-sorting.js';
 import { filterProjectsBySearchTerm } from './rsc/js/search.js';
 import { initCarousel } from './rsc/js/carousel.js';
+import { initNavDrawer } from './rsc/js/nav-drawer.js';
 
 /**
  * Load partial files into the main page with improved path resolution
@@ -34,7 +37,7 @@ async function loadPartial(containerId, partialPath) {
     // Try each path until one works
     for (const path of pathsToTry) {
       try {
-        console.log(`Trying to fetch partial from: ${path}`);
+        // console.log(`Trying to fetch partial from: ${path}`);
         const fetchResponse = await fetch(path, { 
           cache: 'no-store',
           headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
@@ -53,11 +56,11 @@ async function loadPartial(containerId, partialPath) {
           }
           
           successPath = path;
-          console.log(`Success! Loaded partial from: ${path}`);
+          // console.log(`Success! Loaded partial from: ${path}`);
           break;
         }
       } catch (e) {
-        console.log(`Failed attempt with path: ${path}`);
+        console.log(`Failed to load partial attempt with path: ${path}`);
       }
     }
     
@@ -96,11 +99,6 @@ export function renderProjectCard(project) {
   const card = document.createElement('div');
   card.className = 'project-card';
 
-  const stripHtml = (value) => String(value || '')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
   // Add academic or work class based on project type
   if (project.academic) {
     card.classList.add('academic');
@@ -109,7 +107,7 @@ export function renderProjectCard(project) {
   }
 
   // Set tooltip for the expanded text on mouseover
-  card.title = stripHtml(project.description) || '';
+  card.title = project.description || '';
 
   // Create date badge and card
   let dateBadge = '';
@@ -135,7 +133,7 @@ card.innerHTML = `
   </div>
   <!-- Card body: show shortForm instead of the duplicated Title -->
   <div class="card-body">
-    ${stripHtml(project.shortForm || project.description || 'No description available')}
+    ${project.shortForm}
   </div>
   <!-- Card footer: tech stack -->
   <div class="card-footer">
@@ -221,50 +219,100 @@ async function init() {
   return projects;
 }
 
-// Find all academic labels in the document
-document.querySelectorAll('.academic-label').forEach(label => {
-  // When the label is hovered over...
-  label.addEventListener('mouseenter', () => {
-    const dates = label.getAttribute('data-dates');
-    // Locate the parent project-card and its badge element
-    const projectCard = label.closest('.project-card');
-    const badge = projectCard ? projectCard.querySelector('.badge') : null;
-    if (badge && dates) {
-      // If the tooltip doesn't exist yet, create it
-      let tooltip = badge.querySelector('.tooltip-dates');
-      if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.className = 'tooltip-dates';
-        badge.appendChild(tooltip);
+// Add function to set up academic label tooltips
+function setupAcademicLabelTooltips() {
+  // Wait for a short delay to ensure elements are loaded
+  setTimeout(() => {
+    const academicLabels = document.querySelectorAll('.academic-label');
+    // console.log(`Found ${academicLabels.length} academic labels for tooltips`);
+    
+    academicLabels.forEach(label => {
+      // Get dates from data attribute
+      const dates = label.dataset.dates;
+      if (dates) {
+        // Create tooltip element if it doesn't exist
+        if (!label.querySelector('.date-tooltip')) {
+          const tooltip = document.createElement('span');
+          tooltip.className = 'date-tooltip';
+          tooltip.textContent = dates;
+          label.appendChild(tooltip);
+        }
       }
-      tooltip.textContent = dates;
-      // Trigger the fade-in by adding the 'visible' class
-      tooltip.classList.add('visible');
-    }
-  });
-  
-  // When the mouse leaves the label, hide the tooltip
-  label.addEventListener('mouseleave', () => {
-    const projectCard = label.closest('.project-card');
-    const badge = projectCard ? projectCard.querySelector('.badge') : null;
-    if (badge) {
-      const tooltip = badge.querySelector('.tooltip-dates');
-      if (tooltip) {
-        tooltip.classList.remove('visible');
-      }
-    }
-  });
-});
+    });
+  }, 500);
+}
 
 // In main.js, improve the projects page initialization
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('DOM content loaded, pathname:', window.location.pathname);
+  
+  // Initialize navigation drawer
+  initNavDrawer();
   
   await Promise.all([
     loadPartial('headerContainer', 'header.html'),
     loadPartial('sidebarContainer', 'sidebar.html'),
     loadPartial('footerContainer', 'footer.html')
   ]);
+  // Move PDF modal markup into mainContent so modal is child of main
+  const movedModal = document.querySelector('#sidebarContainer #pdfModal');
+  const mainContent = document.getElementById('mainContent');
+  if (movedModal && mainContent) {
+    mainContent.appendChild(movedModal);
+  }
+  // Set up PDF.js and modal handler
+  (function setupPdfModal(){
+    const loader = document.createElement('script');
+    loader.src = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js';
+    loader.onload = () => {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    };
+    document.head.appendChild(loader);
+    document.body.addEventListener('click', async e => {
+      const btn = e.target.closest('#viewResumeBtn');
+      if (!btn) return;
+      e.preventDefault();
+      console.log('View Resume clicked');
+      const modal = document.getElementById('pdfModal');
+      const canvas = document.getElementById('pdfCanvas');
+      const loading = document.getElementById('loadingPdf');
+      const notice = document.getElementById('pdfjs-notice');
+      if (!modal || !canvas) return;
+      modal.classList.add('open');
+      canvas.style.display = 'none';
+      if (loading) loading.style.display = '';
+      if (notice) notice.style.display = 'none';
+      try {
+        if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js library not loaded');
+        const pdf = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
+        const page = await pdf.getPage(1);
+        const vp = page.getViewport({ scale: 1.2 });
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+        canvas.style.display = '';
+        if (loading) loading.style.display = 'none';
+      } catch (err) {
+        console.error('PDF rendering error:', err);
+        if (loading) loading.style.display = 'none';
+        if (notice) notice.style.display = '';
+        // fallback open in new tab
+        window.open('rsc/docs/resume.pdf', '_blank');
+      }
+    });
+    // Close modal on backdrop or close-button
+    document.body.addEventListener('click', e => {
+      if (e.target.matches('.close-button') || e.target.id === 'pdfModal') {
+        e.preventDefault();
+        const m = document.getElementById('pdfModal');
+        if (m) m.classList.remove('open');
+      }
+    });
+  })();
+
+  // Set up academic labels with date tooltips
+  setupAcademicLabelTooltips();
 
   // Check if we're on the projects page in multiple ways to be sure
   const isProjectsPage = 
@@ -273,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.debugProjectsPage ||
     document.getElementById('projectsGallery');
   
-  console.log('Is projects page?', isProjectsPage);
+  // console.log('Is projects page?', isProjectsPage);
   
   if (isProjectsPage) {
     console.log('Projects page detected, initializing...');
@@ -312,15 +360,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (contactForm) {
     contactForm.addEventListener('submit', handleContactSubmit);
   }
-  // Check if current page is index.html
-  if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+  // Check if current page is index.html or root (for GitHub Pages)
+  const isHomePage = (
+    window.location.pathname.endsWith('index.html') ||
+    window.location.pathname === '/' ||
+    window.location.pathname.endsWith('/Personal-Static/') ||
+    window.location.pathname === '/Personal-Static/'
+  );
+  if (isHomePage) {
     // No need to create the carousel element, just load the data
     console.log('Loading carousel data on index page');
-    
     // Import and execute the carousel code
     import('./rsc/js/front_page_carousel.js')
       .then(module => {
-        console.log('Front page carousel module loaded');
+        // console.log('Front page carousel module loaded');
         if (module.initCarousel) {
           module.initCarousel();
         }
@@ -354,32 +407,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    // Filtering dropdown event listener
-    const filterDropdown = document.getElementById('filterDropdown');
-    if (filterDropdown) {
-      filterDropdown.addEventListener('change', (e) => {
-        const value = e.target.value;
-        switch (value) {
-          case 'title':
-            filterProjByTitle();
-            break;
-          case 'date':
-            filterByDate();
-            break;
-          case 'status':
-            console.log('Filter by status not implemented.');
-            break;
-          default:
-            break;
-        }
-      });
-    }
-    
     renderPerPageDropdown();
     window.addEventListener('resize', () => {
       renderPerPageDropdown();
       updateItemsPerPage(projectsPerPage);
     });
+
+    /* Removed filterDropdown change listener block to avoid conflict with custom filter menu */
+    
   }
 });
 
@@ -387,11 +422,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.addEventListener('DOMContentLoaded', () => {
   // Ensure Bootstrap is available for carousels
   if (typeof bootstrap === 'undefined' && document.getElementById('carouselContainer')) {
-    console.log('Loading Bootstrap JS dynamically');
+    // console.log('Loading Bootstrap JS dynamically');
     const bootstrapScript = document.createElement('script');
     bootstrapScript.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
     bootstrapScript.onload = () => {
-      console.log('Bootstrap loaded, initializing carousel');
+      // console.log('Bootstrap loaded, initializing carousel');
       if (typeof initCarousel === 'function') {
         initCarousel();
       }
@@ -399,6 +434,60 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(bootstrapScript);
   }
 });
+
+// PDF Modal Delegated Listener
+// opens PDF.js canvas modal when clicking View Resume button
+if (typeof document !== 'undefined') {
+  document.body.addEventListener('click', async e => {
+    const btn = e.target.closest('#viewResumeBtn');
+    if (!btn) return;
+    e.preventDefault();
+    console.log('View Resume clicked');
+    // ensure modal elements are available
+    const modal = document.getElementById('pdfModal');
+    const canvas = document.getElementById('pdfCanvas');
+    const loading = document.getElementById('loadingPdf');
+    const notice = document.getElementById('pdfjs-notice');
+    if (!modal) {
+      console.error('PDF modal not found');
+      return;
+    }
+    modal.classList.add('open');
+    if (canvas) canvas.style.display = 'none';
+    if (loading) loading.style.display = '';
+    if (notice) notice.style.display = 'none';
+    // render PDF
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+      try {
+        const pdf = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 1.2 });
+        if (canvas) {
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+          canvas.style.display = '';
+        }
+        if (loading) loading.style.display = 'none';
+      } catch (err) {
+        console.error('PDF render error:', err);
+        if (loading) loading.style.display = 'none';
+        if (notice) notice.style.display = '';
+      }
+    } else {
+      console.warn('PDF.js library not loaded');
+    }
+  });
+  // close modal
+  document.body.addEventListener('click', e => {
+    if (e.target.matches('.close-button') || e.target.id === 'pdfModal') {
+      e.preventDefault();
+      const m = document.getElementById('pdfModal');
+      if (m) m.classList.remove('open');
+    }
+  });
+}
 
 // Contact form handler
 function handleContactSubmit(event) {

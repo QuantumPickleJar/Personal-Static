@@ -10,6 +10,7 @@
         <h4 id="modalTitle"></h4>
         <!-- Main image area (carousel or just a grid) -->
         <div id="modalImages" class="modal-images images-view">
+          <div id="imageArea"></div>
           <!-- Image carousel view template -->
           <div id="projectImageCarousel" class="carousel slide" style="display: none;">
             <div class="carousel-inner">
@@ -24,17 +25,14 @@
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-          
           <!-- Fallback placeholder template -->
           <div class="fallback-placeholder" style="display: none; width: 250px; height: 250px;">
             <img src="" alt="Project placeholder">
           </div>
-          
           <!-- Mermaid container template -->
           <div id="mermaidContainer" class="mermaid" style="display: none; overflow: visible;">
             <!-- Mermaid diagram will be rendered here -->
           </div>
-          
           <!-- No mermaid template -->
           <div class="no-mermaid" style="display: none;">
             No Mermaid Diagram Available
@@ -50,17 +48,8 @@
         </div>
         <div class="modal-top-right-lower">
           <p id="projectStatus"></p>
-          <p id="projectType"></p>
         </div>
-        <!-- Static FAB container -->
-        <div class="fab-container">
-          <button class="fab toggle-images selected">
-            <img src="rsc/images/fab-image-icon.png" alt="Images" style="width:24px; height:24px;">
-          </button>
-          <button class="fab toggle-mermaid">
-            <img src="rsc/images/stack/MermaidJS.png" alt="Mermaid Diagram" />
-          </button>
-        </div>
+        <!-- FABs are dynamically added via JavaScript -->
       </div>
     </div>
 

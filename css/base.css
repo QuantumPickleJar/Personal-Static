@@ -18,51 +18,12 @@ body {
   flex-direction: column;
 }
 
-:root {
-  --bg: #f7f8fb;
-  --fg: #101218;
-  --surface: #ffffff;
-  --surface-muted: #eef1f7;
-  --border: rgba(16, 18, 24, 0.12);
-  --link: #1f5bd6;
-}
-
-[data-theme='dark'] {
-  --bg: #10141c;
-  --fg: #e9edf5;
-  --surface: #171c27;
-  --surface-muted: #202736;
-  --border: rgba(233, 237, 245, 0.14);
-  --link: #8eb6ff;
-}
-
-body {
-  background: var(--bg);
-  color: var(--fg);
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-a {
-  color: var(--link);
-}
-
-#themeToggleBtn.theme-toggle-btn {
+.theme-toggle {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1200;
-  width: 2.3rem;
-  height: 2.3rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--fg);
-  font-size: 1.15rem;
-  line-height: 1;
+  right: 20px;
+  top: 20px;
+  z-index: 50; /* Reduced z-index so modal appears on top */
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
-}
-
-#themeToggleBtn.theme-toggle-btn:hover {
-  background: var(--surface-muted);
 }

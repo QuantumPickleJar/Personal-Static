@@ -17,7 +17,7 @@
     {
       "title": "JSON Escaper",
       "url": "https://www.lambdatest.com/free-online-tools/json-escape",
-      "category": "Tool/Development"
+      "category": "Tool"
     },
     {
       "title": "Design Patterns - Peter Norvig (PDF)",
@@ -30,8 +30,24 @@
       "category": "Info Repository"
     },
     {
-      "title": "New Entry",
-      "url": "",
-      "category": ""
+      "title": "Obsidian Exporter",
+      "url": "https://github.com/KosmosisDire/obsidian-webpage-export",
+      "category": "Reference"
+    },
+    {
+      "title": "Mermaid Live Editor",
+      "url": "https://mermaid.live/edit#pako:eNp1lE1zmzAQhv_Kji69kE_jYDj0YmfaQ5N26jSHlh4UtMaagMRIAsd1_N8rJISdLx8wK-0--2p30Y4UkiHJSKlos4a7RS7A_paGKvMnJ780Kui45kbDV1kj_KAl5uQvnJx8hnnFi8d72la9pzM0fHK2_gRcgKCddfVA_zxEOMA3SZn3t4Alqs4ma5TsOEMNFdcG5ApoR3lFHyqEzrmOyEO0gy24biq6vZGMVhY3mOBs2HCzhoWSDZMb0VPvX7L88xjhmEussDDhiK4Y2i1poF4OrJSsgQ3kkXcU6EslxYqr2i9zKQKt8FUbtsfwN0LmVBRYfRjudsfoV85Dr6TGUBtnQN1bESisqW2W9TtucC4G1ivhHrbG4nFOizUe-lb0axpW0r72OwzwqZHKtdBV6iBvjO5hz3PvfY9K9_zrJ9t3_QwO6_dCkgD2hff4j6i3El6Cn-ELClTUYGjnneJlaZV_f9CccSqC4KZqSy5ejcaL4KElFv8TtYctqdU3AIz0So8aMroOY2VPE2T4owncVFsohyzvnDHM1VgVR7qlHS-DrL51FhjWoO1HxIrZtaran_mv52zn_gWtcX80rUHP-9CQ_c2Gc78W7HBT4EYPn0g4hMtCIlKjsoPG7FWz62k5MWusbY0y-8qoesxJLvbWj7ZGLreiIJlRLUakbZhNueDU3lA1yVa00nYVGTdS3fi7y11hEWmo-C1lHQKtSbIdeSJZOjtN4jieTdI4SaaTNCJbkp1MJ_FpmsziaTydpbN4MttH5J-Lvzi9urxKkvM4TSbT6UV6fhkRJdtyPaYvVX8Sn0ehYKjmshWGZJP0cv8f5GzMGg",
+      "category": "Tool"
+    
+    },
+    {
+      "title": "ESP-32 Reference",
+      "url": "https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html",
+      "category": "Reference"
+    },
+    {
+      "title": "Object Oriented Programming - JS",
+      "url": "https://www.freecodecamp.org/news/how-javascript-implements-oop/",
+      "category": "Reference" 
     }
   ]

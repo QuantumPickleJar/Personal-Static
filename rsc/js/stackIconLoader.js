@@ -10,6 +10,12 @@
  */
 
 import { iconSvgs } from './stackSvgMap.js';
+import { allProjects } from './projects.js';
+import { initPagination } from './pagination.js';
+import { projectsPerPage } from './perPageSettings.js';
+
+// Export mapping of tech names to icons for external use
+export const stackSvgMap = iconSvgs;
 
 /**
  * @function getIcon
@@ -63,6 +69,8 @@ export function renderOneStackIcon(tech) {
   } else {
     // If not found, fallback to local PNG with correct base path
     let pngPath = `${basePath}rsc/images/stack/${normalizedTech.toLowerCase()}.png`;
+    // TODO:
+    // # debug
     console.log(`Fallback triggered for ${normalizedTech}. Attempting to load PNG from: ${pngPath}`);
     iconElement = document.createElement('img');
     iconElement.src = pngPath;
@@ -111,3 +119,97 @@ export function renderOneStackIcon(tech) {
   
   return container;
 }
+
+/**
+ * Initialize stack filter chips for technology filtering
+ */
+export function initializeStackFilterChips() {
+  const chipContainer = document.getElementById('stackFilterChips');
+  // # debug
+  // console.log('Initializing stack filter chips');
+  
+  if (!chipContainer) {
+    console.error('Stack filter chip container not found');
+    return;
+  }
+ 
+  // Clear existing chips
+  chipContainer.innerHTML = '';
+  
+  // Create custom chips for each technology
+  Object.keys(stackSvgMap).sort().forEach(tech => {
+    const chip = document.createElement('div');
+    chip.className = 'custom-filter-chip';
+    chip.textContent = tech;
+    chip.dataset.tech = tech;
+    
+    chip.addEventListener('click', (e) => {
+      // Toggle selection state
+      chip.classList.toggle('selected');
+      
+      // Don't close the menu or card when clicking chips
+      e.stopPropagation();
+      
+      // Apply filters immediately using unified logic
+      if (window.applyAllFilters) window.applyAllFilters();
+    });
+    
+    chipContainer.appendChild(chip);
+  });
+  
+  // Make the tech filter card stay visible when interacting with it
+  const techFilterCard = document.getElementById('techFilterCard');
+  const filterTechTrigger = document.getElementById('filterTechTrigger');
+  if (techFilterCard && filterTechTrigger) {
+    // Prevent clicks inside the card from closing the menu
+    techFilterCard.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Show/hide the card on hover (desktop)
+    filterTechTrigger.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) {
+        techFilterCard.classList.add('visible');
+      }
+    });
+    techFilterCard.addEventListener('mouseenter', () => {
+      if (window.innerWidth > 768) {
+        techFilterCard.classList.add('visible');
+      }
+    });
+    techFilterCard.addEventListener('mouseleave', () => {
+      if (window.innerWidth > 768) {
+        setTimeout(() => {
+          if (!document.querySelector(':hover').closest('#filterTechTrigger')) {
+            techFilterCard.classList.remove('visible');
+          }
+        }, 50);
+      }
+    });
+
+    // Show/hide the card on click (mobile/small screens)
+    filterTechTrigger.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        e.stopPropagation();
+        techFilterCard.classList.toggle('visible');
+        // Close when clicking outside
+        if (techFilterCard.classList.contains('visible')) {
+          document.addEventListener('click', closeTechCardOnClickOutside, { once: true });
+        }
+      }
+    });
+    function closeTechCardOnClickOutside(ev) {
+      if (!techFilterCard.contains(ev.target) && ev.target !== filterTechTrigger) {
+        techFilterCard.classList.remove('visible');
+      }
+    }
+  }
+  
+  console.log(`Created ${Object.keys(stackSvgMap).length} technology filter chips`);
+}
+
+// Call this function when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize stack filter chips
+  initializeStackFilterChips();
+});

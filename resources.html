@@ -4,14 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Resources & Reading</title>
+  <script src="https://cdn.jsdelivr.net/npm/@material/web/all.js"></script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Base and global styles -->
   <link rel="stylesheet" href="style.css">
   <!-- Make sure the resources-page.css is loaded -->
   <link rel="stylesheet" href="css/resources-page.css">
+  
+  <!-- Dynamic base path for GitHub Pages -->
+  <script>
+    (function() {
+      var isGithubPages = window.location.hostname.includes('github.io');
+      if (isGithubPages) {
+        var repoName = window.location.pathname.split('/')[1];
+        document.write('<base href="/' + repoName + '/">');
+      }
+    })();
+  </script>
+
+  <!-- Add Material Design 3 vars for dark mode consistency -->
+  <style>
+    /* Material Design 3 CSS variables for light mode */
+    :root {
+      --md-sys-color-primary: #6750a4;
+      --md-sys-color-on-primary: #ffffff;
+      --md-sys-color-primary-container: #eaddff;
+      --md-ssys-color-on-primary-container: #21005d;
+      --md-sys-color-surface: #fdf8fd;
+      --md-sys-color-on-surface: #1c1b1f;
+      --md-sys-color-surface-variant: #e7e0eb;
+      --md-sys-color-on-surface-variant: #49454e;
+      --md-sys-color-outline: #79747e;
+      --md-sys-color-outline-variant: rgba(0, 0, 0, 0.08);
+      --md-sys-color-surface-container: #f3f3f3;
+    }
+    
+    /* Material Design 3 CSS variables for dark mode */
+    body.dark-mode {
+      --md-sys-color-primary: #d0bcff;
+      --md-sys-color-on-primary: #381e72;
+      --md-sys-color-primary-container: #4f378b;
+      --md-sys-color-on-primary-container: #eaddff;
+      --md-sys-color-surface: #1c1b1f;
+      --md-sys-color-on-surface: #e6e0e9;
+      --md-sys-color-surface-variant: #49454f;
+      --md-sys-color-on-surface-variant: #cac4d0;
+      --md-sys-color-outline: #938f99;
+      --md-sys-color-outline-variant: rgba(255, 255, 255, 0.1);
+      --md-sys-color-surface-container: #1d1b20;
+      --md-sys-color-surface-container-high: #2b2930;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+    }
+
+    /* Ensure theme-toggle is always visible */
+    theme-toggle {
+      position: fixed !important;
+      top: 1.25rem !important;
+      right: 1.25rem !important;
+      z-index: 9999 !important;
+      display: block !important;
+      width: auto !important;
+      height: auto !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      background: rgba(255, 255, 255, 0.8) !important;
+      border-radius: 20px !important;
+      padding: 4px !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    body.dark-mode theme-toggle {
+      background: rgba(30, 30, 30, 0.8) !important;
+    }
+  </style>
 </head>
 <body>
+  <!-- Load Navigation Drawer HTML Component -->
+  <div id="navDrawerContainer"></div>
+  
+  <!-- Theme Toggle -->
+  <theme-toggle></theme-toggle>
+  
   <!-- Header partial -->
   <div class="barba-wrapper" data-barba="wrapper">
     <div data-barba="container" data-barba-namespace="resources">
@@ -50,6 +125,20 @@
                 <!-- Bookmarks will be injected here by bookmarks.js -->
               </div>
             </section>
+
+            <!-- Resume Modal -->
+            <div id="resumeModal" class="modal">
+              <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div id="loadingIndicator">Loading Resume...</div>
+                <canvas id="resumeCanvas" style="display:none"></canvas>
+                <div id="fallbackMessage" style="display:none">
+                  <p>Unable to load resume. <a href="rsc/docs/resume.pdf" target="_blank">Download PDF</a></p>
+                </div>
+                <button id="zoomInBtn">Zoom In</button>
+                <button id="zoomOutBtn">Zoom Out</button>
+              </div>
+            </div>
           </main>
         </div>
       </div>
@@ -102,6 +191,12 @@
           document.getElementById(partial.id).innerHTML = 
             `<div class="error-partial">Failed to load ${partial.path}. Error: ${err.message}</div>`;
         }
+      }
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
       }
       
       // Load books data
@@ -200,6 +295,103 @@
   });
 </script>
 <script src="rsc/js/bookmarks.js"></script>
+<!-- Load theme toggle script -->
 <script type="module" src="rsc/js/theme-toggle.js"></script>
+<!-- Load navigation drawer script -->
+<script>
+  // Load nav drawer component
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('htmlModules/nav-drawer.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('navDrawerContainer').innerHTML = html;
+      })
+      .catch(error => console.error('Error loading nav drawer:', error));
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+<script>
+        (function() {
+          let isRendering = false;
+          let pendingScale = null;
+          let pdfDoc = null, page = null, renderTask = null, scale = 1;
+          const modal = document.getElementById('resumeModal');
+          const canvas = document.getElementById('resumeCanvas');
+          const ctx = canvas.getContext('2d');
+          const loadingEl = document.getElementById('loadingIndicator');
+          const fallbackEl = document.getElementById('fallbackMessage');
+
+          async function initPdf() {
+            loadingEl.style.display = '';
+            fallbackEl.style.display = 'none';
+            if (!pdfDoc) {
+              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js';
+              try {
+                pdfDoc = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
+                page = await pdfDoc.getPage(1);
+              } catch (err) {
+                loadingEl.style.display = 'none';
+                fallbackEl.style.display = '';
+                throw err;
+              }
+            }
+          }
+
+          async function renderPage() {
+            if (isRendering) return;
+            isRendering = true;
+            loadingEl.style.display = '';
+            if (!page) return;
+            const viewport = page.getViewport({ scale });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            if (renderTask) {
+              renderTask.cancel();
+              try { await renderTask.promise; } catch {};
+            }
+            renderTask = page.render({ canvasContext: ctx, viewport });
+            try {
+              await renderTask.promise;
+              canvas.style.display = '';
+            } catch {
+              fallbackEl.style.display = '';
+            } finally {
+              loadingEl.style.display = 'none';
+              renderTask = null;
+              isRendering = false;
+              if (pendingScale !== null) {
+                scale = pendingScale;
+                pendingScale = null;
+                queueRenderPage();
+              }
+            }
+          }
+
+          function queueRenderPage() {
+            if (isRendering) {
+              pendingScale = scale;
+            } else {
+              renderPage();
+            }
+          }
+
+          document.body.addEventListener('click', async e => {
+            if (e.target.id === 'viewResumeBtn') {
+              modal.style.display = 'flex';
+              scale = 1;
+              await initPdf();
+              queueRenderPage();
+            } else if (e.target.id === 'zoomInBtn') {
+              scale = Math.min(scale + 0.25, 3);
+              queueRenderPage();
+            } else if (e.target.id === 'zoomOutBtn') {
+              scale = Math.max(scale - 0.25, 0.5);
+              queueRenderPage();
+            } else if (e.target.classList.contains('close-modal') || e.target === modal) {
+              modal.style.display = 'none';
+            }
+          });
+        })();
+</script>
 </body>
 </html>

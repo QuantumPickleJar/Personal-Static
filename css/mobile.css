@@ -1,37 +1,150 @@
 /* Mobile Styles */
 @media (max-width: 768px) {
-  .project-card {
-    /* Full width cards on mobile */
+  /* Card layout adjustments */
+  md-elevated-card.project-card {
     flex: 1 1 100%;
     max-width: 100%;
-    /* Let content determine height or set a more appropriate mobile value */
     height: auto;
-    margin-right: 8px;
+    margin-right: 0;
+    padding: 12px;
+    border-radius: 16px;
+    gap: 8px;
+    position: relative;  /* Important for absolute positioning of button */
+    padding-bottom: 60px; /* Add space for the button */
+    cursor: pointer; /* Show pointer cursor for the entire card */
   }
+  
+  /* Mobile-specific button positioning */
+  .project-card-footer {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    padding-top: 0;
+  }
+  
+  md-filled-button.open-modal-btn {
+    width: 100%; /* Make button full width on mobile */
+    --md-filled-button-container-shape: 16px;
+    font-size: 0.8125rem;
+    min-height: 36px; /* Slightly taller for better tap target */
+    padding: 0 12px;
+    z-index: 5; /* Ensure button is above other elements */
+  }
+  
+  /* Visual indication that the entire card is clickable */
+  md-elevated-card.project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    pointer-events: none; /* Don't interfere with clicks */
+    transition: background-color 0.2s;
+  }
+  
+  md-elevated-card.project-card:active::after {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Push FABs down to make room for close button in mobile view */
+  .modal-content .fab-container {
+    position: absolute;
+    top: 60px !important; /* Override any inline style */
+    right: 15px;
+    z-index: 50;
+  }
+  
   .contentContainer {
     flex-direction: column;
   }
+  
   #sidebar {
     width: 100%;
-    max-width: none; /* Override fixed sidebar width */
+    max-width: none;
     order: 0;
   }
+  
   #mainContainer {
     width: 100%;
     order: 1;
   }
+  
   body {
-    overflow: auto; /* Re-enable vertical scrolling */
+    overflow: auto;
+  }
+  
+  /* Project card content mobile adjustments */
+  .project-thumbnail {
+    height: 140px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+  }
+
+  .project-title {
+    font-size: 1.125rem;
+    margin-bottom: 2px;
+  }
+
+  .short-form-truncated {
+    font-size: 0.8125rem;
+    -webkit-line-clamp: 2;
+    min-height: 2.5rem;
+    margin-bottom: 6px;
+  }
+
+  .stack-icons {
+    gap: 6px;
+    padding-top: 10px;
+    margin-bottom: 10px; /* Add space before the button */
+  }
+  
+  .stack-icon {
+    padding: 3px 8px;
+    font-size: 0.6875rem;
+  }
+  
+  .carousel-card-footer {
+    padding-top: 10px;
+  }
+  
+  .project-meta {
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.6875rem;
+  }
+
+  /* Search bar fixes for mobile */
+  md-outlined-text-field#searchBar {
+    width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+  }
+
+  #advancedSearchContainer {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  #advancedSearchContainer > div {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }
 
 /* For very small screens (max-width: 400px) force single-column project cards */
 @media (max-width: 400px) {
-  .project-card {
+  md-elevated-card.project-card {
     flex: none;
     width: 100%;
     max-width: 100%;
-    margin: 8px 0; /* optional: space between cards */
+    margin: 8px 0;
+    padding: 10px;
+    padding-bottom: 58px; /* Adjust padding for button */
+  }
+  
+  .project-thumbnail {
+    height: 120px;
   }
   
   /* Ensure the sidebar remains consistent */
@@ -39,6 +152,26 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+  }
+  
+  /* Adjust button position for very small screens */
+  .project-card-footer {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+  }
+
+  /* Make carousel arrows smaller but still visible on small screens */
+  #projectImageCarousel .carousel-control-prev,
+  #projectImageCarousel .carousel-control-next,
+  #simpleImageSlider .carousel-arrow {
+    width: 30px;
+    height: 30px;
+    opacity: 0.9;
+  }
+  
+  #simpleImageSlider .carousel-arrow {
+    display: flex !important; /* Ensure these are always shown */
   }
 }
 
@@ -51,11 +184,13 @@
     padding-bottom: 120px;
     gap: 16px;
   }
-  .project-card {
+  
+  md-elevated-card.project-card {
     flex: 1 1 300px;   /* Fixed basis for a consistent 300px width */
     max-width: 300px;
     height: auto; /* Set height to auto for content-driven height */
   }
+  
   /* Fix the width of the inline pagination container */
   #inlinePaginationContainer {
     min-width: 320px;
@@ -91,8 +226,19 @@
     flex: 1; /* Ensure mainContent takes remaining space */
     width: 100%; /* Ensure mainContent takes full width */
   }
-}
 
+  /* Search bar fixes for desktop */
+  md-outlined-text-field#searchBar {
+    min-width: 280px;
+    width: auto;
+    flex: 1;
+  }
+  
+  #advancedSearchContainer > div:first-child {
+    flex: 1;
+    max-width: 500px;
+  }
+}
 
 /* The profile photo can be 200x200 for wider screens */
 .profile-photo {
