@@ -17,13 +17,3 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-.theme-toggle {
-  position: fixed;
-  right: 20px;
-  top: 20px;
-  z-index: 50; /* Reduced z-index so modal appears on top */
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}

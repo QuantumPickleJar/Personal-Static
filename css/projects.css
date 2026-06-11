@@ -14,6 +14,7 @@
   padding-bottom: 150x; /* Push up the gallery so the footer isn't covering it when scrolled all the way down */
 }
 
+
 /* Make the scrollbar more visible but not intrusive */
 .projects-gallery::-webkit-scrollbar {
   width: 8px;
@@ -28,7 +29,9 @@
   background-color: rgba(0,0,0,0.05);
 }
 
-md-elevated-card.project-card {
+
+.project-card {
+  /* 50% width minus gap */
   flex: 1 1 calc(50% - 16px);
   max-width: calc(50% - 16px);
   padding: 10px;
@@ -36,29 +39,27 @@ md-elevated-card.project-card {
   border-radius: 8px;
   background-color: #fff;
   position: relative;
+  /* Let content determine height */
   min-height: 180px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  /* overflow: hidden; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   cursor: pointer;
-  height: 100%;
-  gap: 0.75rem;
+  height: 200px;
 }
 
-md-elevated-card.project-card:hover {
+.project-card:hover {
   transform: translateY(-5px);
 }
 
-md-elevated-card.project-card .project-thumbnail {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
+.project-thumbnail {
+  display: none;
 }
 
-md-elevated-card.project-card .project-title {
+.project-title {
   font-weight: bold;
   margin: 10px 0 5px;
 }
@@ -96,8 +97,10 @@ md-elevated-card.project-card .project-title {
 apply consistent card height. */
 .short-form-truncated {
   display: block;
+  margin-top: 8px;
   font-size: 0.85rem;
-  color: #333; 
+  color: #333;
+  max-height: 4em; 
   overflow: hidden; 
   text-overflow: ellipsis; 
   white-space: nowrap;
@@ -126,26 +129,26 @@ apply consistent card height. */
 }
 
 /* Styles for the academic labels */
-md-elevated-card.project-card:not(.academic) .card-header {
+.project-card:not(.academic) .card-header {
   background-color: cornflowerblue;
   color: white;
 }
 
-md-elevated-card.project-card.academic .card-header {
+.project-card.academic .card-header {
   background-color: yellow;
   color: black;
   font-weight: bold;
   position: relative; /* Make this a positioning context */
 }
 
-md-elevated-card.project-card.work .card-header {
+.project-card.work .card-header {
   background-color: white;
   color: black;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Date card styles */
-md-elevated-card.project-card .date-badge {
+.project-card .date-badge {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -157,7 +160,7 @@ md-elevated-card.project-card .date-badge {
   cursor: pointer;
 }
 
-md-elevated-card.project-card .date-card {
+.project-card .date-card {
   position: absolute;
   top: 40px; /* Adjust as needed */
   right: 10px; /* Adjust as needed */
@@ -175,13 +178,13 @@ md-elevated-card.project-card .date-card {
 }
 
 /* Show date card on hover of academic label */
-md-elevated-card.project-card.academic .card-header:hover + .date-card {
+.project-card.academic .card-header:hover + .date-card {
   opacity: 1;
   visibility: visible;
 }
 
 /* Ensure the badge is positioned relative so the tooltip can be absolutely positioned */
-md-elevated-card.project-card .badge {
+.project-card .badge {
   position: relative;
 }
 
@@ -229,32 +232,19 @@ md-elevated-card.project-card .badge {
   opacity: 1;
 }
 
-/* Initially hide the date label */
-md-elevated-card.project-card .date-label {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  /* Ensure it sits beneath the academic-label */
+/* Position academic label at top left */
+.project-card .academic-label {
   position: absolute;
-  top: 40px; /* Position below the academic label */
+  top: 10px;
   left: 10px;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 8px;
+  z-index: 2;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 0.85em;
-  pointer-events: auto; /* Ensure it can receive mouse events */
-}
-
-/* Reveal the date info when hovering over the academic label */
-md-elevated-card.project-card .academic-label:hover + .date-label,
-md-elevated-card.project-card .academic-label:hover ~ .date-label,
-md-elevated-card.project-card .date-label:hover {
-  opacity: 1;
+  cursor: pointer;
 }
 
 /* Position academic label at top left */
-md-elevated-card.project-card .academic-label {
+.project-card .academic-label {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -265,7 +255,7 @@ md-elevated-card.project-card .academic-label {
 }
 
 /* Position image count icon (or other image icons) at top right if images exist */
-md-elevated-card.project-card .image-count-icon {
+.project-card .image-count-icon {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -308,6 +298,23 @@ md-elevated-card.project-card .image-count-icon {
   font-size: 0.9em;
 }
 
+/* Initially hide the date label */
+.project-card .date-label {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* Ensure it sits beneath the academic-label */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+/* Reveal the date info when hovering over the academic label */
+.project-card .academic-label:hover + .date-label,
+.project-card .academic-label:hover ~ .date-label {
+  opacity: 1;
+}
+
 #mermaidContainer {
   width: 100%;            /* Or a fixed width like 600px */
   max-height: 500px;      /* Set a maximum height */
@@ -318,566 +325,14 @@ md-elevated-card.project-card .image-count-icon {
 }
 
 .academic-label.academic {
-  background-color: #4a6da7;
+  /* Your academic-specific styles here */
+  background-color: #ffeb3b; /* Example: yellow background for academic labels */
   color: #000;
   border: 1px solid #ccc;
   opacity: 60%;
 }
 
 .academic-label.personal {
-  background-color: #6a4a99;
+  background-color: lightcoral;
   opacity: 60%;
 }
-
-/* Academic project date tooltip */
-md-elevated-card.project-card .academic-label {
-  background-color: #5B9BD5; /* Blue for academic */
-  color: white;
-  padding: 4px 8px;
-  border-radius: 3px;
-  font-size: 0.7rem;
-  position: absolute;
-  top: 10px;
-  left: 10px; /* Position on the left side */
-  z-index: 2;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-/* Date tooltip styling */
-.academic-label .date-tooltip {
-  position: absolute;
-  top: -3px; /* Align with the top of the label */
-  left: 105%; /* Position to the right of the label */
-  background-color: rgba(0, 0, 0, 0.85);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  z-index: 100;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  max-width: 150px;
-  text-align: left;
-  line-height: 1.2;
-}
-
-.academic-label:hover .date-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Academic and personal labels styling - compact size */
-md-elevated-card.project-card .academic-label,
-md-elevated-card.project-card .personal-label {
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.65rem;
-  position: absolute;
-  top: 10px;
-  left: 10px; /* Position on the left side */
-  z-index: 2;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-block;
-  max-width: 75px;
-  text-align: center;
-}
-
-/* Different colors for academic and personal projects */
-md-elevated-card.project-card .academic-label {
-  background-color: #4285F4; /* Google blue for academic */
-  color: white;
-  border-left: 3px solid #1967D2; /* Darker blue accent */
-}
-
-md-elevated-card.project-card .personal-label {
-  background-color: orange;
-  color: white;
-  border-left: 3px solid #137333; /* Darker green accent */
-}
-
-/* Date tooltip styling - positioned to the right */
-.academic-label .date-tooltip,
-.personal-label .date-tooltip {
-  position: absolute;
-  top: -3px; /* Align with the top of the label */
-  left: 105%; /* Position to the right of the label */
-  transform: none; /* Reset any transform */
-  background-color: rgba(0, 0, 0, 0.85);
-  color: white;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  z-index: 100;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  max-width: 150px;
-  text-align: left;
-  line-height: 1.2;
-}
-
-.academic-label:hover .date-tooltip,
-.personal-label:hover .date-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Mobile-specific card styling */
-@media (max-width: 767px) {
-  /* Make entire card clickable */
-  .project-card {
-    position: relative;
-    cursor: pointer;
-  }
-  
-  /* Position button at the top instead of bottom for better visibility */
-  .project-card .project-card-footer {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    margin: 0;
-  }
-  
-  /* Create a transparent overlay to make entire card clickable */
-  .project-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-  }
-  
-  /* Ensure buttons are still clickable by placing them above the overlay */
-  .project-card .open-modal-btn {
-    position: relative;
-    z-index: 2;
-    padding: 4px 12px;
-    font-size: 0.75rem;
-  }
-  
-  /* Increase spacing for the title to avoid overlap with the button */
-  .project-card .project-title {
-    padding-right: 110px;
-  }
-
-  /* Ensure tech icons inside project cards are visible and not cut off */
-  md-elevated-card.project-card .stack-icons {
-    margin-bottom: 1rem;  /* Push icons upwards away from bottom edge */
-  }
-  md-elevated-card.project-card .stack-icons .stack-icon {
-    padding: 2px 4px;      /* Make icon containers smaller */
-    font-size: 0.75rem;     /* Smaller font size */
-    line-height: 1;         /* Tight line height */
-  }
-
-  /* Push tech icons up within project cards to prevent cut-off */
-  md-elevated-card.project-card .stack-icons {
-    margin-top: 0.5rem;
-    margin-bottom: 0;  /* Remove bottom gap */
-    padding-bottom: 0.5rem;
-  }
-  /* Shrink individual icons for better fit */
-  md-elevated-card.project-card .stack-icons img,
-  md-elevated-card.project-card .stack-icons .stack-icon {
-    width: 20px !important;
-    height: 20px !important;
-    margin: 0 2px;
-  }
-
-  /* Show academic/personal dates statically on mobile */
-  .academic-label .date-tooltip,
-  .personal-label .date-tooltip {
-    position: static !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: inline-block !important;
-    margin-left: 4px;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    background: transparent !important;
-    color: var(--md-sys-color-on-surface-variant, #49454e) !important;
-    font-size: 0.8rem !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Make labels static so date text appears inline */
-  md-elevated-card.project-card.academic .academic-label,
-  md-elevated-card.project-card .personal-label {
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    display: inline-block !important;
-    margin: 0 !important;
-    padding-right: 0.5rem;
-    background: transparent !important;
-    color: var(--md-sys-color-on-surface, #000) !important;
-  }
-  /* Always show date text next to label */
-  .academic-label .date-tooltip,
-  .personal-label .date-tooltip {
-    position: static !important;
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    margin-left: 0.25rem !important;
-    font-size: 0.75rem !important;
-    color: var(--md-sys-color-on-surface-variant, #49454e) !important;
-    background: transparent !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    pointer-events: none;
-  }
-
-  /* Hide stack-icons on smaller screens */
-  md-elevated-card.project-card .stack-icons {
-    display: none !important;
-  }
-}
-
-/* Custom styling for the MWC filter options button */
-md-filled-tonal-button#filterToggleBtn {
-  margin-right: 1rem;
-  min-width: 160px;
-  font-size: 1rem;
-  --md-filled-tonal-button-container-color: var(--md-sys-color-primary, #6750A4);
-  --md-filled-tonal-button-label-text-color: #fff;
-  border-radius: 24px;
-  box-shadow: 0 2px 8px rgba(103,80,164,0.08);
-  letter-spacing: 0.03em;
-  font-weight: 500;
-  transition: background 0.2s, box-shadow 0.2s;
-  margin-bottom: 0.5rem;
-}
-
-md-filled-tonal-button#filterToggleBtn:hover {
-  --md-filled-tonal-button-container-color: var(--md-sys-color-primary-container, #eaddff);
-  --md-filled-tonal-button-label-text-color: var(--md-sys-color-primary, #6750A4);
-  box-shadow: 0 4px 16px rgba(103,80,164,0.15);
-}
-
-/* ----- FILTER DROPDOWN STYLES ----- */
-.filter-container {
-  position: relative;
-  display: inline-block;
-}
-
-.filter-toggle-btn {
-  min-width: 40px;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-.filter-toggle-btn .material-symbols-outlined {
-  font-size: 28px;
-}
-
-.filter-dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1500;
-  width: 240px;
-  margin-top: 8px;
-  padding: 0;
-  background-color: var(--md-sys-color-surface, #ffffff);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: block;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-10px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.filter-dropdown-menu.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.filter-menu-header {
-  padding: 12px 16px;
-  font-weight: 500;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
-}
-
-.filter-menu-item {
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-.filter-menu-item:hover {
-  background-color: var(--md-sys-color-surface-variant, rgba(103, 80, 164, 0.08));
-}
-
-.filter-menu-divider {
-  height: 1px;
-  background-color: var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
-  margin: 4px 0;
-}
-
-/* Tech filter trigger and submenu */
-.filter-tech-trigger {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.filter-tech-trigger .material-symbols-outlined {
-  font-size: 20px;
-  margin-left: 8px;
-}
-
-.tech-filter-card {
-  position: absolute;
-  left: 100%;
-  top: 0;
-  margin-left: 2px;
-  width: 280px;
-  max-height: 350px;
-  background-color: var(--md-sys-color-surface, #ffffff);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: none;
-  flex-direction: column;
-  z-index: 1600;
-  overflow: hidden;
-}
-
-.tech-filter-header {
-  padding: 12px 16px;
-  font-weight: 500;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.08));
-  background-color: #f5f5f5;
-}
-
-.tech-filter-content {
-  padding: 8px;
-  overflow-y: auto;
-  max-height: 250px;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 6px;
-}
-
-.filter-tech-trigger:hover .tech-filter-card,
-.tech-filter-card:hover {
-  display: flex;
-}
-
-/* Advanced search container */
-#advancedSearchContainer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-radius: 16px;
-  background-color: var(--md-sys-color-surface-variant, #e7e0eb);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-body.dark-mode #advancedSearchContainer {
-  background-color: var(--md-sys-color-surface-variant, #49454f);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-#advancedSearchContainer > div {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Search bar styles */
-#searchBar, md-outlined-text-field#searchBar, .search-bar-fallback {
-  width: 100%;
-  min-width: 280px;
-  max-width: 100%;
-  flex: 1;
-  margin: 0;
-  padding: 8px 0;
-  border-radius: 8px;
-  background-color: var(--md-sys-color-surface, #ffffff);
-  color: var(--md-sys-color-on-surface, #1c1b1f);
-  transition: all 0.3s ease;
-  --md-outlined-text-field-container-shape: 18px;
-  --md-outlined-text-field-outline-color: var(--md-sys-color-outline, #79747e);
-  --md-outlined-text-field-hover-outline-color: var(--md-sys-color-primary, #6750a4);
-  --md-outlined-text-field-focus-outline-color: var(--md-sys-color-primary, #6750a4);
-  --md-outlined-text-field-label-text-color: var(--md-sys-color-on-surface-variant, #49454e);
-  font-family: inherit;
-  display: block !important;
-  visibility: visible !important;
-  min-width: 220px;
-  max-width: 500px;
-  margin: 0 auto 1rem auto;
-}
-
-#searchBar:focus-within, md-outlined-text-field#searchBar:focus-within {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-color: var(--md-sys-color-primary, #6750a4);
-}
-
-.search-bar-fallback {
-  padding: 0.5em 1em;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-/* Dark mode adaptations */
-body.dark-mode .filter-dropdown-menu,
-body.dark-mode .tech-filter-card {
-  background-color: var(--md-sys-color-surface-container-high, #2b2930);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-body.dark-mode .filter-menu-header {
-  border-bottom-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
-}
-
-body.dark-mode .filter-menu-divider {
-  background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
-}
-
-body.dark-mode .filter-menu-item:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-body.dark-mode .tech-filter-header {
-  background-color: #444;
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  #advancedSearchContainer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  md-outlined-text-field#searchBar, .search-bar-fallback {
-    width: 100%;
-    min-width: 100% !important;
-    margin-bottom: 10px;
-  }
-  
-  #advancedSearchContainer > div {
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .filter-dropdown-menu {
-    width: 100%;
-    left: 0;
-    right: 0;
-  }
-  
-  .tech-filter-card {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin-left: 0;
-    width: 90%;
-    max-width: 350px;
-  }
-
-  /* advancedSearchContainer: keep search+filter inline */
-  #advancedSearchContainer .search-filters-group {
-    flex-direction: row !important;
-    align-items: center;
-  }
-  /* Prevent search bar from taking full width */
-  #advancedSearchContainer .search-filters-group #searchBar,
-  #advancedSearchContainer .search-filters-group .search-bar-fallback {
-    width: auto !important;
-    flex: 1 0 auto !important;
-    margin: 0 !important;
-    min-width: 0 !important;
-    max-width: none !important;
-  }
-  /* Keep filter menu next to search bar */
-  #advancedSearchContainer .search-filters-group filter-menu {
-    flex: 0 0 auto !important;
-    margin-left: 8px !important;
-  }
-}
-
-/* Custom filter chip styles */
-.custom-filter-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 16px;
-  font-size: 12px;
-  font-weight: 500;
-  background-color: #e0e0e0;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s;
-  user-select: none;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.custom-filter-chip:hover {
-  background-color: #d0d0d0;
-}
-
-.custom-filter-chip.selected {
-  background-color: var(--md-sys-color-primary-container, #c8e6fa);
-  color: var(--md-sys-color-on-primary-container, #001f28);
-  border-color: var(--md-sys-color-primary, #006782);
-}
-
-.dark-theme .custom-filter-chip {
-  background-color: #3a3a3a;
-  color: #e0e0e0;
-}
-
-.dark-theme .custom-filter-chip:hover {
-  background-color: #4a4a4a;
-}
-
-.dark-theme .custom-filter-chip.selected {
-  background-color: var(--md-sys-color-primary, #5bd3fc);
-  color: var(--md-sys-color-on-primary, #003546);
-}
-
-.custom-filter-chip.selected::before {
-  content: '✓';
-  margin-right: 4px;
-  font-size: 10px;
-}
-
