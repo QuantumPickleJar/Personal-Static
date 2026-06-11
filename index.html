@@ -60,13 +60,18 @@
           const carouselItem = document.createElement("div");
           carouselItem.classList.add("carousel-item");
           if (index === 0) carouselItem.classList.add("active");
+
+          const stripHtml = (value) => String(value || '')
+            .replace(/<[^>]*>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
           
           // Create card structure (similar to your front_page_carousel.js)
           carouselItem.innerHTML = `
             <div class="carousel-card">
               <div class="carousel-card-header">${project.title}</div>
               <div class="carousel-card-body">
-                ${project.shortForm || project.description.substring(0, 100) + "..."}
+                ${project.shortForm || (stripHtml(project.description) ? stripHtml(project.description).substring(0, 100) + "..." : "No description available")}
               </div>
               <div class="carousel-card-footer">
                 ${project.stack ? project.stack.join(", ") : ""}
