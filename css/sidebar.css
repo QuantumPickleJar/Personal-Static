@@ -4,9 +4,9 @@
 #sidebar {
   width: 300px;
   max-width: 300px;
-  background-color: #0000a0;
-  border-right: 1px solid #ddd;
-  color: white;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  color: var(--fg);
   padding: 20px;
   height: 100%;
   box-sizing: border-box;
@@ -34,7 +34,7 @@
 
 /* Only target anchors that are inside .profile-links */
 .profile-links a {
-  color: pink;
+  color: var(--link);
   text-align: center;
 }
 
