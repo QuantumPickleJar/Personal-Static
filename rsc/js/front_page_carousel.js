@@ -1,5 +1,13 @@
 console.log('Front page carousel script executing');
 
+function stripHtml(value) {
+  if (!value) return '';
+  return String(value)
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // Export a function that can be called from main.js
 export function initCarousel() {
   console.log('Initializing carousel from exported function');
@@ -134,7 +142,7 @@ async function loadCarouselProjects() {
       const cardBody = document.createElement("div");
       cardBody.classList.add("carousel-card-body");
       cardBody.textContent = project.shortForm || 
-        (project.description ? project.description.substring(0, 100) + "..." : "No description available");
+        (stripHtml(project.description) ? stripHtml(project.description).substring(0, 100) + "..." : "No description available");
       
       const cardFooter = document.createElement("div");
       cardFooter.classList.add("carousel-card-footer");

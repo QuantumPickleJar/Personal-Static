@@ -13,6 +13,14 @@ window.mermaid = mermaid;
 export let allProjects = []; // stored projects go here
 const MAX_STACK_CHARS = 20; // Adjust this value to your needs
 
+function stripHtml(value) {
+  if (!value) return '';
+  return String(value)
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 mermaid.initialize({ startOnLoad: false });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -127,7 +135,7 @@ export function renderProjectsGallery(projects) {
     card.querySelector('.project-title').textContent = project.title;
     
     // Set description
-    const shortOrDesc = project.shortForm || project.description || '';
+    const shortOrDesc = project.shortForm || stripHtml(project.description) || '';
     const truncatedSpan = card.querySelector('.short-form-truncated');
     if (shortOrDesc.length > 100) {
       truncatedSpan.textContent = shortOrDesc.slice(0, 97) + '...';

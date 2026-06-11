@@ -96,6 +96,11 @@ export function renderProjectCard(project) {
   const card = document.createElement('div');
   card.className = 'project-card';
 
+  const stripHtml = (value) => String(value || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
   // Add academic or work class based on project type
   if (project.academic) {
     card.classList.add('academic');
@@ -104,7 +109,7 @@ export function renderProjectCard(project) {
   }
 
   // Set tooltip for the expanded text on mouseover
-  card.title = project.description || '';
+  card.title = stripHtml(project.description) || '';
 
   // Create date badge and card
   let dateBadge = '';
@@ -130,7 +135,7 @@ card.innerHTML = `
   </div>
   <!-- Card body: show shortForm instead of the duplicated Title -->
   <div class="card-body">
-    ${project.shortForm}
+    ${stripHtml(project.shortForm || project.description || 'No description available')}
   </div>
   <!-- Card footer: tech stack -->
   <div class="card-footer">
