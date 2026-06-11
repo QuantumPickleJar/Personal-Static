@@ -119,7 +119,6 @@ export function renderProjectCard(project) {
   const descriptionText = stripHtml(project.description);
   const shortText = stripHtml(project.shortForm || project.description || '');
   const safeTitle = escapeHtml(project.title || '');
-  const safeDates = escapeHtml((project.dates || []).join(', '));
   const safeStack = (project.stack || []).map(item => escapeHtml(item)).join(', ');
 
   // Add academic or work class based on project type
@@ -152,7 +151,7 @@ card.innerHTML = `
   <!-- Card header: Title and academic info -->
   <div class="card-header">
     ${safeTitle}
-    ${project.academic ? `<span class="academic-label" data-dates="${safeDates}">Academic</span>` : ''}
+    ${project.academic ? '<span class="academic-label">Academic</span>' : ''}
   </div>
   <!-- Card body: show shortForm instead of the duplicated Title -->
   <div class="card-body">
@@ -163,6 +162,11 @@ card.innerHTML = `
     ${safeStack}
   </div>
 `;
+
+  const academicLabel = card.querySelector('.academic-label');
+  if (academicLabel) {
+    academicLabel.dataset.dates = (project.dates || []).join(', ');
+  }
 
 
   return card;
