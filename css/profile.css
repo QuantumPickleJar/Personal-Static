@@ -1,0 +1,49 @@
+/* Profile page layout */
+
+.profile-page {
+  padding: 2rem 1.25rem;
+}
+
+.profile-hero {
+  margin-bottom: 1.5rem;
+}
+
+.profile-hero h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+}
+
+.profile-hero p {
+  margin: 0;
+  max-width: 60ch;
+  opacity: 0.9;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.profile-card h3 {
+  margin: 0 0 0.65rem;
+  font-size: 1.1rem;
+}
+
+.profile-card p,
+.profile-card li {
+  margin: 0 0 0.5rem;
+  line-height: 1.45;
+}
+
+.profile-card ul {
+  margin: 0;
+  padding-left: 1rem;
+}

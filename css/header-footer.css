@@ -2,7 +2,7 @@
 
 /* Updated header styles */
 header {
-  background: linear-gradient(135deg, #4a90e2, #1456a0);
+  background: linear-gradient(135deg, #2f4f8f, #1f2f52);
   color: #fff;
   padding: 1rem 2rem;
   text-align: center;
@@ -52,11 +52,17 @@ header nav .disabled-link:focus {
 
 /* Existing Footer styles */
 footer {
-  background-color: #343a40; /* Same as your current footer */
+  background: var(--surface);
+  color: var(--fg);
+  border-top: 1px solid var(--border);
   padding: 1rem;
   text-align: center;
   width: 100%;
   margin-top: auto; /* This pushes the footer down when content is short */
+}
+
+footer a {
+  color: var(--link);
 }
 
 /* Only use this if you want a truly fixed footer */
