@@ -46,11 +46,12 @@ module.exports = {
       filename: 'resources.html',
       chunks: ['main']
     }),
-    // Add profile.html entry so it's served by webpack-dev-server
+    // profile.html is self-contained. Do not inject main.bundle.js here;
+    // the shared bundle can re-run global page logic that this page does not need.
     new HtmlWebpackPlugin({
       template: './profile.html',
       filename: 'profile.html',
-      chunks: ['main']
+      chunks: []
     }),
 
     // Copy static assets/folders into dist
@@ -69,7 +70,7 @@ module.exports = {
         { from: 'style.css', to: 'style.css' },
         { from: 'css/', to: 'css/' },
         { from: 'htmlModules/', to: 'htmlModules/' },
-        { from: 'transition.js', to: 'transition.js' },  // Add this line
+        { from: 'transition.js', to: 'transition.js' },
         { 
           from: 'rsc/json', 
           to: 'rsc/json',
