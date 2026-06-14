@@ -1,0 +1,85 @@
+/* stack-icons.css - shared, theme-aware technology icon treatments */
+
+.stack-item-container {
+  --stack-icon-tile-bg: color-mix(in srgb, var(--md-sys-color-surface, #ffffff) 88%, var(--md-sys-color-primary-container, #eaddff) 12%);
+  --stack-icon-tile-border: color-mix(in srgb, var(--md-sys-color-outline-variant, #cac4d0) 75%, transparent);
+  --stack-icon-logo-filter: drop-shadow(0 1px 1px rgba(15, 23, 42, 0.22));
+}
+
+.stack-item-container .stack-icon-surface {
+  background: var(--stack-icon-tile-bg) !important;
+  border: 1px solid var(--stack-icon-tile-border) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 2px rgba(15, 23, 42, 0.08) !important;
+}
+
+.stack-item-container .stack-image {
+  filter: var(--stack-icon-logo-filter) !important;
+}
+
+.stack-item-container.has-text-fallback .stack-icon-surface,
+.stack-item-container.needs-contrast .stack-icon-surface {
+  --stack-icon-tile-bg: color-mix(in srgb, var(--md-sys-color-surface, #ffffff) 80%, var(--md-sys-color-primary-container, #eaddff) 20%);
+}
+
+/* Brand marks that are mostly dark/transparent need stronger treatment than colorful logos. */
+.stack-item-container.is-monochrome,
+.stack-item-container[data-tech="GitHub" i],
+.stack-item-container[data-tech="Github" i],
+.stack-item-container[data-tech="Copilot" i],
+.stack-item-container[data-tech="GitHub Copilot" i] {
+  --stack-icon-tile-bg: #ffffff;
+  --stack-icon-tile-border: rgba(15, 23, 42, 0.22);
+  --stack-icon-logo-filter: brightness(0) saturate(100%) drop-shadow(0 1px 1px rgba(15, 23, 42, 0.18));
+}
+
+body.dark-mode .stack-item-container,
+html[data-theme="dark"] .stack-item-container {
+  --stack-icon-tile-bg: color-mix(in srgb, var(--md-sys-color-surface, #1f1f1f) 70%, var(--md-sys-color-primary-container, #4f378b) 30%);
+  --stack-icon-tile-border: rgba(255, 255, 255, 0.18);
+  --stack-icon-logo-filter: brightness(1.1) saturate(1.08) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.48));
+}
+
+body.dark-mode .stack-item-container.is-monochrome,
+body.dark-mode .stack-item-container[data-tech="GitHub" i],
+body.dark-mode .stack-item-container[data-tech="Github" i],
+body.dark-mode .stack-item-container[data-tech="Copilot" i],
+body.dark-mode .stack-item-container[data-tech="GitHub Copilot" i],
+html[data-theme="dark"] .stack-item-container.is-monochrome,
+html[data-theme="dark"] .stack-item-container[data-tech="GitHub" i],
+html[data-theme="dark"] .stack-item-container[data-tech="Github" i],
+html[data-theme="dark"] .stack-item-container[data-tech="Copilot" i],
+html[data-theme="dark"] .stack-item-container[data-tech="GitHub Copilot" i] {
+  --stack-icon-tile-bg: #111827;
+  --stack-icon-tile-border: rgba(255, 255, 255, 0.24);
+  --stack-icon-logo-filter: invert(1) brightness(1.18) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+}
+
+body.dark-mode .stack-item-container.has-text-fallback .stack-icon-surface,
+body.dark-mode .stack-item-container.needs-contrast .stack-icon-surface,
+html[data-theme="dark"] .stack-item-container.has-text-fallback .stack-icon-surface,
+html[data-theme="dark"] .stack-item-container.needs-contrast .stack-icon-surface {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.06)) !important;
+}
+
+/* Projects has older card CSS; keep these icons from being flattened by page-specific img rules. */
+.projects-gallery .stack-item-container,
+md-elevated-card.project-card .stack-item-container {
+  isolation: isolate;
+}
+
+.projects-gallery .stack-item-container .stack-icon-surface,
+md-elevated-card.project-card .stack-item-container .stack-icon-surface {
+  flex: 0 0 1.7rem !important;
+  width: 1.7rem !important;
+  height: 1.7rem !important;
+}
+
+.projects-gallery .stack-item-container .stack-image,
+md-elevated-card.project-card .stack-item-container .stack-image {
+  width: 1.18rem !important;
+  height: 1.18rem !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+}
