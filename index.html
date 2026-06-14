@@ -32,13 +32,13 @@
   --md-sys-color-on-surface: #000000;
   --md-sys-color-surface-dark: rgba(25, 25, 25, 0.6);
   --md-sys-color-on-surface-dark: #FFFFFF;
-  --card-border-radius: 20px;
-  --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  --card-border-radius: var(--app-card-radius, 20px);
+  --card-shadow: var(--app-card-shadow, 0 10px 30px rgba(15, 23, 42, 0.08));
   
   /* Index-specific card accent colors */
-  --index-card-accent: #3D8BF7;
-  --index-card-accent-hover: #1E75E8;
-  --index-card-button-bg: #3D8BF7;
+  --index-card-accent: var(--md-sys-color-primary, #6750A4);
+  --index-card-accent-hover: #836ac4;
+  --index-card-button-bg: var(--md-sys-color-primary, #6750A4);
   --index-card-button-text: white;
 }
 
@@ -54,9 +54,18 @@ body {
 body.dark-mode {
   background: linear-gradient(to bottom right, #1a1a1a, #121212);
   color: var(--md-sys-color-on-surface-dark);
-  --index-card-accent: #5E9CF9;
-  --index-card-accent-hover: #7EACF9;
-  --index-card-button-bg: #5E9CF9;
+  --index-card-accent: #d0bcff;
+  --index-card-accent-hover: #e0d1ff;
+  --index-card-button-bg: #d0bcff;
+}
+
+html[data-theme="dark"] {
+  background-color: #121212;
+}
+
+section {
+  width: min(var(--app-page-max-width, 1120px), calc(100% - 2rem));
+  margin: 0 auto;
 }
 
 .theme-toggle {
@@ -101,7 +110,7 @@ body.dark-mode {
 /* Special styling for index page project titles */
 .home-page .project-title {
   color: var(--index-card-accent);
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 0.5rem;
 }
 
@@ -110,11 +119,11 @@ body.dark-mode {
 }
 
 .home-page md-elevated-card {
-  border-top: 3px solid var(--index-card-accent);
+  border-color: var(--app-card-border, rgba(103, 80, 164, 0.16));
 }
 
 .home-page md-elevated-card:hover {
-  border-top-color: var(--index-card-accent-hover);
+  border-color: rgba(103, 80, 164, 0.32);
 }
 
 .home-page md-filled-button {
@@ -126,16 +135,16 @@ body.dark-mode {
 .home-page.project-card-grid {
   display: grid;
   grid-template-columns: 1fr; /* Default to single column full width */
-  gap: 1.5rem;
-  padding: 1rem 3rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: 0;
 }
 
 /* Media query for desktop view to show all three cards in a row */
 @media (min-width: 992px) {
   .home-page.project-card-grid {
     grid-template-columns: repeat(3, 1fr); /* Show all three cards in a row on desktop */
-    gap: 2rem;
-    padding: 2rem 3rem;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    padding: 0;
   }
   
   .home-page md-elevated-card.project-card {
@@ -167,7 +176,7 @@ body.dark-mode {
 .section-subheading {
   font-size: 1.1rem;
   max-width: 700px;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto clamp(1.5rem, 3vw, 2.25rem);
   text-align: center;
   line-height: 1.6;
 }
@@ -175,34 +184,9 @@ body.dark-mode {
 .project-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
-  padding: 2rem 3rem;
-  margin-top: 2rem;
-}
-
-md-elevated-card {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--card-border-radius);
-  box-shadow: var(--card-shadow);
-  background-color: var(--md-sys-color-surface);
-  color: var(--md-sys-color-on-surface);
-  transition: all 0.3s ease;
-  overflow: hidden;
-  height: 100%;
-}
-
-md-elevated-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-body.dark-mode md-elevated-card {
-  background-color: rgba(42, 42, 42, 0.8);
-  color: var(--md-sys-color-on-surface-dark);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding: 0;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
 }
 
 .carousel-card {
@@ -241,12 +225,12 @@ md-filled-button {
 }
 
 .hero-carousel {
-  padding: 2rem 2rem 3rem;
+  padding: clamp(1.5rem, 2.5vw, 2rem) 0 3rem;
   margin-top: 1rem;
 }
 
 #carouselContainer {
-  width: 92%;
+  width: 100%;
   margin: 1.5rem auto;
   border-radius: var(--card-border-radius);
   overflow: hidden;
@@ -324,13 +308,8 @@ body.dark-mode .more-stack-label {
   }
 
   .project-card-grid {
-    padding: 1rem;
+    padding: 0;
     gap: 1.25rem;
-  }
-
-  md-elevated-card {
-    padding: 1rem;
-    border-radius: 16px;
   }
 
   #carouselContainer {
@@ -361,7 +340,7 @@ body.dark-mode .more-stack-label {
   }
 
   .home-page.project-card-grid {
-    padding: 1rem;
+    padding: 0;
   }
 }
 

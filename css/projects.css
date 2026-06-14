@@ -1,5 +1,41 @@
 /* projects.css - Project gallery and card styles */
 
+#barba-wrapper,
+[data-barba-namespace="projects"],
+#footerContainer {
+  background-color: var(--md-sys-color-surface, #fdf8fd);
+}
+
+body.dark-mode #barba-wrapper,
+body.dark-mode [data-barba-namespace="projects"],
+body.dark-mode #footerContainer {
+  background-color: var(--md-sys-color-surface, #2b2b2b);
+}
+
+#mainContainer {
+  width: 100%;
+}
+
+#mainContent {
+  width: min(var(--app-page-max-width, 1120px), 100%);
+  margin: 0 auto;
+  padding: clamp(1rem, 2vw, 1.5rem) 0 2.5rem;
+}
+
+#how-to {
+  margin-bottom: var(--app-section-gap, 2rem);
+  padding: var(--app-card-padding, clamp(1rem, 2.2vw, 1.5rem));
+  border-radius: var(--app-card-radius, 20px);
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.16));
+  background: var(--app-card-bg, var(--md-sys-color-surface, #ffffff));
+  box-shadow: var(--app-card-shadow, 0 10px 30px rgba(15, 23, 42, 0.08));
+}
+
+body.dark-mode #how-to {
+  background: var(--app-card-bg, var(--md-sys-color-surface-container, #343434));
+  border: var(--app-card-border, 1px solid rgba(255, 255, 255, 0.12));
+}
+
 .projects-gallery {
   position: relative; /* Ensure it doesn't spin */
   display: grid;
@@ -11,7 +47,16 @@
   max-height: 70vh; /* Adjust this value as needed */
   overflow-y: auto;
   padding-right: 10px; /* Add some space for the scrollbar */
-  padding-bottom: 150x; /* Push up the gallery so the footer isn't covering it when scrolled all the way down */
+  padding-bottom: 150px; /* Push up the gallery so the footer isn't covering it when scrolled all the way down */
+  border-radius: var(--app-card-radius, 20px);
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.16));
+  background: var(--app-card-bg, var(--md-sys-color-surface, #ffffff));
+  box-shadow: var(--app-card-shadow, 0 10px 30px rgba(15, 23, 42, 0.08));
+}
+
+body.dark-mode .projects-gallery {
+  background: var(--app-card-bg, var(--md-sys-color-surface-container, #343434));
+  border: var(--app-card-border, 1px solid rgba(255, 255, 255, 0.12));
 }
 
 /* Make the scrollbar more visible but not intrusive */
@@ -697,17 +742,19 @@ md-filled-tonal-button#filterToggleBtn:hover {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-radius: 16px;
+  margin-bottom: var(--app-section-gap, 2rem);
+  padding: var(--app-card-padding, clamp(1rem, 2.2vw, 1.5rem));
+  border-radius: var(--app-card-radius, 20px);
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.16));
   background-color: var(--md-sys-color-surface-variant, #e7e0eb);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--app-card-shadow, 0 10px 30px rgba(15, 23, 42, 0.08));
   transition: all 0.3s ease;
 }
 
 body.dark-mode #advancedSearchContainer {
   background-color: var(--md-sys-color-surface-variant, #49454f);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: var(--app-card-border, 1px solid rgba(255, 255, 255, 0.12));
+  box-shadow: var(--app-card-shadow, 0 8px 20px rgba(0, 0, 0, 0.32));
 }
 
 #advancedSearchContainer > div {

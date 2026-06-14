@@ -1,11 +1,17 @@
 /* pagination.css - Styles for pagination */
 
 #paginationContainer {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
+  background: transparent;
+}
+
+#paginationContainer:empty,
+#inlinePaginationContainer:empty {
+  display: none;
 }
 
 /* Basic pagination button styles */
