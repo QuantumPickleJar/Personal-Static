@@ -29,6 +29,9 @@
 
 @import './css/profile.css';
 
+/* Shared technology icon contrast and theme handling */
+@import './css/stack-icons.css';
+
 /* Mobile-specific styles */
 @import './css/mobile.css';
 
@@ -218,63 +221,4 @@ md-filled-button.open-modal-btn:hover {
   align-items: center;
   gap: 12px;
   margin-bottom: 8px;
-  font-size: 0.75rem;
-  color: var(--md-sys-color-on-surface-variant, #49454f);
 }
-
-.project-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.project-meta-item md-icon {
-  font-size: 1rem;
-  --md-icon-size: 1rem;
-  color: var(--md-sys-color-on-surface-variant, #49454f);
-}
-
-/* Dark mode overrides */
-body.dark-mode md-elevated-card.project-card {
-  background-color: var(--app-card-bg, var(--md-sys-color-surface-container, #343434));
-  color: var(--md-sys-color-on-surface, #e6e0e9);
-  border: var(--app-card-border, 1px solid rgba(255, 255, 255, 0.12));
-  box-shadow: var(--app-card-shadow, 0 8px 20px rgba(0, 0, 0, 0.32));
-}
-
-body.dark-mode md-elevated-card.project-card:hover {
-  background-color: var(--md-sys-color-surface-container-high, #3f3f3f);
-  box-shadow: var(--app-card-shadow-hover, 0 14px 28px rgba(0, 0, 0, 0.42));
-}
-
-body.dark-mode .project-title {
-  color: var(--md-sys-color-on-surface, #e6e0e9);
-}
-
-body.dark-mode md-elevated-card.project-card:hover .project-title {
-  color: var(--md-sys-color-primary, #d0bcff);
-}
-
-body.dark-mode .short-form-truncated {
-  color: var(--md-sys-color-on-surface-variant, #cac4d0);
-}
-
-body.dark-mode .stack-icons::before {
-  background-color: var(--md-sys-color-outline-variant, rgba(255, 255, 255, 0.1));
-}
-
-body.dark-mode .stack-icon {
-  background: var(--md-sys-color-surface-variant, #49454f);
-  color: var(--md-sys-color-on-surface-variant, #cac4d0);
-}
-
-body.dark-mode .stack-icon:hover {
-  background: var(--md-sys-color-primary-container, #4f378b);
-  color: var(--md-sys-color-on-primary-container, #eaddff);
-}
-
-body.dark-mode .project-meta,
-body.dark-mode .project-meta-item md-icon {
-  color: var(--md-sys-color-on-surface-variant, #cac4d0);
-}
-
