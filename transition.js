@@ -1,6 +1,27 @@
 const basePath = window.location.hostname.includes('github.io') ? 
   '/Personal-Static/' : '/';
 
+const fullRefreshPages = ['projects.html', 'index.html', 'resources.html', 'profile.html'];
+
+function shouldUseFullPageLoad(urlOrPath) {
+  return fullRefreshPages.some(page => String(urlOrPath || '').includes(page));
+}
+
+// Barba/PJAX does not execute the destination page's inline scripts on navigation.
+// profile.html is intentionally self-contained, so it must be reached with a normal
+// browser navigation rather than an in-place Barba transition.
+document.addEventListener('click', event => {
+  const anchor = event.target.closest('a[href]');
+  if (!anchor) return;
+
+  const href = anchor.getAttribute('href') || '';
+  if (!shouldUseFullPageLoad(href)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  window.location.assign(anchor.href);
+}, true);
+
 // Ensure Barba is loaded before running initialization
 document.addEventListener('DOMContentLoaded', () => {
   // Check if Barba is available
@@ -34,10 +55,7 @@ function initBarba() {
   
   // Add this to your barba.init configuration before any other hooks
   barba.hooks.before((data) => {
-    // Check if navigating to/from pages that need full refresh
-    const needsRefresh = ['projects.html', 'index.html', 'resources.html'];
-    
-    if (needsRefresh.some(page => data.next.url.path.includes(page))) {
+    if (shouldUseFullPageLoad(data.next.url.path)) {
       console.log('Navigating to page that needs refresh - bypassing Barba');
       window.location.href = data.next.url.href;
       return false; // Cancel Barba transition
@@ -47,6 +65,7 @@ function initBarba() {
   // Initialize Barba with default transitions
   barba.init({
     debug: true,
+    prevent: ({ href }) => shouldUseFullPageLoad(href),
     transitions: [{
       name: 'default-transition',
       leave(data) {
