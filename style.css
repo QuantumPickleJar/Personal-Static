@@ -222,3 +222,317 @@ md-filled-button.open-modal-btn:hover {
   gap: 12px;
   margin-bottom: 8px;
 }
+
+/* Restrained visual polish pass
+   Keeps the purple identity while reducing one-off color treatments across pages. */
+:root:root {
+  --md-sys-color-secondary: #7b6aa8;
+  --app-page-bg: #fbf9ff;
+  --app-page-bg-dark: #15131a;
+  --app-surface-soft: rgba(255, 255, 255, 0.78);
+  --app-surface-soft-dark: rgba(255, 255, 255, 0.055);
+  --app-panel-bg: rgba(255, 255, 255, 0.84);
+  --app-panel-bg-dark: rgba(255, 255, 255, 0.065);
+  --app-card-radius: 18px;
+  --app-card-padding: clamp(1rem, 2vw, 1.45rem);
+  --app-card-border: 1px solid rgba(103, 80, 164, 0.14);
+  --app-card-shadow: 0 12px 28px rgba(31, 22, 59, 0.075);
+  --app-card-shadow-hover: 0 18px 38px rgba(31, 22, 59, 0.13);
+  --app-divider: rgba(103, 80, 164, 0.12);
+}
+
+html,
+body {
+  background: var(--app-page-bg, #fbf9ff);
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html body.dark-mode {
+  background: var(--app-page-bg-dark, #15131a);
+}
+
+body {
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html body.dark-mode {
+  --app-card-bg: rgba(255, 255, 255, 0.055);
+  --app-card-border: 1px solid rgba(208, 188, 255, 0.16);
+  --app-card-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  --app-card-shadow-hover: 0 18px 42px rgba(0, 0, 0, 0.36);
+  background: radial-gradient(circle at top left, rgba(103, 80, 164, 0.16), transparent 34rem), var(--app-page-bg-dark, #15131a) !important;
+}
+
+header {
+  background: linear-gradient(135deg, rgba(103, 80, 164, 0.97), rgba(71, 55, 112, 0.97)) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 28px rgba(31, 22, 59, 0.16) !important;
+}
+
+header h1,
+.section-heading,
+.profile-hero h1,
+.profile-section h2 {
+  letter-spacing: -0.035em;
+}
+
+.section-heading,
+.profile-section h2,
+.experience-card h3,
+.project-title {
+  font-weight: 650;
+}
+
+.section-subheading,
+.profile-lede,
+.short-form-truncated,
+.footer-tagline,
+.profile-section p,
+.experience-card p {
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+}
+
+html body.dark-mode .section-subheading,
+html body.dark-mode .profile-lede,
+html body.dark-mode .short-form-truncated,
+html body.dark-mode .footer-tagline,
+html body.dark-mode .profile-section p,
+html body.dark-mode .experience-card p {
+  color: rgba(245, 241, 255, 0.76);
+}
+
+a:hover,
+.home-page .project-title-link:hover,
+body.dark-mode a:hover {
+  color: var(--md-sys-color-primary, #6750a4) !important;
+}
+
+.contentContainer {
+  width: min(var(--app-page-max-width, 1120px), calc(100% - 2rem));
+  padding: clamp(1rem, 2vw, 1.5rem) 0;
+}
+
+section {
+  width: min(var(--app-page-max-width, 1120px), calc(100% - 2rem));
+}
+
+.section-heading-container {
+  margin: clamp(2rem, 4vw, 3rem) 0 1rem;
+}
+
+.section-heading {
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.section-heading::after,
+.profile-section h2::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin: 0.65rem auto 0;
+  border-radius: 999px;
+  background: var(--md-sys-color-primary, #6750a4);
+  opacity: 0.72;
+}
+
+.profile-section h2::after {
+  margin-left: 0;
+}
+
+.home-page.project-card-grid,
+.project-card-grid,
+.projects-gallery {
+  gap: clamp(1rem, 2vw, 1.35rem);
+}
+
+.profile-hero,
+.profile-section,
+.experience-card,
+#how-to,
+.projects-gallery,
+#advancedSearchContainer,
+md-elevated-card.project-card,
+#carouselContainer,
+.filter-dropdown-menu,
+.tech-filter-card {
+  border-radius: var(--app-card-radius, 18px) !important;
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.14)) !important;
+  background: var(--app-panel-bg, rgba(255, 255, 255, 0.84)) !important;
+  box-shadow: var(--app-card-shadow, 0 12px 28px rgba(31, 22, 59, 0.075)) !important;
+}
+
+html body.dark-mode .profile-hero,
+html body.dark-mode .profile-section,
+html body.dark-mode .experience-card,
+html body.dark-mode #how-to,
+html body.dark-mode .projects-gallery,
+html body.dark-mode #advancedSearchContainer,
+html body.dark-mode md-elevated-card.project-card,
+html body.dark-mode #carouselContainer,
+html body.dark-mode .filter-dropdown-menu,
+html body.dark-mode .tech-filter-card {
+  background: var(--app-panel-bg-dark, rgba(255, 255, 255, 0.065)) !important;
+  border-color: rgba(208, 188, 255, 0.16) !important;
+  box-shadow: var(--app-card-shadow, 0 12px 30px rgba(0, 0, 0, 0.28)) !important;
+}
+
+md-elevated-card.project-card:hover,
+.experience-card:hover {
+  box-shadow: var(--app-card-shadow-hover, 0 18px 38px rgba(31, 22, 59, 0.13)) !important;
+  transform: translateY(var(--app-card-lift-y, -3px));
+}
+
+.project-thumbnail {
+  border-radius: calc(var(--app-card-radius, 18px) - 5px) !important;
+}
+
+.projects-gallery {
+  padding: clamp(1rem, 2.5vw, 1.5rem) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+}
+
+html body.dark-mode .projects-gallery {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.stack-icons::before {
+  background-color: var(--app-divider, rgba(103, 80, 164, 0.12));
+}
+
+.card-header,
+.card-footer,
+.tech-filter-header {
+  background: rgba(103, 80, 164, 0.055) !important;
+  color: var(--md-sys-color-on-surface, #1c1b1f) !important;
+  text-shadow: none !important;
+}
+
+html body.dark-mode .card-header,
+html body.dark-mode .card-footer,
+html body.dark-mode .tech-filter-header {
+  background: rgba(208, 188, 255, 0.075) !important;
+  color: rgba(245, 241, 255, 0.92) !important;
+}
+
+md-elevated-card.project-card .academic-label,
+md-elevated-card.project-card .personal-label,
+.academic-label.academic,
+.academic-label.personal,
+md-elevated-card.project-card .date-badge {
+  background: rgba(103, 80, 164, 0.10) !important;
+  color: var(--md-sys-color-primary, #6750a4) !important;
+  border: 1px solid rgba(103, 80, 164, 0.20) !important;
+  border-left: 3px solid var(--md-sys-color-primary, #6750a4) !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+html body.dark-mode md-elevated-card.project-card .academic-label,
+html body.dark-mode md-elevated-card.project-card .personal-label,
+html body.dark-mode .academic-label.academic,
+html body.dark-mode .academic-label.personal,
+html body.dark-mode md-elevated-card.project-card .date-badge {
+  background: rgba(208, 188, 255, 0.12) !important;
+  color: #d0bcff !important;
+  border-color: rgba(208, 188, 255, 0.24) !important;
+}
+
+#advancedSearchContainer {
+  background: rgba(103, 80, 164, 0.065) !important;
+}
+
+html body.dark-mode #advancedSearchContainer {
+  background: rgba(208, 188, 255, 0.075) !important;
+}
+
+.filter-toggle-btn:hover,
+.filter-menu-item:hover,
+.custom-filter-chip:hover {
+  background-color: rgba(103, 80, 164, 0.085) !important;
+}
+
+.custom-filter-chip {
+  background-color: rgba(103, 80, 164, 0.075) !important;
+  color: var(--md-sys-color-on-surface, #1c1b1f) !important;
+  border-color: rgba(103, 80, 164, 0.12) !important;
+}
+
+.custom-filter-chip.selected,
+.dark-theme .custom-filter-chip.selected,
+body.dark-mode .custom-filter-chip.selected {
+  background-color: var(--md-sys-color-primary-container, #eaddff) !important;
+  color: var(--md-sys-color-on-primary-container, #21005d) !important;
+  border-color: rgba(103, 80, 164, 0.35) !important;
+}
+
+body.dark-mode .custom-filter-chip,
+.dark-theme .custom-filter-chip {
+  background-color: rgba(208, 188, 255, 0.10) !important;
+  color: rgba(245, 241, 255, 0.86) !important;
+  border-color: rgba(208, 188, 255, 0.18) !important;
+}
+
+md-filled-tonal-button#filterToggleBtn {
+  --md-filled-tonal-button-container-color: rgba(103, 80, 164, 0.12) !important;
+  --md-filled-tonal-button-label-text-color: var(--md-sys-color-primary, #6750a4) !important;
+  box-shadow: none !important;
+}
+
+md-filled-tonal-button#filterToggleBtn:hover {
+  --md-filled-tonal-button-container-color: var(--md-sys-color-primary-container, #eaddff) !important;
+  box-shadow: 0 8px 18px rgba(103, 80, 164, 0.12) !important;
+}
+
+.logo-tile {
+  background: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.60), 0 8px 18px rgba(31, 22, 59, 0.07) !important;
+}
+
+html body.dark-mode .logo-tile {
+  background: rgba(255, 255, 255, 0.065) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 24px rgba(0, 0, 0, 0.26) !important;
+}
+
+footer,
+#sidebar {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+  border-color: var(--app-divider, rgba(103, 80, 164, 0.12)) !important;
+  box-shadow: none !important;
+}
+
+body.dark-theme footer,
+body.dark-theme #sidebar,
+body.dark-mode footer,
+body.dark-mode #sidebar {
+  background-color: rgba(255, 255, 255, 0.055) !important;
+  border-color: rgba(208, 188, 255, 0.13) !important;
+}
+
+.footer-brand h3,
+.footer-section h4,
+.profile-details strong,
+.role-meta,
+.eyebrow {
+  color: var(--md-sys-color-primary, #6750a4) !important;
+}
+
+#carouselContainer {
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .contentContainer,
+  section,
+  #experience-page.profile-page {
+    width: min(100% - 1rem, var(--app-page-max-width, 1120px));
+  }
+
+  .section-heading::after,
+  .profile-section h2::after {
+    margin-top: 0.5rem;
+  }
+}
