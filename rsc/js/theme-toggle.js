@@ -64,7 +64,9 @@ class ThemeToggle extends LitElement {
   
   _applyThemeToBody(isDark) {
     // Enhanced color scheme for better overall look
-    document.body.style.setProperty('--md-sys-color-surface', isDark ? '#1a1a1a' : '#ffffff');
+    document.body.style.setProperty('--md-sys-color-surface', isDark ? '#2b2b2b' : '#ffffff');
+    document.body.style.setProperty('--md-sys-color-surface-container', isDark ? '#343434' : '#f3f3f3');
+    document.body.style.setProperty('--md-sys-color-surface-container-high', isDark ? '#3f3f3f' : '#f3f3f3');
     document.body.style.setProperty('--md-sys-color-on-surface', isDark ? '#ffffff' : '#000000');
     
     // Improve footer text contrast in dark mode
@@ -183,7 +185,9 @@ window.applyTheme = function(isDark) {
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   
   // Apply same style properties as in the component
-  document.body.style.setProperty('--md-sys-color-surface', isDark ? '#1a1a1a' : '#ffffff');
+  document.body.style.setProperty('--md-sys-color-surface', isDark ? '#2b2b2b' : '#ffffff');
+  document.body.style.setProperty('--md-sys-color-surface-container', isDark ? '#343434' : '#f3f3f3');
+  document.body.style.setProperty('--md-sys-color-surface-container-high', isDark ? '#3f3f3f' : '#f3f3f3');
   document.body.style.setProperty('--md-sys-color-on-surface', isDark ? '#ffffff' : '#000000');
   document.body.style.setProperty('--md-sys-color-on-surface-variant', isDark ? '#e1e1fc' : '#49454f');
   document.body.style.setProperty('--md-sys-color-outline', isDark ? '#938f99' : '#79747e');
