@@ -40,13 +40,31 @@
     </div>
     
     <div class="mt-3 d-flex justify-content-center">
-      <a href="rsc/docs/resume.pdf?v=2026-02-16-latest" class="btn btn-outline-primary" download="Vincent-Morrill-Resume.pdf">
+      <a href="rsc/docs/resume.pdf?v=2026-02-16-latest" target="_blank" rel="noopener" class="btn btn-outline-primary" aria-label="Open resume PDF in a new tab" title="Open resume PDF in a new tab">
         <span class="material-symbols-outlined">download</span>
       </a>
-      <a href="rsc/docs/resume.pdf?v=2026-02-16-latest" target="_blank" rel="noopener" class="btn btn-outline-primary ms-2">
+      <button type="button" id="viewResumeBtn" class="btn btn-outline-primary ms-2" aria-haspopup="dialog" aria-controls="pdfModal">
         <span class="material-symbols-outlined">visibility</span>
         View Resume
-      </a>
+      </button>
+    </div>
+  </div>
+
+  <div id="pdfModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
+    <div class="modal-content">
+      <button type="button" class="close-button" aria-label="Close resume preview">&times;</button>
+      <h3 id="pdfModalTitle">Vincent Morrill Resume</h3>
+      <p id="loadingPdf">Loading resume preview...</p>
+      <p id="pdfjs-notice" style="display: none;">
+        The PDF.js preview could not load. The embedded PDF viewer below should still display the resume, or use the download button to open it in a new tab.
+      </p>
+      <iframe
+        id="resumePdfFrame"
+        src="rsc/docs/resume.pdf?v=2026-02-16-latest"
+        title="Vincent Morrill resume PDF preview"
+        style="width: 100%; min-height: 78vh; border: 0; border-radius: 12px; background: white;"
+      ></iframe>
+      <canvas id="pdfCanvas" hidden aria-hidden="true"></canvas>
     </div>
   </div>
 </aside>
