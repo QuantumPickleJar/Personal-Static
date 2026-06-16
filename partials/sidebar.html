@@ -56,9 +56,15 @@
       <h3 id="pdfModalTitle">Vincent Morrill Resume</h3>
       <p id="loadingPdf">Loading resume preview...</p>
       <p id="pdfjs-notice" style="display: none;">
-        The resume preview could not load. Use the download button to open the PDF in a new tab.
+        The PDF.js preview could not load. The embedded PDF viewer below should still display the resume, or use the download button to open it in a new tab.
       </p>
-      <canvas id="pdfCanvas" aria-label="Rendered resume preview"></canvas>
+      <iframe
+        id="resumePdfFrame"
+        src="rsc/docs/resume.pdf?v=2026-02-16-latest"
+        title="Vincent Morrill resume PDF preview"
+        style="width: 100%; min-height: 78vh; border: 0; border-radius: 12px; background: white;"
+      ></iframe>
+      <canvas id="pdfCanvas" hidden aria-hidden="true"></canvas>
     </div>
   </div>
 </aside>
