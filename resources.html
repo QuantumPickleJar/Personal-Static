@@ -133,7 +133,7 @@
                 <div id="loadingIndicator">Loading Resume...</div>
                 <canvas id="resumeCanvas" style="display:none"></canvas>
                 <div id="fallbackMessage" style="display:none">
-                  <p>Unable to load resume. <a href="rsc/docs/resume.pdf" target="_blank">Download PDF</a></p>
+                  <p>Unable to load resume. <a href="rsc/docs/resume.pdf?v=2026-02-16-latest" target="_blank" rel="noopener">Download PDF</a></p>
                 </div>
                 <button id="zoomInBtn">Zoom In</button>
                 <button id="zoomOutBtn">Zoom Out</button>
@@ -218,183 +218,74 @@
             booksContainer.innerHTML = books.map(book => `
               <div class="book-item">
                 <img src="${basePath}${book.cover ? book.cover.replace(/^\//, '') : 'rsc/images/placeholder-book.png'}" 
-                     alt="${book.title || 'Untitled Book'}" class="book-cover">
-                <div class="book-details">
-                  <h3 class="book-title">${book.title || 'Untitled'}</h3>
-                  <p class="book-author">${book.author || 'Unknown Author'}</p>
-                  <p class="book-description">${book.description || 'No description available.'}</p>
+                     alt="${book.title || 'Book cover'}" 
+                     onerror="this.onerror=null; this.src='https://placehold.co/150x220?text=No+Cover';" />
+                <div class="book-info">
+                  <h2>${book.title || 'Untitled'}</h2>
+                  <p class="author">by ${book.author || 'Unknown Author'}</p>
+                  <p>${book.description || ''}</p>
                 </div>
               </div>
             `).join('');
           }
         }
       } catch (err) {
-        console.error('Failed to load books:', err);
-        document.getElementById('booksContainer').innerHTML = 
-          `<div class="error">Failed to load books: ${err.message}</div>`;
+        console.error('Error loading books:', err);
+        const booksContainer = document.getElementById('booksContainer');
+        if (booksContainer) {
+          booksContainer.innerHTML = `<div class="error-message">Failed to load books: ${err.message}</div>`;
+        }
       }
-      
-      // Also load bookmarks if that feature is ready
+
+      // Load bookmarks data
       try {
-        // Instead of loading bookmarks directly here, we'll just make sure the container exists
-        // The actual loading will be handled by bookmarks.js
-        if (!document.getElementById('bookmarksContainer')) {
-          console.error('Bookmarks container not found');
-        } else {
-          console.log('Bookmarks container found, loading will be handled by bookmarks.js');
-          // We'll add a small helper for bookmarks.js to use the correct base path
-          window.bookmarksBasePath = basePath;
+        const bookmarkResponse = await fetch(`${basePath}rsc/json/bookmarks.json`);
+        if (!bookmarkResponse.ok) throw new Error(`Bookmarks JSON not found (${bookmarkResponse.status})`);
+        
+        const bookmarks = await bookmarkResponse.json();
+        console.log('Bookmarks loaded:', bookmarks.length);
+        
+        const categorySelect = document.getElementById('bookmarkCategory');
+        const bookmarksContainer = document.getElementById('bookmarksContainer');
+        
+        if (categorySelect && bookmarksContainer) {
+          const categories = [...new Set(bookmarks.map(b => b.category || 'Uncategorized'))];
+          categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            categorySelect.appendChild(opt);
+          });
+          
+          function renderBookmarks(category) {
+            const filtered = bookmarks.filter(b => (b.category || 'Uncategorized') === category);
+            bookmarksContainer.innerHTML = filtered.length === 0
+              ? '<div class="no-data">No bookmarks in this category.</div>'
+              : filtered.map(b => `
+                <div class="bookmark-item">
+                  <a href="${b.url}" target="_blank" rel="noopener">${b.title || b.url}</a>
+                  ${b.description ? `<p>${b.description}</p>` : ''}
+                </div>
+              `).join('');
+          }
+          
+          if (categories.length > 0) {
+            renderBookmarks(categories[0]);
+            categorySelect.addEventListener('change', e => renderBookmarks(e.target.value));
+          }
         }
       } catch (err) {
-        console.error('Error setting up bookmarks:', err);
-        document.getElementById('bookmarksContainer').innerHTML = 
-          `<div class="error">Failed to set up bookmarks: ${err.message}</div>`;
+        console.error('Error loading bookmarks:', err);
+        const bookmarksContainer = document.getElementById('bookmarksContainer');
+        if (bookmarksContainer) {
+          bookmarksContainer.innerHTML = `<div class="error-message">Failed to load bookmarks: ${err.message}</div>`;
+        }
       }
     });
   </script>
-  <script>
-  // Improved footer positioning function
-  function adjustFooterPosition() {
-    const footerContainer = document.getElementById('footerContainer');
-    const contentContainer = document.querySelector('.contentContainer');
-    const mainContent = document.getElementById('mainContent');
-    const viewportHeight = window.innerHeight;
-    
-    // Reset any previously set margin
-    footerContainer.style.marginTop = '';
-    
-    // Get heights after resetting margin
-    const contentHeight = contentContainer.offsetHeight;
-    const mainContentHeight = mainContent.offsetHeight;
-    const headerHeight = document.getElementById('headerContainer').offsetHeight;
-    const footerHeight = footerContainer.offsetHeight;
-    
-    // Calculate space available
-    const availableSpace = viewportHeight - headerHeight;
-    const contentWithoutFooter = mainContentHeight + 40; // Add some buffer
-    
-    // Only adjust if content is shorter than available space
-    if (contentWithoutFooter < availableSpace - footerHeight) {
-      // Calculate margin needed to push footer to bottom
-      const marginNeeded = availableSpace - contentWithoutFooter - footerHeight;
-      footerContainer.style.marginTop = Math.max(20, marginNeeded) + 'px';
-    }
-  }
 
-  // Call on load and resize
-  window.addEventListener('load', adjustFooterPosition);
-  window.addEventListener('resize', adjustFooterPosition);
-  
-  // Also check after content loads with images
-  window.addEventListener('DOMContentLoaded', function() {
-    // Add initial timeout for partial loading
-    setTimeout(adjustFooterPosition, 300);
-    
-    // Check again after all images load
-    window.addEventListener('load', function() {
-      // Wait a bit for any dynamic content to settle
-      setTimeout(adjustFooterPosition, 500);
-    });
-  });
-</script>
-<script src="rsc/js/bookmarks.js"></script>
-<!-- Load theme toggle script -->
-<script type="module" src="rsc/js/theme-toggle.js"></script>
-<!-- Load navigation drawer script -->
-<script>
-  // Load nav drawer component
-  document.addEventListener('DOMContentLoaded', function() {
-    fetch('htmlModules/nav-drawer.html')
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('navDrawerContainer').innerHTML = html;
-      })
-      .catch(error => console.error('Error loading nav drawer:', error));
-  });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-<script>
-        (function() {
-          let isRendering = false;
-          let pendingScale = null;
-          let pdfDoc = null, page = null, renderTask = null, scale = 1;
-          const modal = document.getElementById('resumeModal');
-          const canvas = document.getElementById('resumeCanvas');
-          const ctx = canvas.getContext('2d');
-          const loadingEl = document.getElementById('loadingIndicator');
-          const fallbackEl = document.getElementById('fallbackMessage');
-
-          async function initPdf() {
-            loadingEl.style.display = '';
-            fallbackEl.style.display = 'none';
-            if (!pdfDoc) {
-              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js';
-              try {
-                pdfDoc = await pdfjsLib.getDocument('rsc/docs/resume.pdf').promise;
-                page = await pdfDoc.getPage(1);
-              } catch (err) {
-                loadingEl.style.display = 'none';
-                fallbackEl.style.display = '';
-                throw err;
-              }
-            }
-          }
-
-          async function renderPage() {
-            if (isRendering) return;
-            isRendering = true;
-            loadingEl.style.display = '';
-            if (!page) return;
-            const viewport = page.getViewport({ scale });
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            if (renderTask) {
-              renderTask.cancel();
-              try { await renderTask.promise; } catch {};
-            }
-            renderTask = page.render({ canvasContext: ctx, viewport });
-            try {
-              await renderTask.promise;
-              canvas.style.display = '';
-            } catch {
-              fallbackEl.style.display = '';
-            } finally {
-              loadingEl.style.display = 'none';
-              renderTask = null;
-              isRendering = false;
-              if (pendingScale !== null) {
-                scale = pendingScale;
-                pendingScale = null;
-                queueRenderPage();
-              }
-            }
-          }
-
-          function queueRenderPage() {
-            if (isRendering) {
-              pendingScale = scale;
-            } else {
-              renderPage();
-            }
-          }
-
-          document.body.addEventListener('click', async e => {
-            if (e.target.id === 'viewResumeBtn') {
-              modal.style.display = 'flex';
-              scale = 1;
-              await initPdf();
-              queueRenderPage();
-            } else if (e.target.id === 'zoomInBtn') {
-              scale = Math.min(scale + 0.25, 3);
-              queueRenderPage();
-            } else if (e.target.id === 'zoomOutBtn') {
-              scale = Math.max(scale - 0.25, 0.5);
-              queueRenderPage();
-            } else if (e.target.classList.contains('close-modal') || e.target === modal) {
-              modal.style.display = 'none';
-            }
-          });
-        })();
-</script>
+  <!-- Component scripts -->
+  <script type="module" src="rsc/js/theme-toggle.js"></script>
+  <script src="transition.js"></script>
 </body>
 </html>
