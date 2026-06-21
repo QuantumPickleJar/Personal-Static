@@ -295,9 +295,33 @@ export function applyAllFilters() {
   }
 }
 
+function insertPrintGalleryTeaser() {
+  const projectsGallery = document.getElementById('projectsGallery');
+  const advancedSearch = document.getElementById('advancedSearchContainer');
+
+  if (!projectsGallery || !advancedSearch || document.getElementById('printGalleryProjectTeaser')) {
+    return;
+  }
+
+  const teaser = document.createElement('section');
+  teaser.id = 'printGalleryProjectTeaser';
+  teaser.className = 'print-gallery-project-teaser';
+  teaser.setAttribute('aria-labelledby', 'print-gallery-project-teaser-title');
+  teaser.innerHTML = `
+    <p class="eyebrow">Hands-on technical work</p>
+    <h2 id="print-gallery-project-teaser-title">3D Printing Gallery</h2>
+    <p>
+      A static showcase of additive manufacturing work, including functional prints, manual filament swaps, repair/utility parts, print tuning, and future TokenForge PrintDesk context.
+    </p>
+    <a href="3d-printing.html">View the 3D printing gallery</a>
+  `;
+
+  advancedSearch.parentNode.insertBefore(teaser, advancedSearch);
+}
+
+document.addEventListener('DOMContentLoaded', insertPrintGalleryTeaser);
+
 // Make function globally available
 window.applyAllFilters = applyAllFilters;
 
 export { renderProjectsGallery };
-
-
