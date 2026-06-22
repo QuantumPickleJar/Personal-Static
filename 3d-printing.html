@@ -74,12 +74,17 @@
     <section class="print-section gallery-shell" aria-labelledby="gallery-title">
       <div class="print-section-heading-row compact">
         <div>
-          <p class="eyebrow">Selected work</p>
-          <h2 id="gallery-title">Completed and placeholder-ready print entries</h2>
+          <p class="eyebrow">Gallery</p>
+          <h2 id="gallery-title">Print entries</h2>
         </div>
       </div>
       <div id="printGalleryGrid" class="print-gallery-grid" aria-live="polite"></div>
       <p id="printNoResults" class="print-no-results" hidden>No matching prints found. Try clearing the search or selecting All.</p>
+      <nav class="print-pagination" aria-label="Print gallery pagination">
+        <button id="printPrevPage" class="print-page-btn" type="button">Previous</button>
+        <span id="printPageStatus" aria-live="polite">Page 1 of 1</span>
+        <button id="printNextPage" class="print-page-btn" type="button">Next</button>
+      </nav>
     </section>
 
     <section class="print-section print-process-section" aria-labelledby="process-title">
