@@ -1,4 +1,7 @@
 const PRINT_FILTER_ALL = 'all';
+const PRINT_PAGE_SIZE = 6;
+
+let currentPrintPage = 1;
 
 const sourceTypeLabels = {
   designed: 'Designed by me',
@@ -199,25 +202,69 @@ function createPrintCard(item) {
   `;
 }
 
+function getVisibleItems() {
+  const searchInput = document.getElementById('printSearch');
+  const activeFilter = getActiveFilter();
+  const searchTerm = normalize(searchInput ? searchInput.value : '');
+
+  return printGalleryItems.filter(function(item) {
+    return matchesFilters(item, activeFilter, searchTerm);
+  });
+}
+
+function getPaginationState(visibleItemCount) {
+  const totalPages = Math.max(1, Math.ceil(visibleItemCount / PRINT_PAGE_SIZE));
+  currentPrintPage = Math.min(Math.max(currentPrintPage, 1), totalPages);
+
+  const startIndex = (currentPrintPage - 1) * PRINT_PAGE_SIZE;
+  const endIndex = Math.min(startIndex + PRINT_PAGE_SIZE, visibleItemCount);
+
+  return {
+    totalPages,
+    startIndex,
+    endIndex
+  };
+}
+
+function updatePaginationControls(totalPages, visibleItemCount) {
+  const previousButton = document.getElementById('printPrevPage');
+  const nextButton = document.getElementById('printNextPage');
+  const pageStatus = document.getElementById('printPageStatus');
+
+  if (!previousButton || !nextButton || !pageStatus) {
+    return;
+  }
+
+  previousButton.disabled = currentPrintPage <= 1 || visibleItemCount === 0;
+  nextButton.disabled = currentPrintPage >= totalPages || visibleItemCount === 0;
+  pageStatus.textContent = visibleItemCount === 0
+    ? 'Page 0 of 0'
+    : `Page ${currentPrintPage} of ${totalPages}`;
+}
+
 function renderPrintGallery() {
   const galleryGrid = document.getElementById('printGalleryGrid');
   const noResults = document.getElementById('printNoResults');
   const resultCount = document.getElementById('printResultCount');
-  const searchInput = document.getElementById('printSearch');
 
-  if (!galleryGrid || !noResults || !resultCount || !searchInput) {
+  if (!galleryGrid || !noResults || !resultCount) {
     return;
   }
 
-  const activeFilter = getActiveFilter();
-  const searchTerm = normalize(searchInput.value);
-  const visibleItems = printGalleryItems.filter(function(item) {
-    return matchesFilters(item, activeFilter, searchTerm);
-  });
+  const visibleItems = getVisibleItems();
+  const pagination = getPaginationState(visibleItems.length);
+  const pageItems = visibleItems.slice(pagination.startIndex, pagination.endIndex);
 
-  galleryGrid.innerHTML = visibleItems.map(createPrintCard).join('');
+  galleryGrid.innerHTML = pageItems.map(createPrintCard).join('');
   noResults.hidden = visibleItems.length > 0;
-  resultCount.textContent = `${visibleItems.length} of ${printGalleryItems.length} print entries shown`;
+
+  if (visibleItems.length === 0) {
+    resultCount.textContent = `0 of ${printGalleryItems.length} print entries shown`;
+  } else {
+    resultCount.textContent = `${pagination.startIndex + 1}-${pagination.endIndex} of ${visibleItems.length} matching print entries shown`;
+  }
+
+  updatePaginationControls(pagination.totalPages, visibleItems.length);
 }
 
 function setActiveFilter(button) {
@@ -228,21 +275,42 @@ function setActiveFilter(button) {
   });
 }
 
+function resetToFirstPageAndRender() {
+  currentPrintPage = 1;
+  renderPrintGallery();
+}
+
 function initPrintGallery() {
   const searchInput = document.getElementById('printSearch');
   const filterButtons = document.querySelectorAll('.print-filter-btn');
+  const previousButton = document.getElementById('printPrevPage');
+  const nextButton = document.getElementById('printNextPage');
 
   if (!searchInput || filterButtons.length === 0) {
     return;
   }
 
-  searchInput.addEventListener('input', renderPrintGallery);
+  searchInput.addEventListener('input', resetToFirstPageAndRender);
   filterButtons.forEach(function(button) {
     button.addEventListener('click', function() {
       setActiveFilter(button);
-      renderPrintGallery();
+      resetToFirstPageAndRender();
     });
   });
+
+  if (previousButton) {
+    previousButton.addEventListener('click', function() {
+      currentPrintPage -= 1;
+      renderPrintGallery();
+    });
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener('click', function() {
+      currentPrintPage += 1;
+      renderPrintGallery();
+    });
+  }
 
   renderPrintGallery();
 }
