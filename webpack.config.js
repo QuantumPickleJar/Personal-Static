@@ -40,6 +40,12 @@ module.exports = {
       filename: 'projects.html',
       chunks: ['main']
     }),
+    // Turn 3d-printing.html into dist/3d-printing.html
+    new HtmlWebpackPlugin({
+      template: './3d-printing.html',
+      filename: '3d-printing.html',
+      chunks: ['main']
+    }),
     // Turn resources.html into dist/resources.html
     new HtmlWebpackPlugin({
       template: './resources.html',
