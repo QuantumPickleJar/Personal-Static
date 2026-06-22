@@ -1,0 +1,406 @@
+.print-gallery-page {
+  width: min(var(--app-page-max-width, 1120px), calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+
+.print-hero,
+.print-section {
+  width: 100%;
+  border-radius: var(--app-card-radius, 18px);
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.14));
+  background: var(--app-panel-bg, rgba(255, 255, 255, 0.84));
+  box-shadow: var(--app-card-shadow, 0 12px 28px rgba(31, 22, 59, 0.075));
+  padding: clamp(1.25rem, 3vw, 2rem);
+  margin-bottom: clamp(1rem, 3vw, 1.75rem);
+}
+
+.print-hero {
+  padding-top: clamp(2rem, 5vw, 3rem);
+}
+
+.print-hero h1,
+.print-section h2 {
+  margin: 0;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.print-hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+}
+
+.print-section h2 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.print-lede {
+  max-width: 860px;
+  margin: 1rem 0 0;
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  line-height: 1.7;
+}
+
+.secondary-lede {
+  font-size: 1rem;
+}
+
+.print-hero-stats,
+.print-filter-group,
+.print-card-tags,
+.print-card-specs,
+.printdesk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.print-hero-stats {
+  margin-top: 1.5rem;
+}
+
+.print-hero-stats span,
+.print-card-tags span,
+.print-source-badge,
+.printdesk-cta,
+.printdesk-note {
+  border-radius: 999px;
+  border: 1px solid rgba(103, 80, 164, 0.20);
+  background: rgba(103, 80, 164, 0.08);
+  color: var(--md-sys-color-primary, #6750a4);
+  font-weight: 650;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.75rem;
+}
+
+.print-section-heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.print-section-heading-row.compact {
+  margin-bottom: 1rem;
+}
+
+.print-result-count {
+  margin: 0.2rem 0 0;
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.print-controls {
+  display: grid;
+  gap: 1rem;
+}
+
+.print-search-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.print-search-group label,
+.print-card-meta-label {
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+#printSearch {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(103, 80, 164, 0.22);
+  border-radius: 16px;
+  padding: 0.75rem 1rem;
+  background: var(--md-sys-color-surface, #ffffff);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font: inherit;
+}
+
+#printSearch:focus {
+  outline: 3px solid rgba(103, 80, 164, 0.24);
+  border-color: var(--md-sys-color-primary, #6750a4);
+}
+
+.print-filter-btn {
+  border: 1px solid rgba(103, 80, 164, 0.18);
+  border-radius: 999px;
+  background: rgba(103, 80, 164, 0.075);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  min-height: 40px;
+  padding: 0.5rem 0.85rem;
+  transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.print-filter-btn:hover,
+.print-filter-btn:focus-visible {
+  border-color: rgba(103, 80, 164, 0.36);
+  background: rgba(103, 80, 164, 0.12);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.print-filter-btn.is-active {
+  background: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #21005d);
+  border-color: rgba(103, 80, 164, 0.40);
+}
+
+.print-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 2vw, 1.35rem);
+}
+
+.print-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--app-card-radius, 18px);
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.14));
+  background: var(--app-card-bg, #ffffff);
+  box-shadow: var(--app-card-shadow, 0 12px 28px rgba(31, 22, 59, 0.075));
+  min-height: 100%;
+}
+
+.print-card-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: rgba(103, 80, 164, 0.075);
+}
+
+.print-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: clamp(1rem, 2vw, 1.25rem);
+  flex: 1;
+}
+
+.print-card-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.print-card h3 {
+  margin: 0;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.print-card-description,
+.print-card-notes,
+.printdesk-teaser p,
+.process-grid p {
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.print-card-specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+.print-card-specs div {
+  border-radius: 14px;
+  background: rgba(103, 80, 164, 0.055);
+  padding: 0.65rem;
+}
+
+.print-card-specs strong,
+.print-card-specs span {
+  display: block;
+}
+
+.print-card-specs strong {
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  font-size: 0.9rem;
+  margin-top: 0.12rem;
+}
+
+.print-card-footer {
+  margin-top: auto;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.print-card-link {
+  justify-self: start;
+  font-weight: 650;
+}
+
+.print-no-results {
+  border-radius: var(--app-card-radius, 18px);
+  background: rgba(103, 80, 164, 0.08);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  padding: 1rem;
+  margin: 0;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.process-grid article {
+  border-radius: 16px;
+  border: 1px solid rgba(103, 80, 164, 0.14);
+  background: rgba(103, 80, 164, 0.055);
+  padding: 1rem;
+}
+
+.process-grid .material-symbols-outlined {
+  color: var(--md-sys-color-primary, #6750a4);
+  font-size: 2rem;
+}
+
+.process-grid h3 {
+  margin: 0.5rem 0;
+}
+
+.printdesk-teaser {
+  background: linear-gradient(135deg, rgba(103, 80, 164, 0.12), rgba(123, 106, 168, 0.08));
+}
+
+.printdesk-actions {
+  align-items: center;
+  margin-top: 1.25rem;
+}
+
+.printdesk-cta.is-disabled {
+  opacity: 0.78;
+  cursor: not-allowed;
+}
+
+.printdesk-note code {
+  font-size: 0.9em;
+}
+
+.print-gallery-project-teaser {
+  border-radius: var(--app-card-radius, 18px);
+  border: var(--app-card-border, 1px solid rgba(103, 80, 164, 0.14));
+  background: var(--app-panel-bg, rgba(255, 255, 255, 0.84));
+  box-shadow: var(--app-card-shadow, 0 12px 28px rgba(31, 22, 59, 0.075));
+  padding: clamp(1rem, 2vw, 1.35rem);
+  margin: 0 0 1.25rem;
+}
+
+.print-gallery-project-teaser h2 {
+  margin-top: 0;
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+}
+
+.print-gallery-project-teaser p {
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  line-height: 1.6;
+}
+
+.print-gallery-project-teaser a {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 650;
+  margin-top: 0.35rem;
+}
+
+html body.dark-mode .print-hero,
+html body.dark-mode .print-section,
+html body.dark-mode .print-card,
+html body.dark-mode .print-gallery-project-teaser {
+  background: var(--app-panel-bg-dark, rgba(255, 255, 255, 0.065));
+  border-color: rgba(208, 188, 255, 0.16);
+  box-shadow: var(--app-card-shadow, 0 12px 30px rgba(0, 0, 0, 0.28));
+}
+
+html body.dark-mode .print-lede,
+html body.dark-mode .print-result-count,
+html body.dark-mode .print-search-group label,
+html body.dark-mode .print-card-meta-label,
+html body.dark-mode .print-card-description,
+html body.dark-mode .print-card-notes,
+html body.dark-mode .printdesk-teaser p,
+html body.dark-mode .process-grid p,
+html body.dark-mode .print-gallery-project-teaser p {
+  color: rgba(245, 241, 255, 0.76);
+}
+
+html body.dark-mode #printSearch,
+html body.dark-mode .print-card-specs div,
+html body.dark-mode .process-grid article {
+  background: rgba(255, 255, 255, 0.065);
+  color: rgba(245, 241, 255, 0.92);
+  border-color: rgba(208, 188, 255, 0.16);
+}
+
+html body.dark-mode .print-filter-btn {
+  background: rgba(208, 188, 255, 0.10);
+  color: rgba(245, 241, 255, 0.92);
+  border-color: rgba(208, 188, 255, 0.18);
+}
+
+html body.dark-mode .print-filter-btn.is-active,
+html body.dark-mode .print-hero-stats span,
+html body.dark-mode .print-card-tags span,
+html body.dark-mode .print-source-badge,
+html body.dark-mode .printdesk-cta,
+html body.dark-mode .printdesk-note {
+  background: rgba(208, 188, 255, 0.14);
+  color: #d0bcff;
+  border-color: rgba(208, 188, 255, 0.26);
+}
+
+@media (max-width: 820px) {
+  .print-section-heading-row,
+  .print-card-header-row {
+    flex-direction: column;
+  }
+
+  .print-result-count {
+    white-space: normal;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .print-gallery-page {
+    width: min(100% - 1rem, var(--app-page-max-width, 1120px));
+    padding-top: 1rem;
+  }
+
+  .print-hero,
+  .print-section {
+    padding: 1rem;
+  }
+
+  .print-filter-group {
+    gap: 0.5rem;
+  }
+
+  .print-filter-btn {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .print-card-specs {
+    grid-template-columns: 1fr;
+  }
+}
