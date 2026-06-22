@@ -2,7 +2,9 @@
 
 This guide explains how to replace the placeholder 3D printing gallery entries with real projects.
 
-The gallery is currently static-site friendly. There is no backend, upload form, database, authentication, payment flow, request queue, or owner dashboard in this repository.
+The gallery is still static-site friendly. There is no public backend, database, payment flow, print request queue, customer upload system, or owner dashboard in this repository.
+
+There is now an optional maintainer-only browser wizard on `3d-printing.html`. It can generate a gallery entry, upload a print image, and commit the update to GitHub when you provide a GitHub token for this repository.
 
 ## Where the gallery data lives
 
@@ -53,7 +55,67 @@ Then reference it from the matching gallery entry:
 image: 'assets/images/prints/commander-lid-with-text.jpg'
 ```
 
-## Recommended workflow for replacing a placeholder
+## Maintainer wizard auth situation
+
+Because this is a static GitHub Pages site, normal OAuth sign-in is not safe to implement directly in this repo. A browser-only OAuth flow would require exposing secrets or relying on an external backend/serverless function.
+
+The implemented wizard uses the safer static-site compromise:
+
+1. You open the 3D Printing Gallery page.
+2. Click **Add gallery entry**.
+3. Paste a GitHub token for your account.
+4. The token is kept only in memory or `sessionStorage` for that browser tab.
+5. The wizard calls the GitHub Contents API from your browser to commit the image and update `rsc/js/print-gallery.js`.
+
+Recommended token type:
+
+- GitHub fine-grained personal access token
+- Repository access: `QuantumPickleJar/Personal-Static`
+- Permissions: **Contents: Read and write**
+
+Use the `main` branch after this feature is merged. While testing the feature branch, set the wizard branch field to:
+
+```text
+feat/3d-print-gallery
+```
+
+Security notes:
+
+- Do not use the wizard on public/shared computers.
+- Clear the saved token when done.
+- Revoke the token from GitHub if you no longer need browser-based updates.
+- Do not commit a token into this repository.
+
+## Browser wizard workflow
+
+Use this when you want the page to create the commit for you:
+
+1. Open `3d-printing.html` in the deployed site or local preview.
+2. Click **Add gallery entry**.
+3. Enter the GitHub token and target branch.
+4. Fill in the print title, description, material, colors, nozzle, layer height, model origin, notes, categories, tags, and alt text.
+5. Select a print photo.
+6. Choose the matching gallery filters.
+7. Review the generated entry.
+8. Click **Commit entry to GitHub**.
+
+The wizard uploads the image to:
+
+```text
+assets/images/prints/<entry-slug>.<image-extension>
+```
+
+Then it prepends the generated object to:
+
+```text
+rsc/js/print-gallery.js
+```
+
+If no image is selected, the entry uses the existing placeholder image.
+
+## Manual workflow for replacing a placeholder
+
+Use this when you prefer editing files directly:
 
 1. Add the real photo to `assets/images/prints/`.
 2. Open `rsc/js/print-gallery.js`.
@@ -149,6 +211,8 @@ filters: [
   'experimental'
 ]
 ```
+
+The wizard automatically adds `designed-by-me` when `sourceType` is `designed`, `printed-by-me` when `sourceType` is `printed`, and `remixed` when `sourceType` is `remixed`.
 
 The gallery is one reactive gallery. There is not a separate secondary gallery for other projects. Search, filters, and pagination all operate on the same `printGalleryItems` array.
 
