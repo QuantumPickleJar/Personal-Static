@@ -57,6 +57,7 @@ function createNavDrawerMarkup() {
   const navItems = [
     { text: 'Home', icon: 'home', href: 'index.html' },
     { text: 'Projects', icon: 'code', href: 'projects.html' },
+    { text: '3D Printing', icon: 'precision_manufacturing', href: '3d-printing.html' },
     { text: 'Resources', icon: 'book', href: 'resources.html' },
     {
       text: 'Profile',
@@ -218,58 +219,18 @@ function addNavDrawerStyles() {
     .profile-dropdown-item {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 8px 16px;
-      text-decoration: none;
+      gap: 12px;
+      padding: 8px 12px;
       color: var(--md-sys-color-on-surface, #1c1b1f);
+      text-decoration: none;
+      border-radius: 4px;
       transition: background-color 0.2s ease;
+      white-space: nowrap;
     }
 
     .profile-dropdown-item:hover {
       background-color: var(--md-sys-color-surface-variant, rgba(103, 80, 164, 0.08));
       color: var(--md-sys-color-primary, #6750A4);
-    }
-
-    body.dark-mode #mainDrawer,
-    body.dark-mode .has-dropdown .profile-dropdown {
-      background-color: #1a1a1a;
-      color: #ffffff;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    body.dark-mode .drawer-header {
-      color: #ffffff;
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-
-    body.dark-mode .drawer-nav-item a,
-    body.dark-mode .profile-dropdown-item {
-      color: #ffffff;
-    }
-
-    body.dark-mode .drawer-nav-item a:hover,
-    body.dark-mode .profile-dropdown-item:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: var(--md-sys-color-primary, #d0bcff);
-    }
-
-    @media (max-width: 768px) {
-      #menuToggle {
-        top: 0.75rem;
-        left: 0.75rem;
-        width: 40px;
-        height: 40px;
-      }
-
-      #mainDrawer {
-        width: 240px;
-      }
-
-      .has-dropdown .profile-dropdown {
-        position: static;
-        box-shadow: none;
-        padding-left: 24px;
-      }
     }
   `;
 
