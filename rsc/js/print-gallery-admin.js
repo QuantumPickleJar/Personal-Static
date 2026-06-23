@@ -67,6 +67,18 @@ function loadStoredToken() {
   }
 }
 
+function hasMaintainerSession() {
+  return Boolean(sessionStorage.getItem(WIZARD_TOKEN_STORAGE_KEY));
+}
+
+function setMaintainerControlsVisibility(isVisible) {
+  const adminPanel = byId('printAdminPanel');
+  if (!adminPanel) return;
+
+  adminPanel.hidden = !isVisible;
+  adminPanel.setAttribute('aria-hidden', String(!isVisible));
+}
+
 function persistTokenForSession() {
   const tokenInput = byId('printGithubToken');
   const rememberInput = byId('printRememberToken');
@@ -74,8 +86,10 @@ function persistTokenForSession() {
 
   if (rememberInput && rememberInput.checked && tokenInput.value.trim()) {
     sessionStorage.setItem(WIZARD_TOKEN_STORAGE_KEY, tokenInput.value.trim());
+    setMaintainerControlsVisibility(true);
   } else {
     sessionStorage.removeItem(WIZARD_TOKEN_STORAGE_KEY);
+    setMaintainerControlsVisibility(false);
   }
 }
 
@@ -84,9 +98,9 @@ function clearStoredToken() {
   sessionStorage.removeItem(WIZARD_TOKEN_STORAGE_KEY);
   if (tokenInput) {
     tokenInput.value = '';
-    tokenInput.focus();
   }
-  setStatus('Saved token cleared for this tab.', 'success');
+  setMaintainerControlsVisibility(false);
+  closeWizard();
 }
 
 function getGithubToken() {
@@ -477,10 +491,11 @@ function openWizard() {
   const wizard = byId('printEntryWizard');
   const panel = wizard?.querySelector('.print-wizard-panel');
 
-  if (!wizard || !panel) return;
+  if (!wizard || !panel || !hasMaintainerSession()) return;
 
   lastFocusedElement = document.activeElement;
   wizard.hidden = false;
+  wizard.setAttribute('aria-hidden', 'false');
   document.body.classList.add('print-wizard-open');
   loadStoredToken();
   setActiveStep(0);
@@ -493,6 +508,7 @@ function closeWizard() {
   if (!wizard) return;
 
   wizard.hidden = true;
+  wizard.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('print-wizard-open');
 
   if (currentPreviewUrl) {
@@ -545,6 +561,8 @@ function initPrintGalleryAdmin() {
   if (!openButton || !byId('printEntryWizard')) {
     return;
   }
+
+  setMaintainerControlsVisibility(hasMaintainerSession());
 
   openButton.addEventListener('click', openWizard);
   closeButton?.addEventListener('click', closeWizard);
