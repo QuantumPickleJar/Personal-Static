@@ -206,6 +206,7 @@ function collectEntry() {
 
   return {
     id: entryId,
+    name: title,
     title,
     description: normalizeText(byId('printDescription')?.value),
     categories: categories.length ? categories : ['3D Printing'],
@@ -219,9 +220,18 @@ function collectEntry() {
     image: getUploadedImagePath(entryId),
     alt: normalizeText(byId('printAlt')?.value) || title,
     link: normalizeText(byId('printLink')?.value),
+    modelUrl: normalizeText(byId('printModelUrl')?.value),
+    previewUrl: normalizeText(byId('printPreviewUrl')?.value),
+    estimatedGrams: toOptionalNumber(byId('printEstimatedGrams')?.value),
+    estimatedTimeMinutes: toOptionalNumber(byId('printEstimatedTimeMinutes')?.value),
     notes: normalizeText(byId('printNotes')?.value) || 'Add notes about settings, tuning, fit, materials, or troubleshooting.',
     filters
   };
+}
+
+function toOptionalNumber(value) {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function formatEntryObject(entry) {

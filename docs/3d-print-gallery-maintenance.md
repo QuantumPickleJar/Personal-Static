@@ -28,6 +28,28 @@ const printGalleryItems = [
 
 Each object inside `printGalleryItems` becomes one gallery card.
 
+## Tokenforge Generator handoff
+
+Every gallery card includes **Customize / Request in Tokenforge**. It opens the configured Tokenforge Generator URL with a URL-safe base64 `handoff` query parameter. The payload follows `tokenforge.handoff.v1` and includes gallery identity and URLs, available print settings, and a customization-ready Generator project name. This portfolio does not create a payment, quote, or print queue.
+
+The central endpoint configuration is in:
+
+```text
+rsc/js/tokenforge-config.js
+```
+
+Local previews default to `http://127.0.0.1:8080`; deployed pages use the clearly marked production placeholder until a public Generator URL is available. Set `data-tokenforge-generator-url` on the page's `<html>` element, or set `window.TOKENFORGE_GENERATOR_URL` before `print-gallery.js` loads, to override either default.
+
+Add these optional fields to an entry when they are known so the handoff can prefill them:
+
+```js
+name: 'Project Title',
+modelUrl: 'https://example.com/model',
+previewUrl: 'https://example.com/preview',
+estimatedGrams: 24,
+estimatedTimeMinutes: 95,
+```
+
 ## Where images should go
 
 Put real print photos here:
@@ -134,6 +156,7 @@ Copy this object into `printGalleryItems` when adding a new print:
 ```js
 {
   id: 'unique-project-slug',
+  name: 'Project Title',
   title: 'Project Title',
   description: 'Short summary of what the print is and why it matters.',
   categories: ['Functional', 'Repair / Utility'],
@@ -147,6 +170,10 @@ Copy this object into `printGalleryItems` when adding a new print:
   image: 'assets/images/prints/example-photo.jpg',
   alt: 'Short description of the visible 3D print photo',
   link: '',
+  modelUrl: '',
+  previewUrl: '',
+  estimatedGrams: null,
+  estimatedTimeMinutes: null,
   notes: 'What I learned, tuned, repaired, changed, or debugged during this print.',
   filters: ['designed-by-me', 'functional', 'repair-utility']
 }
@@ -157,6 +184,7 @@ Copy this object into `printGalleryItems` when adding a new print:
 | Field | Purpose |
 | --- | --- |
 | `id` | Unique slug for the card. Use lowercase letters, numbers, and hyphens. |
+| `name` | Handoff-friendly project name. Use the same value as `title` for normal gallery entries. |
 | `title` | Card title shown to visitors. |
 | `description` | Short explanation of the print. |
 | `categories` | Human-readable category chips shown on the card. |
@@ -170,6 +198,10 @@ Copy this object into `printGalleryItems` when adding a new print:
 | `image` | Relative path to the project image. |
 | `alt` | Accessible image description. Do not leave this blank. |
 | `link` | Optional external model/source/writeup link. Leave as `''` when unused. |
+| `modelUrl` | Optional direct model URL sent to Tokenforge. |
+| `previewUrl` | Optional preview URL sent to Tokenforge; the gallery image is used when omitted. |
+| `estimatedGrams` | Optional estimated filament weight sent to Tokenforge. |
+| `estimatedTimeMinutes` | Optional estimated print time in minutes sent to Tokenforge. |
 | `notes` | What was learned, tuned, fixed, or customized. |
 | `filters` | Machine-readable filter keys used by the filter buttons. |
 

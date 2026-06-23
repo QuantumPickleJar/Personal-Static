@@ -1,3 +1,5 @@
+import { TOKENFORGE_GENERATOR_URL } from './tokenforge-config.js';
+
 const PRINT_FILTER_ALL = 'all';
 const PRINT_PAGE_SIZE = 6;
 
@@ -12,6 +14,7 @@ const sourceTypeLabels = {
 const printGalleryItems = [
   {
     id: 'manual-swap-token-sample',
+    name: 'Manual Color-Swap Game Token',
     title: 'Manual Color-Swap Game Token',
     description: 'Placeholder entry for a thin token/card-style print using planned layer-based color changes without AMS hardware.',
     categories: ['Tokens / Cards', 'Multi-color / Manual Filament Swap', 'Experimental'],
@@ -30,6 +33,7 @@ const printGalleryItems = [
   },
   {
     id: 'functional-bracket-sample',
+    name: 'Functional Bracket',
     title: 'Functional Bracket',
     description: 'Example utility print entry for a part where fit, orientation, wall count, and strength matter more than decoration.',
     categories: ['Functional', 'Repair / Utility'],
@@ -48,6 +52,7 @@ const printGalleryItems = [
   },
   {
     id: 'repair-insert-sample',
+    name: 'Repair / Replacement Insert',
     title: 'Repair / Replacement Insert',
     description: 'Placeholder for a practical repair print where the goal is to restore or improve an existing object.',
     categories: ['Functional', 'Repair / Utility'],
@@ -66,6 +71,7 @@ const printGalleryItems = [
   },
   {
     id: 'storage-box-sample',
+    name: 'Small Storage Box / Organizer',
     title: 'Small Storage Box / Organizer',
     description: 'Placeholder for a container or organizer print where usability, wall thickness, and print time tradeoffs matter.',
     categories: ['Functional', 'Experimental'],
@@ -84,6 +90,7 @@ const printGalleryItems = [
   },
   {
     id: 'decorative-figure-sample',
+    name: 'Decorative Figure / Display Print',
     title: 'Decorative Figure / Display Print',
     description: 'Placeholder for a successful decorative print where surface finish, supports, and cleanup are the main learning points.',
     categories: ['Decorative'],
@@ -102,6 +109,7 @@ const printGalleryItems = [
   },
   {
     id: 'material-tuning-sample',
+    name: 'Material / Nozzle Tuning Print',
     title: 'Material / Nozzle Tuning Print',
     description: 'Placeholder for calibration and material testing work, such as nozzle changes, adhesion checks, temperature tuning, or strength troubleshooting.',
     categories: ['Experimental'],
@@ -130,9 +138,13 @@ function normalize(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function getItemName(item) {
+  return item.name || item.title || 'Untitled print';
+}
+
 function getSearchText(item) {
   return [
-    item.title,
+    getItemName(item),
     item.description,
     item.material,
     item.modelOrigin,
@@ -142,6 +154,98 @@ function getSearchText(item) {
     ...(item.categories || []),
     ...(item.tags || [])
   ].map(normalize).join(' ');
+}
+
+function getAbsoluteUrl(value) {
+  if (!value) return '';
+
+  try {
+    return new URL(value, window.location.href).toString();
+  } catch (error) {
+    console.warn('Tokenforge handoff skipped an invalid gallery URL.', error);
+    return '';
+  }
+}
+
+function getNumberOrNull(value) {
+  const parsed = Number.parseFloat(String(value || '').replace(',', '.'));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+// Tokenforge handoff contract: tokenforge.handoff.v1. Keep this mapping in
+// sync with the Generator so the portfolio remains a static, public demo.
+function createTokenforgeHandoff(item) {
+  const galleryUrl = new URL(window.location.href);
+  galleryUrl.hash = `print-${item.id}`;
+  const name = getItemName(item);
+
+  return {
+    schema: 'tokenforge.handoff.v1',
+    source: 'portfolio-gallery',
+    intent: 'request-print',
+    item: {
+      id: item.id || '',
+      name,
+      description: item.description || '',
+      galleryUrl: galleryUrl.toString(),
+      imageUrl: getAbsoluteUrl(item.image),
+      modelUrl: getAbsoluteUrl(item.modelUrl),
+      previewUrl: getAbsoluteUrl(item.previewUrl || item.image)
+    },
+    print: {
+      category: (item.categories || []).join(', '),
+      material: item.material || '',
+      nozzleMm: getNumberOrNull(item.nozzle),
+      layerHeightMm: getNumberOrNull(item.layerHeight),
+      colors: Array.isArray(item.colors) ? item.colors : [],
+      estimatedGrams: getNumberOrNull(item.estimatedGrams),
+      estimatedTimeMinutes: getNumberOrNull(item.estimatedTimeMinutes),
+      notes: item.notes || ''
+    },
+    generator: {
+      mode: 'IMG',
+      projectName: name,
+      allowCustomization: true
+    }
+  };
+}
+
+function encodeUrlSafeBase64Json(value) {
+  const bytes = new TextEncoder().encode(JSON.stringify(value));
+  let binary = '';
+  const chunkSize = 0x8000;
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+
+  return btoa(binary)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+function setTokenforgeHandoffStatus(message) {
+  const status = document.getElementById('tokenforgeHandoffStatus');
+  if (!status) return;
+
+  status.hidden = !message;
+  status.textContent = message || '';
+}
+
+function openTokenforge(item) {
+  let destination = TOKENFORGE_GENERATOR_URL;
+
+  try {
+    const generatorUrl = new URL(TOKENFORGE_GENERATOR_URL);
+    generatorUrl.searchParams.set('handoff', encodeUrlSafeBase64Json(createTokenforgeHandoff(item)));
+    destination = generatorUrl.toString();
+  } catch (error) {
+    console.warn('Could not encode the Tokenforge handoff; opening a blank request instead.', error);
+    setTokenforgeHandoffStatus('Could not prefill this request. Opening Tokenforge for a new custom request instead.');
+  }
+
+  window.location.assign(destination);
 }
 
 function getActiveFilter() {
@@ -167,6 +271,7 @@ function createListMarkup(items) {
 // item: print gallery data object
 // Returns: HTML string for a single accessible gallery card
 function createPrintCard(item) {
+  const itemName = getItemName(item);
   const categories = createListMarkup(item.categories || []);
   const colors = (item.colors || []).join(', ') || 'Not recorded';
   const tags = createListMarkup(item.tags || []);
@@ -176,16 +281,16 @@ function createPrintCard(item) {
     : '';
 
   return `
-    <article class="print-card" data-print-id="${escapeHtml(item.id)}">
-      <img class="print-card-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || item.title)}" loading="lazy">
+    <article class="print-card" id="print-${escapeHtml(item.id)}" data-print-id="${escapeHtml(item.id)}">
+      <img class="print-card-image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.alt || itemName)}" loading="lazy">
       <div class="print-card-body">
         <div class="print-card-header-row">
-          <h3>${escapeHtml(item.title)}</h3>
+          <h3>${escapeHtml(itemName)}</h3>
           <span class="print-source-badge">${escapeHtml(sourceLabel)}</span>
         </div>
         <p class="print-card-description">${escapeHtml(item.description)}</p>
-        <div class="print-card-tags" aria-label="Categories for ${escapeHtml(item.title)}">${categories}</div>
-        <div class="print-card-specs" aria-label="Print settings for ${escapeHtml(item.title)}">
+        <div class="print-card-tags" aria-label="Categories for ${escapeHtml(itemName)}">${categories}</div>
+        <div class="print-card-specs" aria-label="Print settings for ${escapeHtml(itemName)}">
           <div><span class="print-card-meta-label">Material</span><strong>${escapeHtml(item.material || 'Not recorded')}</strong></div>
           <div><span class="print-card-meta-label">Colors</span><strong>${escapeHtml(colors)}</strong></div>
           <div><span class="print-card-meta-label">Nozzle</span><strong>${escapeHtml(item.nozzle || 'Not recorded')}</strong></div>
@@ -194,8 +299,11 @@ function createPrintCard(item) {
         <div class="print-card-footer">
           <p><span class="print-card-meta-label">Model origin:</span> ${escapeHtml(item.modelOrigin || 'Not recorded')}</p>
           <p class="print-card-notes"><span class="print-card-meta-label">Learned / notes:</span> ${escapeHtml(item.notes || 'Add notes when this entry is replaced.')}</p>
-          <div class="print-card-tags" aria-label="Search tags for ${escapeHtml(item.title)}">${tags}</div>
+          <div class="print-card-tags" aria-label="Search tags for ${escapeHtml(itemName)}">${tags}</div>
           ${linkMarkup}
+          <button class="tokenforge-handoff-btn" type="button" data-tokenforge-print-id="${escapeHtml(item.id)}">
+            Customize / Request in Tokenforge
+          </button>
         </div>
       </div>
     </article>
@@ -291,6 +399,16 @@ function initPrintGallery() {
   }
 
   searchInput.addEventListener('input', resetToFirstPageAndRender);
+  document.getElementById('printGalleryGrid')?.addEventListener('click', function(event) {
+    const handoffButton = event.target.closest('[data-tokenforge-print-id]');
+    if (!handoffButton) return;
+
+    const item = printGalleryItems.find(function(candidate) {
+      return candidate.id === handoffButton.dataset.tokenforgePrintId;
+    });
+
+    if (item) openTokenforge(item);
+  });
   filterButtons.forEach(function(button) {
     button.addEventListener('click', function() {
       setActiveFilter(button);

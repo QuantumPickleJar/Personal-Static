@@ -94,6 +94,7 @@
         </div>
       </div>
       <div id="printGalleryGrid" class="print-gallery-grid" aria-live="polite"></div>
+      <p id="tokenforgeHandoffStatus" class="tokenforge-handoff-status" role="status" aria-live="polite" hidden></p>
       <p id="printNoResults" class="print-no-results" hidden>No matching prints found. Try clearing the search or selecting All.</p>
       <nav class="print-pagination" aria-label="Print gallery pagination">
         <button id="printPrevPage" class="print-page-btn" type="button">Previous</button>
@@ -248,6 +249,24 @@
             Optional source/writeup link
             <input id="printLink" type="url" placeholder="https://...">
           </label>
+          <label>
+            Optional model URL
+            <input id="printModelUrl" type="url" placeholder="https://...">
+          </label>
+          <label>
+            Optional preview URL
+            <input id="printPreviewUrl" type="url" placeholder="https://...">
+          </label>
+          <div class="print-wizard-grid">
+            <label>
+              Estimated grams
+              <input id="printEstimatedGrams" type="number" min="0" step="0.1" placeholder="24">
+            </label>
+            <label>
+              Estimated print minutes
+              <input id="printEstimatedTimeMinutes" type="number" min="0" step="1" placeholder="95">
+            </label>
+          </div>
           <label>
             Image alt text
             <input id="printAlt" type="text" required placeholder="Black PLA printed lid with raised gold text">
