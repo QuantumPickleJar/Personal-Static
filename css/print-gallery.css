@@ -245,12 +245,73 @@
   font-weight: 650;
 }
 
+.tokenforge-handoff-btn {
+  align-self: start;
+  border: 1px solid rgba(103, 80, 164, 0.35);
+  border-radius: 999px;
+  background: var(--md-sys-color-primary, #6750a4);
+  color: var(--md-sys-color-on-primary, #ffffff);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+  min-height: 42px;
+  padding: 0.6rem 0.95rem;
+}
+
+.tokenforge-handoff-btn:hover,
+.tokenforge-handoff-btn:focus-visible {
+  background: var(--md-sys-color-primary-container, #eaddff);
+  color: var(--md-sys-color-on-primary-container, #21005d);
+  outline: 3px solid rgba(103, 80, 164, 0.24);
+  outline-offset: 2px;
+}
+
+.tokenforge-handoff-status {
+  border-radius: 12px;
+  background: rgba(103, 80, 164, 0.08);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+}
+
 .print-no-results {
   border-radius: var(--app-card-radius, 18px);
   background: rgba(103, 80, 164, 0.08);
   color: var(--md-sys-color-on-surface, #1c1b1f);
   padding: 1rem;
   margin: 0;
+}
+
+.print-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.print-page-btn {
+  border: 1px solid rgba(103, 80, 164, 0.20);
+  border-radius: 999px;
+  background: rgba(103, 80, 164, 0.08);
+  color: var(--md-sys-color-primary, #6750a4);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+  min-height: 40px;
+  padding: 0.5rem 0.9rem;
+}
+
+.print-page-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#printPageStatus {
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  font-weight: 650;
+  min-width: 7rem;
+  text-align: center;
 }
 
 .process-grid {
@@ -336,7 +397,8 @@ html body.dark-mode .print-card-description,
 html body.dark-mode .print-card-notes,
 html body.dark-mode .printdesk-teaser p,
 html body.dark-mode .process-grid p,
-html body.dark-mode .print-gallery-project-teaser p {
+html body.dark-mode .print-gallery-project-teaser p,
+html body.dark-mode #printPageStatus {
   color: rgba(245, 241, 255, 0.76);
 }
 
@@ -348,7 +410,9 @@ html body.dark-mode .process-grid article {
   border-color: rgba(208, 188, 255, 0.16);
 }
 
-html body.dark-mode .print-filter-btn {
+html body.dark-mode .print-filter-btn,
+html body.dark-mode .print-page-btn,
+html body.dark-mode .tokenforge-handoff-btn {
   background: rgba(208, 188, 255, 0.10);
   color: rgba(245, 241, 255, 0.92);
   border-color: rgba(208, 188, 255, 0.18);
@@ -363,6 +427,11 @@ html body.dark-mode .printdesk-note {
   background: rgba(208, 188, 255, 0.14);
   color: #d0bcff;
   border-color: rgba(208, 188, 255, 0.26);
+}
+
+html body.dark-mode .tokenforge-handoff-status {
+  background: rgba(208, 188, 255, 0.14);
+  color: rgba(245, 241, 255, 0.92);
 }
 
 @media (max-width: 820px) {
@@ -402,5 +471,14 @@ html body.dark-mode .printdesk-note {
 
   .print-card-specs {
     grid-template-columns: 1fr;
+  }
+
+  .print-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .print-page-btn {
+    width: 100%;
   }
 }
