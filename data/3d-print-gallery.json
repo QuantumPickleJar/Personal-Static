@@ -1,0 +1,24 @@
+{
+  "entries": [
+    {
+      "id": "hello-world",
+      "title": "Hello, world!",
+      "shortDescription": "A test submission",
+      "longDescription": "nothing to see here",
+      "material": "PLA",
+      "printer": "Ender 3 Pro",
+      "nozzle": "0.4mm",
+      "layerHeight": "0.2mm",
+      "printTime": "6h",
+      "tags": [],
+      "category": "Tests",
+      "status": "Done",
+      "notes": "",
+      "images": [
+        "assets/gallery/hello-world/cfe403a1-ae72-4392-a7fa-62d5e3bcdf2c.png"
+      ],
+      "attachment": null,
+      "updatedAt": "2026-06-25T14:04:29.569Z"
+    }
+  ]
+}
