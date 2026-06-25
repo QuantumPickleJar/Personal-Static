@@ -1,0 +1,81 @@
+@media (max-width: 560px) {
+  .gallery-shell {
+    padding-inline: 0.75rem;
+  }
+
+  .print-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .print-card {
+    border-radius: 14px;
+  }
+
+  .print-card-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .print-card-body {
+    gap: 0.5rem;
+    padding: 0.7rem;
+  }
+
+  .print-card-header-row {
+    gap: 0.4rem;
+  }
+
+  .print-card h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+
+  .print-source-badge {
+    align-self: flex-start;
+    font-size: 0.66rem;
+    line-height: 1.1;
+    padding: 0.25rem 0.4rem;
+  }
+
+  .print-card-description,
+  .print-card-specs,
+  .print-card-notes,
+  .print-card-footer .print-card-tags,
+  .print-card-link {
+    display: none;
+  }
+
+  .print-card-body > .print-card-tags {
+    gap: 0.3rem;
+  }
+
+  .print-card-body > .print-card-tags span {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0.25rem 0.4rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .print-card-footer {
+    gap: 0;
+  }
+
+  .print-card-footer .tokenforge-handoff-btn {
+    justify-content: center;
+    min-height: 36px;
+    padding: 0.45rem 0.5rem;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 340px) {
+  .print-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
