@@ -1,8 +1,8 @@
 export const TOKENFORGE_LOCAL_GENERATOR_URL = 'http://127.0.0.1:8080';
 export const TOKENFORGE_PRODUCTION_GENERATOR_URL = 'https://tokenforge.example.com';
 
-export const PRINTDESK_REQUEST_LOCAL_URL = 'http://localhost:5173/tokenforge-printdesk/request';
-export const PRINTDESK_REQUEST_PRODUCTION_URL = 'https://quantumpicklejar.github.io/tokenforge-printdesk/request';
+export const PRINTDESK_REQUEST_LOCAL_URL = 'http://localhost:5173/tokenforge-printdesk/#/request';
+export const PRINTDESK_REQUEST_PRODUCTION_URL = 'https://quantumpicklejar.github.io/tokenforge-printdesk/#/request';
 
 export const PRINTDESK_GALLERY_ADMIN_LOCAL_URL = 'http://192.168.0.149:5175';
 export const PRINTDESK_GALLERY_ADMIN_PRODUCTION_URL = 'http://192.168.0.149:5175';
