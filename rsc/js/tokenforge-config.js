@@ -1,5 +1,5 @@
 export const TOKENFORGE_LOCAL_GENERATOR_URL = 'http://127.0.0.1:8080';
-export const TOKENFORGE_PRODUCTION_GENERATOR_URL = 'https://tokenforge.example.com';
+export const TOKENFORGE_PRODUCTION_GENERATOR_URL = 'https://github.com/QuantumPickleJar/tokenforge-generator';
 
 export const PRINTDESK_REQUEST_LOCAL_URL = 'http://localhost:5173/tokenforge-printdesk/#/request';
 export const PRINTDESK_REQUEST_PRODUCTION_URL = 'https://quantumpicklejar.github.io/tokenforge-printdesk/#/request';
