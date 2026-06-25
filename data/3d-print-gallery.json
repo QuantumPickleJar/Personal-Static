@@ -19,6 +19,33 @@
       ],
       "attachment": null,
       "updatedAt": "2026-06-25T14:05:34.875Z"
+    },
+    {
+      "id": "token-caddy-2-slot",
+      "title": "Token Caddy (2 slot)",
+      "shortDescription": "Storage for your tokens!",
+      "longDescription": "A nifty little portable carrying case that feaures swing-out compartments for storing your tokens.  There are 1-7 slots available, but for this one I opted for 2 since I had Treasure and Goblin tokens to carry for the deck I was building it for.",
+      "material": "PLA",
+      "printer": "Ender 3 Pro",
+      "nozzle": "0.4mm",
+      "layerHeight": "0.2mm",
+      "printTime": "4h",
+      "tags": [
+        "magic",
+        "mtg",
+        "token",
+        "storage",
+        "portable"
+      ],
+      "category": "Tabletop",
+      "status": "Done",
+      "notes": "",
+      "images": [
+        "assets/gallery/token-caddy-2-slot/20260625_123759.jpg",
+        "assets/gallery/token-caddy-2-slot/20260625_123804.jpg"
+      ],
+      "attachment": "assets/gallery-attachments/token-caddy-2-slot/MTG_60_80cards_gambling_goblins_mono_red.stl",
+      "updatedAt": "2026-06-25T18:10:39.612Z"
     }
   ]
 }
