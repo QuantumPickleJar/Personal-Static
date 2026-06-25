@@ -1,132 +1,23 @@
-import { TOKENFORGE_GENERATOR_URL } from './tokenforge-config.js';
+import {
+  TOKENFORGE_GENERATOR_URL,
+  PRINTDESK_GALLERY_ADMIN_URL
+} from './tokenforge-config.js';
 
 const PRINT_FILTER_ALL = 'all';
 const PRINT_PAGE_SIZE = 6;
+const GALLERY_DATA_URL = 'data/3d-print-gallery.json';
+const PLACEHOLDER_IMAGE = 'assets/images/prints/placeholder.svg';
 
 let currentPrintPage = 1;
+let printGalleryItems = [];
+let galleryLoadState = 'loading';
+let galleryLoadMessage = 'Loading print entries…';
 
 const sourceTypeLabels = {
   designed: 'Designed by me',
   remixed: 'Remixed/customized by me',
   printed: 'Printed by me / model by another maker'
 };
-
-const printGalleryItems = [
-  {
-    id: 'manual-swap-token-sample',
-    name: 'Manual Color-Swap Game Token',
-    title: 'Manual Color-Swap Game Token',
-    description: 'Placeholder entry for a thin token/card-style print using planned layer-based color changes without AMS hardware.',
-    categories: ['Tokens / Cards', 'Multi-color / Manual Filament Swap', 'Experimental'],
-    sourceType: 'remixed',
-    material: 'PLA',
-    colors: ['Black', 'Gold', 'Red'],
-    nozzle: '0.2mm',
-    layerHeight: '0.1mm',
-    modelOrigin: 'Placeholder for future TokenForge-related token work',
-    tags: ['token', 'manual swap', 'relief', 'multi-color', 'PLA'],
-    image: 'assets/images/prints/placeholder.svg',
-    alt: 'Placeholder image for a manual color-swap 3D printed token',
-    link: '',
-    notes: 'Replace with a real photo and the actual layer/color plan once documented.',
-    filters: ['remixed', 'tokens-cards', 'manual-filament-swap', 'experimental']
-  },
-  {
-    id: 'functional-bracket-sample',
-    name: 'Functional Bracket',
-    title: 'Functional Bracket',
-    description: 'Example utility print entry for a part where fit, orientation, wall count, and strength matter more than decoration.',
-    categories: ['Functional', 'Repair / Utility'],
-    sourceType: 'printed',
-    material: 'PLA or PETG',
-    colors: ['Black'],
-    nozzle: '0.4mm',
-    layerHeight: '0.2mm',
-    modelOrigin: 'Placeholder for public model attribution',
-    tags: ['functional', 'bracket', 'utility', 'fitment'],
-    image: 'assets/images/prints/placeholder.svg',
-    alt: 'Placeholder image for a functional 3D printed bracket',
-    link: '',
-    notes: 'Track model source, print orientation, wall count, and any tolerance adjustments here.',
-    filters: ['printed-by-me', 'functional', 'repair-utility']
-  },
-  {
-    id: 'repair-insert-sample',
-    name: 'Repair / Replacement Insert',
-    title: 'Repair / Replacement Insert',
-    description: 'Placeholder for a practical repair print where the goal is to restore or improve an existing object.',
-    categories: ['Functional', 'Repair / Utility'],
-    sourceType: 'designed',
-    material: 'PETG',
-    colors: ['Dark Gray'],
-    nozzle: '0.4mm',
-    layerHeight: '0.2mm',
-    modelOrigin: 'Designed from measurements / fit testing',
-    tags: ['repair', 'utility', 'measurement', 'iteration'],
-    image: 'assets/images/prints/placeholder.svg',
-    alt: 'Placeholder image for a repair-oriented 3D printed insert',
-    link: '',
-    notes: 'A good real entry would include what failed, what was measured, and how many fit iterations were needed.',
-    filters: ['designed-by-me', 'functional', 'repair-utility']
-  },
-  {
-    id: 'storage-box-sample',
-    name: 'Small Storage Box / Organizer',
-    title: 'Small Storage Box / Organizer',
-    description: 'Placeholder for a container or organizer print where usability, wall thickness, and print time tradeoffs matter.',
-    categories: ['Functional', 'Experimental'],
-    sourceType: 'remixed',
-    material: 'PLA',
-    colors: ['Black', 'White'],
-    nozzle: '0.4mm',
-    layerHeight: '0.2mm',
-    modelOrigin: 'Placeholder for remixed or customized source model',
-    tags: ['box', 'organizer', 'walls', 'infill', 'fit'],
-    image: 'assets/images/prints/placeholder.svg',
-    alt: 'Placeholder image for a printed storage box or organizer',
-    link: '',
-    notes: 'Useful place to document wall count, infill decisions, magnet slots, or any lid-fit adjustments.',
-    filters: ['remixed', 'functional', 'experimental']
-  },
-  {
-    id: 'decorative-figure-sample',
-    name: 'Decorative Figure / Display Print',
-    title: 'Decorative Figure / Display Print',
-    description: 'Placeholder for a successful decorative print where surface finish, supports, and cleanup are the main learning points.',
-    categories: ['Decorative'],
-    sourceType: 'printed',
-    material: 'PLA',
-    colors: ['Beige'],
-    nozzle: '0.4mm',
-    layerHeight: '0.16mm',
-    modelOrigin: 'Placeholder for public model attribution',
-    tags: ['decorative', 'supports', 'surface finish', 'display'],
-    image: 'assets/images/prints/placeholder.svg',
-    alt: 'Placeholder image for a decorative 3D printed figure',
-    link: '',
-    notes: 'Replace with a real model attribution and support/cleanup notes before publishing as a real entry.',
-    filters: ['printed-by-me', 'decorative']
-  },
-  {
-    id: 'material-tuning-sample',
-    name: 'Material / Nozzle Tuning Print',
-    title: 'Material / Nozzle Tuning Print',
-    description: 'Placeholder for calibration and material testing work, such as nozzle changes, adhesion checks, temperature tuning, or strength troubleshooting.',
-    categories: ['Experimental'],
-    sourceType: 'printed',
-    material: 'PLA, PETG, wood PLA, or TPU',
-    colors: ['Varies'],
-    nozzle: '0.2mm / 0.4mm',
-    layerHeight: '0.1mm - 0.2mm',
-    modelOrigin: 'Calibration or test model',
-    tags: ['calibration', 'nozzle', 'adhesion', 'temperature', 'troubleshooting'],
-    image: 'assets/images/prints/placeholder.svg',
-    alt: 'Placeholder image for a 3D printer calibration or tuning print',
-    link: '',
-    notes: 'Use this entry type for evidence of process: what changed, what improved, and what still needed tuning.',
-    filters: ['printed-by-me', 'experimental']
-  }
-];
 
 function escapeHtml(value) {
   const element = document.createElement('div');
@@ -138,6 +29,131 @@ function normalize(value) {
   return String(value || '').trim().toLowerCase();
 }
 
+function toArray(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (value === null || value === undefined || value === '') return [];
+  return [value];
+}
+
+function slugify(value) {
+  return normalize(value)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function deriveAltText(entry, title) {
+  const explicitAlt = String(entry.alt || entry.altText || '').trim();
+  if (explicitAlt) return explicitAlt;
+  return title ? `${title} 3D print photo` : '3D print gallery photo';
+}
+
+function normalizeCategories(entry) {
+  const rawCategories = [
+    ...toArray(entry.categories),
+    ...toArray(entry.category)
+  ];
+
+  return rawCategories
+    .map((category) => String(category || '').trim())
+    .filter(Boolean);
+}
+
+function deriveFilters(entry, categories, tags) {
+  const filterValues = new Set(toArray(entry.filters).map(slugify).filter(Boolean));
+
+  categories.forEach((category) => {
+    const categorySlug = slugify(category);
+    if (categorySlug) filterValues.add(categorySlug);
+  });
+
+  tags.forEach((tag) => {
+    const tagSlug = slugify(tag);
+    if (tagSlug) filterValues.add(tagSlug);
+  });
+
+  if (entry.sourceType === 'designed') filterValues.add('designed-by-me');
+  if (entry.sourceType === 'printed') filterValues.add('printed-by-me');
+
+  return Array.from(filterValues);
+}
+
+function normalizeGalleryEntry(entry, index) {
+  const rawEntry = entry && typeof entry === 'object' ? entry : {};
+  const title = String(rawEntry.title || rawEntry.name || 'Untitled print').trim();
+  const id = slugify(rawEntry.id || title || `print-${index + 1}`) || `print-${index + 1}`;
+  const description = String(
+    rawEntry.shortDescription
+    || rawEntry.description
+    || rawEntry.longDescription
+    || rawEntry.notes
+    || ''
+  ).trim();
+  const categories = normalizeCategories(rawEntry);
+  const tags = toArray(rawEntry.tags).map((tag) => String(tag).trim()).filter(Boolean);
+  const images = toArray(rawEntry.images).map((image) => String(image).trim()).filter(Boolean);
+  const image = String(rawEntry.image || images[0] || PLACEHOLDER_IMAGE).trim();
+  const sourceType = String(rawEntry.sourceType || '').trim();
+
+  return {
+    ...rawEntry,
+    id,
+    name: title,
+    title,
+    description,
+    longDescription: String(rawEntry.longDescription || '').trim(),
+    categories,
+    category: String(rawEntry.category || categories[0] || '').trim(),
+    sourceType,
+    material: String(rawEntry.material || '').trim(),
+    printer: String(rawEntry.printer || '').trim(),
+    nozzle: String(rawEntry.nozzle || '').trim(),
+    layerHeight: String(rawEntry.layerHeight || '').trim(),
+    printTime: String(rawEntry.printTime || '').trim(),
+    status: String(rawEntry.status || '').trim(),
+    notes: String(rawEntry.notes || '').trim(),
+    tags,
+    images,
+    image,
+    alt: deriveAltText(rawEntry, title),
+    attachment: rawEntry.attachment || null,
+    filters: deriveFilters(rawEntry, categories, tags)
+  };
+}
+
+async function loadPrintGalleryData() {
+  galleryLoadState = 'loading';
+  galleryLoadMessage = 'Loading print entries…';
+  renderPrintGallery();
+
+  try {
+    const response = await fetch(GALLERY_DATA_URL, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`Gallery JSON returned ${response.status}`);
+    }
+
+    const payload = await response.json();
+    const entries = Array.isArray(payload?.entries)
+      ? payload.entries
+      : Array.isArray(payload)
+        ? payload
+        : [];
+
+    printGalleryItems = entries.map(normalizeGalleryEntry);
+    galleryLoadState = 'loaded';
+    galleryLoadMessage = printGalleryItems.length
+      ? ''
+      : 'No 3D print entries are published yet. Add entries through the Pi admin service.';
+  } catch (error) {
+    console.warn('3D print gallery JSON could not be loaded.', error);
+    printGalleryItems = [];
+    galleryLoadState = 'error';
+    galleryLoadMessage = 'The 3D print gallery data could not be loaded. The page is still usable, but no entries are available right now.';
+  }
+
+  currentPrintPage = 1;
+  renderPrintGallery();
+}
+
 function getItemName(item) {
   return item.name || item.title || 'Untitled print';
 }
@@ -146,7 +162,13 @@ function getSearchText(item) {
   return [
     getItemName(item),
     item.description,
+    item.longDescription,
     item.material,
+    item.printer,
+    item.nozzle,
+    item.layerHeight,
+    item.printTime,
+    item.status,
     item.modelOrigin,
     item.notes,
     sourceTypeLabels[item.sourceType],
@@ -253,7 +275,7 @@ function getActiveFilter() {
   return activeButton ? activeButton.dataset.filter : PRINT_FILTER_ALL;
 }
 
-// item: print gallery data object
+// item: normalized print gallery data object
 // activeFilter: selected filter key, such as "functional" or "designed-by-me"
 // searchTerm: lower-cased free-text query from the search box
 function matchesFilters(item, activeFilter, searchTerm) {
@@ -268,17 +290,20 @@ function createListMarkup(items) {
   }).join('');
 }
 
-// item: print gallery data object
+function createOptionalLink(label, href) {
+  if (!href) return '';
+  return `<a class="print-card-link" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+}
+
+// item: normalized print gallery data object
 // Returns: HTML string for a single accessible gallery card
 function createPrintCard(item) {
   const itemName = getItemName(item);
   const categories = createListMarkup(item.categories || []);
-  const colors = (item.colors || []).join(', ') || 'Not recorded';
   const tags = createListMarkup(item.tags || []);
-  const sourceLabel = sourceTypeLabels[item.sourceType] || 'Source not recorded';
-  const linkMarkup = item.link
-    ? `<a class="print-card-link" href="${escapeHtml(item.link)}" target="_blank" rel="noopener">View source or notes</a>`
-    : '';
+  const badgeLabel = sourceTypeLabels[item.sourceType] || item.status || item.category || 'Print entry';
+  const sourceLink = createOptionalLink('View source or notes', item.link);
+  const attachmentLink = createOptionalLink('Download attachment', item.attachment);
 
   return `
     <article class="print-card" id="print-${escapeHtml(item.id)}" data-print-id="${escapeHtml(item.id)}">
@@ -286,21 +311,23 @@ function createPrintCard(item) {
       <div class="print-card-body">
         <div class="print-card-header-row">
           <h3>${escapeHtml(itemName)}</h3>
-          <span class="print-source-badge">${escapeHtml(sourceLabel)}</span>
+          <span class="print-source-badge">${escapeHtml(badgeLabel)}</span>
         </div>
-        <p class="print-card-description">${escapeHtml(item.description)}</p>
+        <p class="print-card-description">${escapeHtml(item.description || 'No description recorded yet.')}</p>
         <div class="print-card-tags" aria-label="Categories for ${escapeHtml(itemName)}">${categories}</div>
         <div class="print-card-specs" aria-label="Print settings for ${escapeHtml(itemName)}">
           <div><span class="print-card-meta-label">Material</span><strong>${escapeHtml(item.material || 'Not recorded')}</strong></div>
-          <div><span class="print-card-meta-label">Colors</span><strong>${escapeHtml(colors)}</strong></div>
+          <div><span class="print-card-meta-label">Printer</span><strong>${escapeHtml(item.printer || 'Not recorded')}</strong></div>
           <div><span class="print-card-meta-label">Nozzle</span><strong>${escapeHtml(item.nozzle || 'Not recorded')}</strong></div>
           <div><span class="print-card-meta-label">Layer height</span><strong>${escapeHtml(item.layerHeight || 'Not recorded')}</strong></div>
+          <div><span class="print-card-meta-label">Print time</span><strong>${escapeHtml(item.printTime || 'Not recorded')}</strong></div>
+          <div><span class="print-card-meta-label">Status</span><strong>${escapeHtml(item.status || 'Not recorded')}</strong></div>
         </div>
         <div class="print-card-footer">
-          <p><span class="print-card-meta-label">Model origin:</span> ${escapeHtml(item.modelOrigin || 'Not recorded')}</p>
-          <p class="print-card-notes"><span class="print-card-meta-label">Learned / notes:</span> ${escapeHtml(item.notes || 'Add notes when this entry is replaced.')}</p>
+          <p class="print-card-notes"><span class="print-card-meta-label">Learned / notes:</span> ${escapeHtml(item.notes || 'No notes recorded yet.')}</p>
           <div class="print-card-tags" aria-label="Search tags for ${escapeHtml(itemName)}">${tags}</div>
-          ${linkMarkup}
+          ${sourceLink}
+          ${attachmentLink}
           <button class="tokenforge-handoff-btn" type="button" data-tokenforge-print-id="${escapeHtml(item.id)}">
             Customize / Request in Tokenforge
           </button>
@@ -364,9 +391,18 @@ function renderPrintGallery() {
   const pageItems = visibleItems.slice(pagination.startIndex, pagination.endIndex);
 
   galleryGrid.innerHTML = pageItems.map(createPrintCard).join('');
-  noResults.hidden = visibleItems.length > 0;
 
-  if (visibleItems.length === 0) {
+  if (printGalleryItems.length === 0) {
+    noResults.textContent = galleryLoadMessage;
+    noResults.hidden = galleryLoadState === 'loading' && !galleryLoadMessage;
+  } else {
+    noResults.textContent = 'No matching prints found. Try clearing the search or selecting All.';
+    noResults.hidden = visibleItems.length > 0;
+  }
+
+  if (galleryLoadState === 'loading') {
+    resultCount.textContent = 'Loading print entries…';
+  } else if (visibleItems.length === 0) {
     resultCount.textContent = `0 of ${printGalleryItems.length} print entries shown`;
   } else {
     resultCount.textContent = `${pagination.startIndex + 1}-${pagination.endIndex} of ${visibleItems.length} matching print entries shown`;
@@ -393,6 +429,11 @@ function initPrintGallery() {
   const filterButtons = document.querySelectorAll('.print-filter-btn');
   const previousButton = document.getElementById('printPrevPage');
   const nextButton = document.getElementById('printNextPage');
+  const adminLink = document.getElementById('printAdminServiceLink');
+
+  if (adminLink && PRINTDESK_GALLERY_ADMIN_URL) {
+    adminLink.href = PRINTDESK_GALLERY_ADMIN_URL;
+  }
 
   if (!searchInput || filterButtons.length === 0) {
     return;
@@ -430,7 +471,7 @@ function initPrintGallery() {
     });
   }
 
-  renderPrintGallery();
+  loadPrintGalleryData();
 }
 
 document.addEventListener('DOMContentLoaded', initPrintGallery);
