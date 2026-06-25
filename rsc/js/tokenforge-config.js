@@ -4,10 +4,11 @@
 export const TOKENFORGE_LOCAL_GENERATOR_URL = 'http://127.0.0.1:8080';
 export const TOKENFORGE_PRODUCTION_GENERATOR_URL = 'https://tokenforge.example.com';
 
-// Pi Gallery Admin endpoint configuration. The local fallback is only for
-// development on the home network; set a deployed URL before publishing.
+// Pi Gallery Admin endpoint configuration. This is intentionally a maintainer
+// link, not a public customer flow. Until the auth service has a public URL,
+// both local and deployed portfolio pages should point at the Pi service root.
 export const PRINTDESK_GALLERY_ADMIN_LOCAL_URL = 'http://192.168.0.149:5175';
-export const PRINTDESK_GALLERY_ADMIN_PRODUCTION_URL = 'https://printdesk-gallery-admin.example.com';
+export const PRINTDESK_GALLERY_ADMIN_PRODUCTION_URL = 'http://192.168.0.149:5175';
 
 function isLocalHost(hostname) {
   return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
@@ -33,8 +34,8 @@ export const TOKENFORGE_GENERATOR_URL = getConfiguredGeneratorUrl()
     : TOKENFORGE_PRODUCTION_GENERATOR_URL);
 
 // The Pi service URL is intentionally centralized here so the public page never
-// asks for a GitHub PAT. Local previews use the Pi fallback; deployed pages
-// should override this with data-printdesk-gallery-admin-url or a window value.
+// asks for a GitHub PAT. Override this with data-printdesk-gallery-admin-url or
+// window.PRINTDESK_GALLERY_ADMIN_URL when a public admin URL exists.
 export const PRINTDESK_GALLERY_ADMIN_URL = getConfiguredGalleryAdminUrl()
   || (isLocalHost(window.location.hostname)
     ? PRINTDESK_GALLERY_ADMIN_LOCAL_URL
