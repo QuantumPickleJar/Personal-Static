@@ -18,7 +18,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="css/print-gallery.css">
-  <link rel="stylesheet" href="css/print-gallery-admin.css">
 </head>
 <body>
   <div id="navDrawerContainer"></div>
@@ -72,18 +71,17 @@
       </div>
     </section>
 
-    <section id="printAdminPanel" class="print-section print-admin-panel" aria-labelledby="print-admin-title" hidden>
-      <div>
-        <p class="eyebrow">Maintainer tool</p>
-        <h2 id="print-admin-title">Add a gallery entry</h2>
-        <p>
-          Owner-only helper for adding print photos and entry metadata from the browser. It uses a GitHub token for this repo instead of adding a backend to the portfolio site.
-        </p>
+    <section class="print-section" aria-labelledby="print-admin-title">
+      <div class="print-section-heading-row compact">
+        <div>
+          <p class="eyebrow">Maintainer tool</p>
+          <h2 id="print-admin-title">Gallery admin</h2>
+        </div>
+        <a id="printAdminServiceLink" class="tokenforge-handoff-btn" href="http://192.168.0.149:5175" target="_blank" rel="noopener">Open Pi admin</a>
       </div>
-      <button id="printOpenWizard" class="print-admin-open" type="button">
-        <span class="material-symbols-outlined" aria-hidden="true">add_photo_alternate</span>
-        Add gallery entry
-      </button>
+      <p class="print-lede secondary-lede">
+        New print entries are managed by the Pi-based Printdesk Gallery Auth service, which commits JSON and images to this repository. Do not paste GitHub personal access tokens into the public portfolio page.
+      </p>
     </section>
 
     <section class="print-section gallery-shell" aria-labelledby="gallery-title">
@@ -138,187 +136,6 @@
     </section>
   </main>
 
-  <div
-    id="printEntryWizard"
-    class="print-entry-wizard"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="printWizardTitle"
-    aria-hidden="true"
-    data-gallery-repo="QuantumPickleJar/Personal-Static"
-    data-gallery-branch="main"
-    data-gallery-data-file="rsc/js/print-gallery.js"
-    data-gallery-image-dir="assets/images/prints"
-    hidden>
-    <div class="print-wizard-backdrop" data-close-print-wizard></div>
-    <section class="print-wizard-panel" tabindex="-1">
-      <header class="print-wizard-header">
-        <div>
-          <p class="eyebrow">Maintainer wizard</p>
-          <h2 id="printWizardTitle">Upload a 3D print gallery entry</h2>
-        </div>
-        <button id="printWizardClose" class="print-wizard-icon-btn" type="button" aria-label="Close gallery entry wizard">
-          <span class="material-symbols-outlined" aria-hidden="true">close</span>
-        </button>
-      </header>
-
-      <ol class="print-wizard-progress" aria-label="Gallery entry wizard progress">
-        <li class="is-active" data-step-indicator="0">Sign in</li>
-        <li data-step-indicator="1">Describe</li>
-        <li data-step-indicator="2">Review</li>
-      </ol>
-
-      <form id="printWizardForm" class="print-wizard-form">
-        <fieldset class="print-wizard-step" data-step="0">
-          <legend>GitHub maintainer sign-in</legend>
-          <p class="print-wizard-help">
-            This static page cannot safely run normal OAuth by itself. Use a fine-grained GitHub token with Contents read/write access to <strong>QuantumPickleJar/Personal-Static</strong>. The token is kept in memory or session storage for this browser tab only.
-          </p>
-          <label>
-            GitHub token
-            <input id="printGithubToken" type="password" autocomplete="off" placeholder="github_pat_...">
-          </label>
-          <label>
-            Target branch
-            <input id="printTargetBranch" type="text" value="main" autocomplete="off">
-          </label>
-          <label class="print-wizard-inline-check">
-            <input id="printRememberToken" type="checkbox" checked>
-            Remember token for this tab only
-          </label>
-          <button id="printClearToken" class="print-wizard-secondary" type="button">Clear saved token</button>
-        </fieldset>
-
-        <fieldset class="print-wizard-step" data-step="1" hidden>
-          <legend>Entry details</legend>
-          <div class="print-wizard-grid">
-            <label>
-              Title
-              <input id="printEntryTitle" type="text" required placeholder="Commander lid with raised text">
-            </label>
-            <label>
-              Entry slug
-              <input id="printEntryId" type="text" placeholder="auto-generated-from-title">
-            </label>
-            <label>
-              Source type
-              <select id="printSourceType">
-                <option value="designed">Designed by me</option>
-                <option value="remixed">Remixed/customized by me</option>
-                <option value="printed">Printed by me / model by another maker</option>
-              </select>
-            </label>
-            <label>
-              Material
-              <input id="printMaterial" type="text" placeholder="PLA, PETG, TPU, wood PLA">
-            </label>
-            <label>
-              Colors
-              <input id="printColors" type="text" placeholder="Black, Gold">
-            </label>
-            <label>
-              Nozzle
-              <input id="printNozzle" type="text" placeholder="0.4mm">
-            </label>
-            <label>
-              Layer height
-              <input id="printLayerHeight" type="text" placeholder="0.2mm">
-            </label>
-            <label>
-              Model origin
-              <input id="printModelOrigin" type="text" placeholder="Designed by me, Thingiverse link, measured from part, etc.">
-            </label>
-          </div>
-
-          <label>
-            Description
-            <textarea id="printDescription" required rows="3" placeholder="What the print is and why it matters."></textarea>
-          </label>
-          <label>
-            Notes / learning
-            <textarea id="printNotes" rows="3" placeholder="Settings tuned, failure fixed, material choice, manual swap details, tolerance work, etc."></textarea>
-          </label>
-          <label>
-            Categories
-            <input id="printCategories" type="text" placeholder="Functional, Repair / Utility">
-          </label>
-          <label>
-            Search tags
-            <input id="printTags" type="text" placeholder="functional, repair, PLA, manual swap">
-          </label>
-          <label>
-            Optional source/writeup link
-            <input id="printLink" type="url" placeholder="https://...">
-          </label>
-          <label>
-            Optional model URL
-            <input id="printModelUrl" type="url" placeholder="https://...">
-          </label>
-          <label>
-            Optional preview URL
-            <input id="printPreviewUrl" type="url" placeholder="https://...">
-          </label>
-          <div class="print-wizard-grid">
-            <label>
-              Estimated grams
-              <input id="printEstimatedGrams" type="number" min="0" step="0.1" placeholder="24">
-            </label>
-            <label>
-              Estimated print minutes
-              <input id="printEstimatedTimeMinutes" type="number" min="0" step="1" placeholder="95">
-            </label>
-          </div>
-          <label>
-            Image alt text
-            <input id="printAlt" type="text" required placeholder="Black PLA printed lid with raised gold text">
-          </label>
-          <label>
-            Print photo
-            <input id="printImageFile" type="file" accept="image/*">
-          </label>
-
-          <fieldset class="print-filter-fieldset">
-            <legend>Gallery filters</legend>
-            <div class="print-filter-checkboxes">
-              <label><input type="checkbox" name="printFilters" value="functional"> Functional</label>
-              <label><input type="checkbox" name="printFilters" value="decorative"> Decorative</label>
-              <label><input type="checkbox" name="printFilters" value="tokens-cards"> Tokens / cards</label>
-              <label><input type="checkbox" name="printFilters" value="repair-utility"> Repair / utility</label>
-              <label><input type="checkbox" name="printFilters" value="manual-filament-swap"> Multi-color / manual filament swap</label>
-              <label><input type="checkbox" name="printFilters" value="experimental"> Experimental</label>
-            </div>
-          </fieldset>
-        </fieldset>
-
-        <fieldset class="print-wizard-step" data-step="2" hidden>
-          <legend>Review and commit</legend>
-          <div class="print-review-layout">
-            <div class="print-review-card">
-              <img id="printReviewImage" src="assets/images/prints/placeholder.svg" alt="Generated gallery entry preview image">
-              <h3 id="printReviewTitle">Entry preview</h3>
-              <p id="printReviewDescription">Complete the previous steps to preview the new gallery entry.</p>
-            </div>
-            <div>
-              <p class="print-wizard-help">
-                The commit button uploads the image, then prepends this generated object to <code>rsc/js/print-gallery.js</code> on the selected branch.
-              </p>
-              <pre id="printGeneratedEntry" class="print-generated-entry" tabindex="0"></pre>
-            </div>
-          </div>
-        </fieldset>
-
-        <p id="printWizardStatus" class="print-wizard-status" role="status" aria-live="polite"></p>
-
-        <footer class="print-wizard-actions">
-          <button id="printWizardPrevious" class="print-wizard-secondary" type="button">Previous</button>
-          <button id="printCopyGeneratedEntry" class="print-wizard-secondary" type="button" hidden>Copy generated entry</button>
-          <button id="printWizardNext" class="print-wizard-primary" type="button">Next</button>
-          <button id="printCommitEntry" class="print-wizard-primary" type="button" hidden>Commit entry to GitHub</button>
-        </footer>
-      </form>
-    </section>
-  </div>
-
   <div id="footerContainer"></div>
 
   <script>
@@ -357,6 +174,5 @@
   </script>
   <script type="module" src="rsc/js/theme-toggle.js"></script>
   <script type="module" src="rsc/js/print-gallery.js"></script>
-  <script type="module" src="rsc/js/print-gallery-admin.js"></script>
 </body>
 </html>
