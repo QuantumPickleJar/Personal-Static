@@ -26,6 +26,34 @@
       ],
       "attachment": "assets/gallery-attachments/token-caddy-2-slot/MTG_60_80cards_gambling_goblins_mono_red.stl",
       "updatedAt": "2026-06-25T18:10:39.612Z"
+    },
+    {
+      "id": "cutesy-goblin-token",
+      "title": "Cutesy Goblin token",
+      "shortDescription": "1/1 Goblin token",
+      "longDescription": "A goblin token.  Prints in 4 colors, consists of 9 layers of plastic, 4 of which are strongly recommended to be black.  It's not too scratchy either, so your cards can be adjacent to it without much issue.",
+      "material": "PLA",
+      "colors": [],
+      "generatorSetup": null,
+      "printer": "Ender 3 Pro",
+      "nozzle": "0.2mm",
+      "layerHeight": "0.1mm",
+      "printTime": "2h",
+      "tags": [
+        "magic",
+        "mtg",
+        "token",
+        "goblin"
+      ],
+      "category": "Tabletop",
+      "status": "Done",
+      "notes": "",
+      "images": [
+        "assets/gallery/cutesy-goblin-token/20260625_123741.jpg",
+        "assets/gallery/cutesy-goblin-token/20260625_123746.jpg"
+      ],
+      "attachment": null,
+      "updatedAt": "2026-06-25T19:09:17.621Z"
     }
   ]
 }
