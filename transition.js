@@ -1,7 +1,7 @@
 const basePath = window.location.hostname.includes('github.io') ? 
   '/Personal-Static/' : '/';
 
-const fullRefreshPages = ['projects.html', 'index.html', 'resources.html', 'profile.html'];
+const fullRefreshPages = ['projects.html', 'index.html', 'resources.html', 'profile.html', '3d-printing.html'];
 
 function shouldUseFullPageLoad(urlOrPath) {
   return fullRefreshPages.some(page => String(urlOrPath || '').includes(page));
@@ -11,11 +11,15 @@ function shouldUseFullPageLoad(urlOrPath) {
 // profile.html is intentionally self-contained, so it must be reached with a normal
 // browser navigation rather than an in-place Barba transition.
 document.addEventListener('click', event => {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
   const anchor = event.target.closest('a[href]');
   if (!anchor) return;
 
-  const href = anchor.getAttribute('href') || '';
-  if (!shouldUseFullPageLoad(href)) return;
+  if ((anchor.target && anchor.target !== '_self') || anchor.hasAttribute('download')) return;
+
+  const destination = new URL(anchor.href, window.location.href);
+  if (destination.origin !== window.location.origin || !shouldUseFullPageLoad(destination.pathname)) return;
 
   event.preventDefault();
   event.stopPropagation();

@@ -35,7 +35,8 @@
 }
 
 body.dark-mode .stack-item-container,
-html[data-theme="dark"] .stack-item-container {
+html[data-theme="dark"] .stack-item-container,
+body.dark-theme .stack-item-container {
   --stack-icon-tile-bg: color-mix(in srgb, var(--md-sys-color-surface, #1f1f1f) 70%, var(--md-sys-color-primary-container, #4f378b) 30%);
   --stack-icon-tile-border: rgba(255, 255, 255, 0.18);
   --stack-icon-logo-filter: brightness(1.1) saturate(1.08) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.48));
@@ -50,7 +51,12 @@ html[data-theme="dark"] .stack-item-container.is-monochrome,
 html[data-theme="dark"] .stack-item-container[data-tech="GitHub" i],
 html[data-theme="dark"] .stack-item-container[data-tech="Github" i],
 html[data-theme="dark"] .stack-item-container[data-tech="Copilot" i],
-html[data-theme="dark"] .stack-item-container[data-tech="GitHub Copilot" i] {
+html[data-theme="dark"] .stack-item-container[data-tech="GitHub Copilot" i],
+body.dark-theme .stack-item-container.is-monochrome,
+body.dark-theme .stack-item-container[data-tech="GitHub" i],
+body.dark-theme .stack-item-container[data-tech="Github" i],
+body.dark-theme .stack-item-container[data-tech="Copilot" i],
+body.dark-theme .stack-item-container[data-tech="GitHub Copilot" i] {
   --stack-icon-tile-bg: #111827;
   --stack-icon-tile-border: rgba(255, 255, 255, 0.24);
   --stack-icon-logo-filter: invert(1) brightness(1.18) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
@@ -59,7 +65,9 @@ html[data-theme="dark"] .stack-item-container[data-tech="GitHub Copilot" i] {
 body.dark-mode .stack-item-container.has-text-fallback .stack-icon-surface,
 body.dark-mode .stack-item-container.needs-contrast .stack-icon-surface,
 html[data-theme="dark"] .stack-item-container.has-text-fallback .stack-icon-surface,
-html[data-theme="dark"] .stack-item-container.needs-contrast .stack-icon-surface {
+html[data-theme="dark"] .stack-item-container.needs-contrast .stack-icon-surface,
+body.dark-theme .stack-item-container.has-text-fallback .stack-icon-surface,
+body.dark-theme .stack-item-container.needs-contrast .stack-icon-surface {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.06)) !important;
 }
 
@@ -82,4 +90,38 @@ md-elevated-card.project-card .stack-item-container .stack-image {
   height: 1.18rem !important;
   margin: 0 !important;
   object-fit: contain !important;
+}
+
+/* Project cards need stronger dark-mode rules because stackIconLoader injects base styles at runtime. */
+body.dark-mode .projects-gallery .stack-item-container,
+html[data-theme="dark"] .projects-gallery .stack-item-container,
+body.dark-theme .projects-gallery .stack-item-container,
+body.dark-mode md-elevated-card.project-card .stack-item-container,
+html[data-theme="dark"] md-elevated-card.project-card .stack-item-container,
+body.dark-theme md-elevated-card.project-card .stack-item-container {
+  background: rgba(208, 188, 255, 0.10) !important;
+  border: 1px solid rgba(208, 188, 255, 0.22) !important;
+  color: rgba(250, 247, 255, 0.96) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 1px 2px rgba(0, 0, 0, 0.30) !important;
+}
+
+body.dark-mode .projects-gallery .stack-item-container .stack-label,
+html[data-theme="dark"] .projects-gallery .stack-item-container .stack-label,
+body.dark-theme .projects-gallery .stack-item-container .stack-label,
+body.dark-mode md-elevated-card.project-card .stack-item-container .stack-label,
+html[data-theme="dark"] md-elevated-card.project-card .stack-item-container .stack-label,
+body.dark-theme md-elevated-card.project-card .stack-item-container .stack-label {
+  color: rgba(250, 247, 255, 0.95) !important;
+  text-shadow: none !important;
+}
+
+body.dark-mode .projects-gallery .stack-icon,
+html[data-theme="dark"] .projects-gallery .stack-icon,
+body.dark-theme .projects-gallery .stack-icon,
+body.dark-mode md-elevated-card.project-card .stack-icon,
+html[data-theme="dark"] md-elevated-card.project-card .stack-icon,
+body.dark-theme md-elevated-card.project-card .stack-icon {
+  background: rgba(208, 188, 255, 0.12) !important;
+  border: 1px solid rgba(208, 188, 255, 0.22) !important;
+  color: rgba(250, 247, 255, 0.95) !important;
 }
