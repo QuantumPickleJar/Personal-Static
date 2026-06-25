@@ -64,9 +64,27 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         // Make sure this path is correct and partials are being copied
-        { 
-          from: './partials', 
+        {
+          from: './partials',
           to: 'partials',
+          globOptions: {
+            ignore: ['**/.DS_Store']
+          }
+        },
+        // Gallery data and uploaded images are committed outside the webpack bundle.
+        // Copy them into dist so the gh-pages deployment can serve the public gallery.
+        {
+          from: 'data/',
+          to: 'data/',
+          noErrorOnMissing: true,
+          globOptions: {
+            ignore: ['**/.DS_Store']
+          }
+        },
+        {
+          from: 'assets/',
+          to: 'assets/',
+          noErrorOnMissing: true,
           globOptions: {
             ignore: ['**/.DS_Store']
           }
@@ -77,8 +95,8 @@ module.exports = {
         { from: 'css/', to: 'css/' },
         { from: 'htmlModules/', to: 'htmlModules/' },
         { from: 'transition.js', to: 'transition.js' },
-        { 
-          from: 'rsc/json', 
+        {
+          from: 'rsc/json',
           to: 'rsc/json',
           globOptions: {
             ignore: ['**/.DS_Store']
