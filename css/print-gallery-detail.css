@@ -1,0 +1,125 @@
+.print-detail-dialog {
+  width: min(1120px, calc(100% - 2rem));
+  max-height: min(88vh, 900px);
+  border: 0;
+  border-radius: 22px;
+  padding: 0;
+  background: transparent;
+}
+
+.print-detail-dialog::backdrop {
+  background: rgba(12, 10, 20, 0.62);
+  backdrop-filter: blur(4px);
+}
+
+.print-detail-panel {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(103, 80, 164, 0.18);
+  background: var(--app-card-bg, #fff);
+  box-shadow: 0 28px 80px rgba(20, 12, 40, 0.30);
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.print-detail-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(103, 80, 164, 0.20);
+  border-radius: 999px;
+  background: var(--md-sys-color-surface, #fff);
+  color: var(--md-sys-color-on-surface, #1c1b1f);
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.print-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.75fr);
+  gap: clamp(1rem, 3vw, 1.75rem);
+  align-items: start;
+}
+
+.print-detail-media,
+.print-stl-preview {
+  width: 100%;
+  min-height: clamp(280px, 50vw, 540px);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(103, 80, 164, 0.075);
+  display: grid;
+  place-items: center;
+}
+
+.print-detail-media img,
+.print-stl-preview canvas {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: contain;
+  display: block;
+}
+
+.print-detail-copy {
+  display: grid;
+  gap: 1rem;
+  padding-right: 2rem;
+}
+
+.print-detail-copy h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.print-detail-copy p {
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  line-height: 1.65;
+}
+
+.print-detail-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  font-weight: 650;
+}
+
+.print-stl-loading,
+.print-stl-fallback {
+  color: var(--md-sys-color-on-surface-variant, #4f4858);
+  padding: 1rem;
+  text-align: center;
+}
+
+html body.dark-mode .print-detail-panel,
+html body.dark-mode .print-detail-close {
+  background: var(--app-panel-bg-dark, rgba(255, 255, 255, 0.08));
+  color: rgba(245, 241, 255, 0.92);
+  border-color: rgba(208, 188, 255, 0.18);
+}
+
+html body.dark-mode .print-detail-copy p,
+html body.dark-mode .print-detail-carousel-controls,
+html body.dark-mode .print-stl-loading,
+html body.dark-mode .print-stl-fallback {
+  color: rgba(245, 241, 255, 0.76);
+}
+
+@media (max-width: 840px) {
+  .print-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .print-detail-copy {
+    padding-right: 0;
+  }
+}
