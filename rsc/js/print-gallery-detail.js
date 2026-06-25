@@ -1,11 +1,20 @@
 const GALLERY_DATA_URL = 'data/3d-print-gallery.json';
 const THREE_MODULE_URL = 'https://esm.sh/three@0.166.1';
 const STL_LOADER_MODULE_URL = 'https://esm.sh/three@0.166.1/examples/jsm/loaders/STLLoader.js';
+const DETAIL_STYLESHEET_URL = 'css/print-gallery-detail.css';
 
 let galleryEntries = [];
 let selectedEntry = null;
 let selectedMediaIndex = 0;
 let activePreviewCleanup = null;
+
+function loadDetailStyles() {
+  if (document.querySelector(`link[href="${DETAIL_STYLESHEET_URL}"]`)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = DETAIL_STYLESHEET_URL;
+  document.head.appendChild(link);
+}
 
 function escapeHtml(value) {
   const element = document.createElement('div');
@@ -275,6 +284,7 @@ function enhanceCards() {
 }
 
 async function initDetailEnhancement() {
+  loadDetailStyles();
   try {
     galleryEntries = await loadEntries();
   } catch (error) {
