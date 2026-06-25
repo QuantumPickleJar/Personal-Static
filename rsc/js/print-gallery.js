@@ -1,6 +1,6 @@
 import {
-  TOKENFORGE_GENERATOR_URL,
-  PRINTDESK_GALLERY_ADMIN_URL
+  PRINTDESK_GALLERY_ADMIN_URL,
+  PRINTDESK_REQUEST_URL
 } from './tokenforge-config.js';
 
 const PRINT_FILTER_ALL = 'all';
@@ -172,9 +172,9 @@ function getSearchText(item) {
     item.modelOrigin,
     item.notes,
     sourceTypeLabels[item.sourceType],
-    ...(item.colors || []),
-    ...(item.categories || []),
-    ...(item.tags || [])
+    ...toArray(item.colors),
+    ...toArray(item.categories),
+    ...toArray(item.tags)
   ].map(normalize).join(' ');
 }
 
@@ -184,7 +184,7 @@ function getAbsoluteUrl(value) {
   try {
     return new URL(value, window.location.href).toString();
   } catch (error) {
-    console.warn('Tokenforge handoff skipped an invalid gallery URL.', error);
+    console.warn('PrintDesk handoff skipped an invalid gallery URL.', error);
     return '';
   }
 }
@@ -194,17 +194,19 @@ function getNumberOrNull(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-// Tokenforge handoff contract: tokenforge.handoff.v1. Keep this mapping in
-// sync with the Generator so the portfolio remains a static, public demo.
-function createTokenforgeHandoff(item) {
+function createPrintdeskHandoff(item) {
   const galleryUrl = new URL(window.location.href);
   galleryUrl.hash = `print-${item.id}`;
   const name = getItemName(item);
 
   return {
-    schema: 'tokenforge.handoff.v1',
-    source: 'portfolio-gallery',
-    intent: 'request-print',
+    schema: 'tokenforge.printdesk.gallery-handoff.v1',
+    createdAt: new Date().toISOString(),
+    source: {
+      app: 'portfolio-gallery',
+      galleryEntryId: item.id || '',
+      galleryUrl: galleryUrl.toString()
+    },
     item: {
       id: item.id || '',
       name,
@@ -223,11 +225,6 @@ function createTokenforgeHandoff(item) {
       estimatedGrams: getNumberOrNull(item.estimatedGrams),
       estimatedTimeMinutes: getNumberOrNull(item.estimatedTimeMinutes),
       notes: item.notes || ''
-    },
-    generator: {
-      mode: 'IMG',
-      projectName: name,
-      allowCustomization: true
     }
   };
 }
@@ -247,7 +244,7 @@ function encodeUrlSafeBase64Json(value) {
     .replace(/=+$/, '');
 }
 
-function setTokenforgeHandoffStatus(message) {
+function setPrintdeskHandoffStatus(message) {
   const status = document.getElementById('tokenforgeHandoffStatus');
   if (!status) return;
 
@@ -255,16 +252,16 @@ function setTokenforgeHandoffStatus(message) {
   status.textContent = message || '';
 }
 
-function openTokenforge(item) {
-  let destination = TOKENFORGE_GENERATOR_URL;
+function openPrintdeskRequest(item) {
+  let destination = PRINTDESK_REQUEST_URL;
 
   try {
-    const generatorUrl = new URL(TOKENFORGE_GENERATOR_URL);
-    generatorUrl.searchParams.set('handoff', encodeUrlSafeBase64Json(createTokenforgeHandoff(item)));
-    destination = generatorUrl.toString();
+    const requestUrl = new URL(PRINTDESK_REQUEST_URL);
+    requestUrl.searchParams.set('handoff', encodeUrlSafeBase64Json(createPrintdeskHandoff(item)));
+    destination = requestUrl.toString();
   } catch (error) {
-    console.warn('Could not encode the Tokenforge handoff; opening a blank request instead.', error);
-    setTokenforgeHandoffStatus('Could not prefill this request. Opening Tokenforge for a new custom request instead.');
+    console.warn('Could not encode the PrintDesk handoff.', error);
+    setPrintdeskHandoffStatus('Could not prefill this request. Opening PrintDesk without the gallery handoff.');
   }
 
   window.location.assign(destination);
@@ -275,9 +272,6 @@ function getActiveFilter() {
   return activeButton ? activeButton.dataset.filter : PRINT_FILTER_ALL;
 }
 
-// item: normalized print gallery data object
-// activeFilter: selected filter key, such as "functional" or "designed-by-me"
-// searchTerm: lower-cased free-text query from the search box
 function matchesFilters(item, activeFilter, searchTerm) {
   const filterMatches = activeFilter === PRINT_FILTER_ALL || (item.filters || []).includes(activeFilter);
   const searchMatches = !searchTerm || getSearchText(item).includes(searchTerm);
@@ -295,8 +289,6 @@ function createOptionalLink(label, href) {
   return `<a class="print-card-link" href="${escapeHtml(href)}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
 }
 
-// item: normalized print gallery data object
-// Returns: HTML string for a single accessible gallery card
 function createPrintCard(item) {
   const itemName = getItemName(item);
   const categories = createListMarkup(item.categories || []);
@@ -328,8 +320,8 @@ function createPrintCard(item) {
           <div class="print-card-tags" aria-label="Search tags for ${escapeHtml(itemName)}">${tags}</div>
           ${sourceLink}
           ${attachmentLink}
-          <button class="tokenforge-handoff-btn" type="button" data-tokenforge-print-id="${escapeHtml(item.id)}">
-            Customize / Request in Tokenforge
+          <button class="tokenforge-handoff-btn" type="button" data-printdesk-request-id="${escapeHtml(item.id)}">
+            Request this print in PrintDesk
           </button>
         </div>
       </div>
@@ -441,14 +433,14 @@ function initPrintGallery() {
 
   searchInput.addEventListener('input', resetToFirstPageAndRender);
   document.getElementById('printGalleryGrid')?.addEventListener('click', function(event) {
-    const handoffButton = event.target.closest('[data-tokenforge-print-id]');
+    const handoffButton = event.target.closest('[data-printdesk-request-id]');
     if (!handoffButton) return;
 
     const item = printGalleryItems.find(function(candidate) {
-      return candidate.id === handoffButton.dataset.tokenforgePrintId;
+      return candidate.id === handoffButton.dataset.printdeskRequestId;
     });
 
-    if (item) openTokenforge(item);
+    if (item) openPrintdeskRequest(item);
   });
   filterButtons.forEach(function(button) {
     button.addEventListener('click', function() {
